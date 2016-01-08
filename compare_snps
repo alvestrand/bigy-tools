@@ -1,0 +1,57 @@
+#!/usr/bin/python
+#
+# Explore the relationship between two SNPs.
+#
+import argparse
+import collections
+import csv
+import sys
+
+import bigy_snp
+
+
+def print_subtree(kitset, level):
+  subclades = kitset.subclade_candidates()
+  for candidate in subclades:
+    people = kitset.filter(candidate)
+    print '%s +--%s: %d [%s]' % (' ' * (3 * level), candidate, people.count(),
+                                  ' '.join(subclades[candidate]))
+    print_subtree(people, level + 1)
+
+
+def main():
+  parser = argparse.ArgumentParser()
+  parser.add_argument('snp1')
+  parser.add_argument('snp2')
+  args = parser.parse_args()
+
+  snp1 = args.snp1
+  snp2 = args.snp2
+  kitset = bigy_snp.load_spreadsheet('bigy-531.csv')
+  print 'File count:', kitset.count()
+  (snp1_yes, snp1_no, snp1_maybe) = kitset.split(args.snp1)
+  (snp2_yes, snp2_no, snp2_maybe) = kitset.split(args.snp2)
+  print args.snp1, 'count:', snp1_yes.count(), '+', snp1_maybe.count()
+  print args.snp2, 'count:', snp2_yes.count(), '+', snp2_maybe.count()
+  snp1_min_set = set(snp1_yes.persons.keys())
+  snp1_max_set = snp1_min_set | set(snp1_maybe.persons.keys())
+  snp2_min_set = set(snp2_yes.persons.keys())
+  snp2_max_set = snp2_min_set | set(snp2_maybe.persons.keys())
+
+  print args.snp1, snp1_min_set, snp1_max_set - snp1_min_set
+  print args.snp2, snp2_min_set, snp2_max_set - snp2_min_set
+
+  if (snp1_min_set < snp2_min_set):
+    print snp1, 'true subset of', snp2
+  elif (snp1_max_set < snp2_max_set):
+    print snp1, 'probably subset of', snp2
+    doubtful_kits = (snp2_max_set - snp2_min_set) & snp1_min_set
+    for id in doubtful_kits:
+      print snp1, kitset.persons[id][snp1], snp2, kitset.persons[id][snp2]
+  elif (snp1_min_set < snp2_max_set):
+    print snp1, 'maybe subset of', snp2
+    print 'Doubtful kits:', (snp2_max_set - snp2_min_set) & snp1_min_set
+
+  
+if __name__ == '__main__':
+  sys.exit(main())

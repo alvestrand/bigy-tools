@@ -1,0 +1,39 @@
+#!/usr/bin/python
+#
+# An SNP tree builder using the Big Y data files from the U106 project.
+#
+#
+import argparse
+import collections
+import csv
+import sys
+
+import bigy_snp
+
+
+def print_subtree(kitset, level):
+  subclades = kitset.subclade_candidates()
+  for candidate in subclades:
+    people = kitset.filter(candidate)
+    print '%s +--%s: %d [%s]' % (' ' * (3 * level), candidate, people.count(),
+                                  ' '.join(subclades[candidate]))
+    print_subtree(people, level + 1)
+
+
+def main():
+  parser = argparse.ArgumentParser()
+  parser.add_argument('snp', default='Z159', nargs='?')
+  args = parser.parse_args()
+
+  kitset = bigy_snp.load_spreadsheet('bigy-531.csv')
+  print 'File count:', kitset.count()
+  if args.snp == 'all':
+    filtered = kitset
+  else:
+    filtered = kitset.filter(args.snp)
+  print args.snp, 'Filtered count:', filtered.count()
+  print 'SNPs: ', len(filtered.snps())
+  print_subtree(filtered, 0)
+  
+if __name__ == '__main__':
+  sys.exit(main())

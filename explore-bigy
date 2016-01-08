@@ -1,0 +1,44 @@
+#!/usr/bin/python
+#
+# An exploration tool for the Big Y data files from the U106 project.
+#
+# The input spreadsheet has 1 column per participant and 1 row per mutation.
+# The first few rows are header, with the very first line having kitnames.
+#
+import argparse
+import collections
+import csv
+import sys
+
+import bigy_snp
+
+
+
+def main():
+  parser = argparse.ArgumentParser()
+  parser.add_argument('snp', default='Z159', nargs='?')
+  args = parser.parse_args()
+
+  kitset = bigy_snp.load_spreadsheet('bigy-531.csv')
+  # print 'Me:', kitset.persons['105 Gjolanger-B3752.zip']
+  print 'Count:', kitset.count()
+  if args.snp == 'all':
+    filtered = kitset
+  else:
+    filtered = kitset.filter(args.snp)
+  print args.snp, 'count:', filtered.count()
+  print 'SNPs: ', len(filtered.snps())
+  print 'Consistent SNPs:', len(filtered.consistent_snps()), filtered.consistent_snps()
+
+  varying_snps = filtered.inconsistent_snps()
+  print 'Inconsistent SNPs:', len(varying_snps)
+  print 'Uncertain SNPs:', len(filtered.uncertain_snps())
+
+  print 'Subclade candidates:'
+  subclades = filtered.subclade_candidates()
+  for candidate in subclades:
+    people = filtered.filter(candidate)
+    print candidate, people.count(), 'people', subclades[candidate]
+  
+if __name__ == '__main__':
+  sys.exit(main())
