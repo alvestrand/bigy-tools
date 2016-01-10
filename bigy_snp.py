@@ -165,7 +165,13 @@ def load_spreadsheet(filename):
     for row in reader:
       if len(row) < 2:
         break
-      position = int(row[0])
+      try:
+        position = int(row[0])
+      except ValueError, e:
+        if row[0] == '':
+          break
+        print 'Error:', row[0]
+        break
       if row[1]:
         name = row[1].split(' ')[0]
       else:

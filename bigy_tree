@@ -23,9 +23,10 @@ def print_subtree(kitset, level):
 def main():
   parser = argparse.ArgumentParser()
   parser.add_argument('snp', default='Z159', nargs='?')
+  parser.add_argument('--file', default='bigy-531.csv')
   args = parser.parse_args()
 
-  kitset = bigy_snp.load_spreadsheet('bigy-531.csv')
+  kitset = bigy_snp.load_spreadsheet(args.file)
   print 'File count:', kitset.count()
   if args.snp == 'all':
     filtered = kitset
