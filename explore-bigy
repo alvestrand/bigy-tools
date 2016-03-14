@@ -17,9 +17,11 @@ import bigy_snp
 def main():
   parser = argparse.ArgumentParser()
   parser.add_argument('snp', default='Z159', nargs='?')
+  parser.add_argument('--file', default='bigy-531.csv')
+  parser.add_argument('-v', action='store_true')
   args = parser.parse_args()
 
-  kitset = bigy_snp.load_spreadsheet('bigy-531.csv')
+  kitset = bigy_snp.load_spreadsheet(args.file)
   # print 'Me:', kitset.persons['105 Gjolanger-B3752.zip']
   print 'Count:', kitset.count()
   if args.snp == 'all':
@@ -32,7 +34,17 @@ def main():
 
   varying_snps = filtered.inconsistent_snps()
   print 'Inconsistent SNPs:', len(varying_snps)
+  if args.v:
+    print varying_snps
   print 'Uncertain SNPs:', len(filtered.uncertain_snps())
+  if args.v:
+    for snp in filtered.uncertain_snps():
+      (subset_yes, subset_no, subset_uncertain) = filtered.split(snp)
+      if subset_yes.count():
+        print snp, subset_yes.count()
+        print snp, 'yes:', [key for key in subset_yes.persons]
+        print snp, 'maybe:', [key for key in subset_uncertain.persons]
+    print filtered.uncertain_snps()
 
   print 'Subclade candidates:'
   subclades = filtered.subclade_candidates()
