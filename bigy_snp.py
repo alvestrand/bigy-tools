@@ -143,7 +143,7 @@ def load_spreadsheet(filename):
   The input spreadsheet has 1 column per participant and 1 row per mutation.
   The first few rows are header, with the very first line having kitnames.
   """
-  with open(filename) as csvfile:
+  with open(filename, 'rU') as csvfile:
     reader = csv.reader(csvfile)
 
     kitnames = reader.next()

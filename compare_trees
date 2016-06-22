@@ -1,0 +1,34 @@
+#!/usr/bin/python
+#
+# A BigY file comparision tool.
+#
+#
+import argparse
+import collections
+import csv
+import sys
+
+import bigy_snp
+
+def reportSnpDifference(kitset1, kitset2):
+  new_snps = kitset2.snps() - kitset1.snps()
+  print "New SNPs (%d) :%s" % (len(new_snps), sorted(new_snps))
+  retired_snps = kitset1.snps() - kitset2.snps()
+  print "Retired SNPs (%d): %s:" % (len(retired_snps), sorted(retired_snps))
+  # TODO: Figure out which of the new ones are renames of the old ones.
+
+
+def main():
+  parser = argparse.ArgumentParser()
+  parser.add_argument('file1', default='bigy-531.csv', nargs='?')
+  parser.add_argument('file2', default='bigy-600.csv', nargs='?')
+  args = parser.parse_args()
+
+  kitset1 = bigy_snp.load_spreadsheet(args.file1)
+  kitset2 = bigy_snp.load_spreadsheet(args.file2)
+  print "Kit count: %d -> %d" % (kitset1.count(), kitset2.count())
+  print "SNP count: ", len(kitset1.snps()), '->', len(kitset2.snps())
+  reportSnpDifference(kitset1, kitset2)
+  
+if __name__ == '__main__':
+  sys.exit(main())
