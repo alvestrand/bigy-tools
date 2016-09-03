@@ -158,11 +158,19 @@ def load_spreadsheet(filename):
     kits = collections.defaultdict(dict)
     # Skip header
     for row in reader:
+      if len(row) < 1:
+        continue
       if row[0] == 'SNP Number':
+        break
+      # New version from 719:
+      if row[0] == 'Non-shared SNPs':
+        _ = reader.next() # Skip a line
         break
 
     # Include only the part down to the first comment block
+    linecount = 0
     for row in reader:
+      linecount += 1
       if len(row) < 2:
         break
       try:

@@ -11,19 +11,28 @@ import sys
 import bigy_snp
 
 
-def print_subtree(kitset, level):
+def print_subtree(kitset, level, spacer, print_people):
   subclades = kitset.subclade_candidates()
+  if print_people:
+    not_subclades = set(kitset.persons.keys())
+    for candidate in subclades:
+      people = kitset.filter(candidate)
+      not_subclades -= set(people.persons.keys())
+    for personkey in not_subclades:
+      print ':%s %s' % (spacer * (3 * level), personkey)
   for candidate in subclades:
     people = kitset.filter(candidate)
-    print '%s +--%s: %d [%s]' % (' ' * (3 * level), candidate, people.count(),
+    print ':%s +--%s: %d [%s]' % (spacer * (3 * level), candidate, people.count(),
                                   ' '.join(subclades[candidate]))
-    print_subtree(people, level + 1)
+    print_subtree(people, level + 1, spacer, print_people)
 
 
 def main():
   parser = argparse.ArgumentParser()
   parser.add_argument('snp', default='Z159', nargs='?')
   parser.add_argument('--file', default='bigy-531.csv')
+  parser.add_argument('--dots', action='store_true')
+  parser.add_argument('--people', action='store_true')
   args = parser.parse_args()
 
   kitset = bigy_snp.load_spreadsheet(args.file)
@@ -34,7 +43,10 @@ def main():
     filtered = kitset.filter(args.snp)
   print args.snp, 'Filtered count:', filtered.count()
   print 'SNPs: ', len(filtered.snps())
-  print_subtree(filtered, 0)
+  if args.dots:
+    print_subtree(filtered, 0, spacer='.', print_people=args.people)
+  else:
+    print_subtree(filtered, 0, spacker=' ', print_people=args.people)
   
 if __name__ == '__main__':
   sys.exit(main())
