@@ -18,7 +18,7 @@ def test_tree():
   personset['mut3'] = {'mut1': 'mut1', 'mut3': 'mut3'}
   personset['mut31'] = {'mut1': 'mut1', 'mut3': 'mut3', 'mut31': 'mut31'}
   return personset
-  
+
 
 class TestBigY(unittest.TestCase):
 
@@ -51,7 +51,7 @@ class TestBigY(unittest.TestCase):
     # The uncertain one shouldn't change any of the other counts.
     self.assertEquals(1, len(collection.consistent_snps()))
     self.assertEquals(3, len(collection.inconsistent_snps()))
-    
+
   def test_split(self):
     collection = bigy_snp.KitCollection(test_tree())
     filtered = collection.filter('mut2')
@@ -90,8 +90,32 @@ class TestBigY(unittest.TestCase):
                                           'mut3': 'nc', 'mut31': 'mut31'})
     subclades = collection.subclade_candidates()
     self.assertEquals(set(subclades.keys()), set(('mut2', 'mut3')))
+    # If we add someone without mut3, mut31 does bubble up.
+    collection.add_person('no-mut-3', {'mut1': 'mut1',
+                                       'mut31': 'mut31'})
+    subclades = collection.subclade_candidates()
+    self.assertEquals(set(subclades.keys()), set(('mut2', 'mut3', 'mut31')))
 
-    
+  def test_subclade_with_irrelevant_nc(self):
+    collection = bigy_snp.KitCollection(test_tree())
+    # This person may or may not belong to mut5. He has a novel mutation mut4.
+    collection.add_person('nocall-overlap1', {'mut1': 'mut1',
+                                              'mut4': 'mut4',
+                                              'mut5': 'nc'})
+
+    collection.add_person('nocall-overlap2', {'mut1': 'mut1',
+                                              'mut4': 'nc',
+                                              'mut5': 'mut5'})
+    subclades = collection.subclade_candidates()
+    # Both mut4 and mut5 should be possible candidates.
+    self.assertEquals(set(subclades.keys()),
+                      set(('mut2', 'mut3', 'mut4', 'mut5')))
+
+  def test_subclade_size_control(self):
+    collection = bigy_snp.KitCollection(test_tree())
+    subclades = collection.subclade_candidates(minimum_subclade=2)
+    self.assertEquals(set(subclades.keys()), set(('mut3',)))
+
 
 if __name__ == '__main__':
   unittest.main()

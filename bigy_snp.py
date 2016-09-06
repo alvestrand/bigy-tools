@@ -76,7 +76,7 @@ class KitCollection(object):
     # Old - this is still wrong for the case of conflicts despite NCs.
     #return self.snps() - self.consistent_snps() - self.uncertain_snps()
 
-  def subclade_candidates(self):
+  def subclade_candidates(self, minimum_subclade=1):
     """SNPs that may be first-level subclades.
 
     Returns a dict of firstlevel: set(equivalents).
@@ -84,7 +84,7 @@ class KitCollection(object):
     consistent_for_this = {}
     for snp in self.inconsistent_snps():
       next_level = self.filter(snp)
-      if next_level.count() > 0:
+      if next_level.count() >= minimum_subclade:
         consistent_for_this[snp] = next_level.consistent_snps()
     equivalents = collections.defaultdict(set)
 
@@ -114,6 +114,9 @@ class KitCollection(object):
     if second_look:
       for snp1 in second_look:
         for snp2 in second_look:
+          # Look for the sets where the consistent_for_this sets are
+          # either disjoint or partially overlapping - no subset, superset
+          # or equivalence.
           if (not consistent_for_this[snp1] < consistent_for_this[snp2]
               and not consistent_for_this[snp1] > consistent_for_this[snp2]
               and not consistent_for_this[snp1] == consistent_for_this[snp2]):
@@ -121,11 +124,14 @@ class KitCollection(object):
             (snp2_yes, snp2_no, snp2_maybe) = self.split(snp2)
             # If all the certain ones in snp1 are true or uncertain in snp2,
             # and there are some snp2 (real or uncertain) not in snp1,
-            # we think snp1 is a subset of snp2, and drop it from consideration.
+            # we think snp1 is a subclade of snp2, and drop it from
+            # consideration.
             # Note that potential equivalents are missed by this method.
             if set(snp1_yes.persons.keys()) < set(snp2_yes.persons.keys()
                                                   + snp2_maybe.persons.keys()):
-              first_level_candidates.discard(snp1)
+              # As a second test, require that snp1_yes and snp2_yes overlap.
+              if set(snp1_yes.persons.keys()) & set(snp2_yes.persons.keys()):
+                first_level_candidates.discard(snp1)
 
     # Remove those in equivalent sets
     do_not_present = set()
@@ -154,7 +160,7 @@ def load_spreadsheet(filename):
         kitname = matches.group(1)
       new_kitnames.append(kitname)
     kitnames = new_kitnames
-          
+
     kits = collections.defaultdict(dict)
     # Skip header
     for row in reader:

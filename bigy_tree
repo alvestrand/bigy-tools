@@ -12,7 +12,7 @@ import bigy_snp
 
 
 def print_subtree(kitset, level, spacer, print_people):
-  subclades = kitset.subclade_candidates()
+  subclades = kitset.subclade_candidates(minimum_subclade=2)
   if print_people:
     not_subclades = set(kitset.persons.keys())
     for candidate in subclades:
@@ -46,7 +46,7 @@ def main():
   if args.dots:
     print_subtree(filtered, 0, spacer='.', print_people=args.people)
   else:
-    print_subtree(filtered, 0, spacker=' ', print_people=args.people)
-  
+    print_subtree(filtered, 0, spacer=' ', print_people=args.people)
+
 if __name__ == '__main__':
   sys.exit(main())
