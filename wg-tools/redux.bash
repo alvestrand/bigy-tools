@@ -246,20 +246,7 @@ echo "...complete after $DT seconds"
 
 # Write out positive cases
 echo "Identifying positives and no calls..."
-cp variant-list.txt variant-match.txt
-for BEDFILE in ${FILES[@]}; do
-	VCFFILE=`echo "$BEDFILE" | sed 's/.bed/.vcf/'`
-	gawk 'NR==FNR {d[NR]=$0;split($0,x,",");s[NR]=x[1];n++} \
-	      NR!=FNR && $1=="chrY" && $7=="PASS" && $4!="." && $5!="." {for (i=1;i<=n;i++) if ($2==s[i]) p[i]=$2"."$4"."$5} \
-		  END {for (i=1;i<=n;i++) print d[i]","p[i]}' variant-match.txt "$VCFFILE" > foo
-	gawk 'NR==FNR {d[NR]=$0;split($0,x,",");s[NR]=x[1];n++;xi=1} \
-	      NR!=FNR && $1=="chrY" {m++;a[m]=$2;b[m]=$3} \
-		  END {for (i=1;i<=n;i++) {call=";nc"; for (j=xi;j<=m;j++) {if (a[j]<=s[i] && s[i]<=b[j]) {call=""; \
-		          if (a[j]==s[i]) call=";cbl"; if (b[j]==s[i]) call=";cbu"; if (a[j]==s[i] && b[j]==s[i]) call=";cblu"; xi=j; break}; \
-				  if (a[j]>s[i]) break}; print d[i]""call}}' foo "$BEDFILE" > variant-match.txt
-	echo -n "."
-done
-echo ""
+./positives-and-no-calls.bash ${FILES[@]}
 
 T1=`date +%s.%N`
 DT=`echo "$T1" "$T0" | gawk '{print $1-$2}'`
@@ -280,7 +267,7 @@ mv foo variant-output.txt
 # Identify recurrent SNPs
 gawk -v FS=, -v OFS=, 'NR==FNR {split($0,u," ");a[NR]=u[1];n++} NR!=FNR {for (j=1;j<=n;j++) if (a[j]==$1) {$2="(R);";for (i=18;i<=NF;i++) if ($i~$1 || $i~/(?+)/) $i="(R);"$i}; print}' recurrencies.txt variant-output.txt > foo
 mv foo variant-output.txt
-	 
+
 # Generate SNP stats
 echo "Generating stats and segregating for SNPs..."
 NFILES=`head -1 header.csv | gawk -v FS=, '{print NF-17}'`
