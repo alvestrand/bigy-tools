@@ -31,21 +31,27 @@ def analyzeBed(file):
   return result
 
 
-def makeCall(pos, bed_calls):
+def makeCall(pos, index_container, bed_calls):
   call = ';nc'
-  for pos_pair in bed_calls:
-    if pos_pair[0] <= pos and pos_pair[1] >= pos:
-      call = ''
-      if pos_pair[0] == pos:
-        call = ';cbl'
-      if pos_pair[1] == pos:
-        call = ';cbu'
+  for bed_index in xrange(index_container[0], len(bed_calls)):
+    pos_pair = bed_calls[bed_index]
+    index_container[0] = bed_index
+    if pos_pair[0] > pos:
+      # We have not reached the right segment.
+      continue
+    if pos_pair[1] >= pos:
+      # Position is within this segment.
       if pos_pair[0] == pos_pair[1] and pos_pair[0] == pos:
         call = ';cblu'
-      if pos == '28802526':
-        print 'Called %s for %s in %s-%s' % (call, pos, pos_pair[0], pos_pair[1])
+      elif pos_pair[0] == pos:
+        call = ';cbl'
+      elif pos_pair[1] == pos:
+        call = ';cbu'
+      else:
+        call = ''
       return call
-  return call
+    # Else the position is after this segment. Continue.
+  return call # No segment found.
 
 def main():
   parser = argparse.ArgumentParser()
@@ -64,11 +70,12 @@ def main():
   for file in args.files:
     vcf_calls = analyzeVcf(file)
     bed_calls = analyzeBed(file)
+    bed_index = [0]
     for lineno in xrange(len(d)):
       d[lineno] += ','
       if s[lineno] in vcf_calls:
         d[lineno] += vcf_calls[s[lineno]]
-      d[lineno] += makeCall(s[lineno], bed_calls)
+      d[lineno] += makeCall(s[lineno], bed_index, bed_calls)
 
   for line in d:
     print line
