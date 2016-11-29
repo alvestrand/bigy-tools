@@ -1,8 +1,9 @@
 # !/bin/bash
-# !/bin/bash
 # Author: Iain McDonald
 # Purpose: Reduction and comparison script for Family Tree DNA's BigY data
-# Release: 0.2.0 2016/08/31
+# Release: 0.2.2 2016/09/05
+# For free distribution under the terms of the GNU General Public License, version 3 (29 June 2007)
+# https://www.gnu.org/licenses/gpl.html
 
 # Set up instructions:
 #    Create sub-directory called zip, and insert BigY zip files into the folder with the format bigy-<NAME>-<KIT NUMBER>.zip
@@ -15,26 +16,48 @@
 #	The first example implies that anyone who is L48+ is also Z381+. Only columns 1 and 3 are used.
 #   The second example states that E206 is an inconsistent SNP. Only the first column is used.
 #   The third example shows the (same) format for recurrent SNPs, indicating F552 is recurrent. Only the first column is used.
+#
+# Windows WSL BASH users:
+#   Non-native package dependences:
+#      unzip
+#   These must be installed before the script is run, otherwise an error message will be generated. Try:
+#      sudo apt-get install unzip
+
+# For circa 700 kits, this process takes around 2.5 hours on a heavy-duty 2014 laptop.
 
 # Change log:
-# 0.2.0.20160831a - Introduced SNP counts
-#                   Encoded MAKE flags to begin age analysis
+# 0.2.2.20160905a - Fixed bug in shared SNP counting involving presumed positives being counted twice
+# 0.2.1.20160901a - BETA RELEASE (716): Introduced short report format
+#					Introduced basic age calculation (based solely on SNP counts)
+#					Fixed bug involving the NFILES parameter not being set on an initial run
+#                   Moved backup location to be more intuitive
+# 0.2.0.20160831a - Private release to Harald A.
+#					Introduced SNP counts
+#                   Encoded MAKE* flags to begin age analysis
 #                   Encoded clade identification, tree formation and basic SNP counting
 #					Fixed bug for multiple SNP names
 #					Discontinued use of forced SNP names in favour of the single YBrowse output file
-# 0.1.1.20160822a - BETA RELEASE: allowed basic compilation of report.csv
+# 0.1.1.20160822a - BETA RELEASE (710): allowed basic compilation of report.csv
 
-# WORK IN PROGRESS:
-# The file allowed-regions.txt contains the allowed regions where SNPs should be counted for age analysis.
-# Regions can be set in this file to avoid regions of the chromosome where problems exist, like DYZ19, palindromic regions, and other regions of poor coverage.
-# For circa 700 kits, this process takes around 2.5 hours on a heavy-duty 2014 laptop.
-# Note that parallelisation is not currently supported.
+# Wish list:
+# Basic report: parallisation / further optimisation
+# Age analysis: the ability to select allowed regions of the chromosome where SNPs should be counted for age analysis.
+# Age analysis: implementation of causality
+# Age analysis: uncertainty ranges based on Poisson statistics
+# HTML report: in the style of Alex W's BigTree
+# General: BigY+YElite+WGS crossover
+# Basic report: sorting criterion to match FTDNA tree
 
 # These flags define what actually gets done
+# Unless MAKEREPORT is non-zero, the other reports will be based on the current report.csv
 # MAKEREPORT = do the main reduction and create report.csv, else use an existing one
 # MAKEAGES = perform age analysis
+# MAKESHORTREPORT = make a shorter version of the report, collapsing the singleton section and removing the shared and inconsistent list of SNPs
+# MAKEHTMLTREE = make an HTML version of the tree for easier visualisation
 MAKEREPORT=1
 MAKEAGES=1
+MAKESHORTREPORT=1
+MAKEHTMLREPORT=1
 
 # Set SKIPZIP to >0 skip the labour-intensive parts of the script. Requires MAKEREPORT=TRUE
 # This should only be done if you have run the script before on the same dataset!
@@ -58,6 +81,26 @@ RATE1=0.880
 # Let's do stuff.
 
 T0=`date +%s.%N`
+
+# ---------------------------------------
+# Always make a backup
+
+echo "CREATING BACKUP COPIES OF EXISTING FILES..."
+
+if [ ! -d "autobackup" ]; then
+mkdir autobackup
+else
+rm -rf autobackup/*
+fi
+cp variant-*.txt autobackup/
+cp snps_hg19.csv autobackup/
+cp snp-names.csv autobackup/
+cp snp-used.csv autobackup/
+cp report.csv autobackup/
+cp short-report.csv autobackup/
+cp clades.csv autobackup/
+cp tree.txt autobackup/
+cp raw-ages.txt autobackup/
 
 if [ "$MAKEREPORT" -gt "0" ]; then
 
@@ -129,7 +172,7 @@ fi
 # Skip some more if SKIPZIP set
 if [ "$SKIPZIP" -gt "1" ]; then
 cp header.csv report.csv
-NFILES=`head -1 header.csv | gawk -v FS=, '{print NF-18}'`
+NFILES=`head -1 header.csv | gawk -v FS=, '{print NF-17}'`
 echo "... $NFILES results to be post-processed"
 fi
 if [ "$SKIPZIP" -le "1" ]; then
@@ -203,20 +246,7 @@ echo "...complete after $DT seconds"
 
 # Write out positive cases
 echo "Identifying positives and no calls..."
-cp variant-list.txt variant-match.txt
-for BEDFILE in ${FILES[@]}; do
-	VCFFILE=`echo "$BEDFILE" | sed 's/.bed/.vcf/'`
-	gawk 'NR==FNR {d[NR]=$0;split($0,x,",");s[NR]=x[1];n++} \
-	      NR!=FNR && $1=="chrY" && $7=="PASS" && $4!="." && $5!="." {for (i=1;i<=n;i++) if ($2==s[i]) p[i]=$2"."$4"."$5} \
-		  END {for (i=1;i<=n;i++) print d[i]","p[i]}' variant-match.txt "$VCFFILE" > foo
-	gawk 'NR==FNR {d[NR]=$0;split($0,x,",");s[NR]=x[1];n++;xi=1} \
-	      NR!=FNR && $1=="chrY" {m++;a[m]=$2;b[m]=$3} \
-		  END {for (i=1;i<=n;i++) {call=";nc"; for (j=xi;j<=m;j++) {if (a[j]<=s[i] && s[i]<=b[j]) {call=""; \
-		          if (a[j]==s[i]) call=";cbl"; if (b[j]==s[i]) call=";cbu"; if (a[j]==s[i] && b[j]==s[i]) call=";cblu"; xi=j; break}; \
-				  if (a[j]>s[i]) break}; print d[i]""call}}' foo "$BEDFILE" > variant-match.txt
-	echo -n "."
-done
-echo ""
+./positives-and-no-calls.bash ${FILES[@]}
 
 T1=`date +%s.%N`
 DT=`echo "$T1" "$T0" | gawk '{print $1-$2}'`
@@ -237,17 +267,22 @@ mv foo variant-output.txt
 # Identify recurrent SNPs
 gawk -v FS=, -v OFS=, 'NR==FNR {split($0,u," ");a[NR]=u[1];n++} NR!=FNR {for (j=1;j<=n;j++) if (a[j]==$1) {$2="(R);";for (i=18;i<=NF;i++) if ($i~$1 || $i~/(?+)/) $i="(R);"$i}; print}' recurrencies.txt variant-output.txt > foo
 mv foo variant-output.txt
-	 
+
 # Generate SNP stats
 echo "Generating stats and segregating for SNPs..."
-gawk -v FS=, -v f="$NFILES" '{cbl=cbu=cblu=presp=nn=nc=cblp=cbln=cbup=cbun=cblup=cblun=0; for (i=18;i<=18+f-1;i++) {if ($i!~$1) nn++; if ($i ~ /(?+)/) presp++; if ($i ~ /nc/) nc++; if ($i ~ /cbl/) cbl++; if ($i ~ /cbu/) cbu++; if ($i ~ /cblu/) cblu++; if ($i ~ /cbl/ && $i~$1) cblp++; if ($i ~ /cbu/ && $i~$1) cbup++; if ($i ~ /cblu/ && $i~$1) cblup++}; cbln=cbl-cblp-cblu; cbun=cbu-cbup; cblun=cblu-cblup; $6+=presp; $7=presp+0; $8=nn+0; $9=nc+0; $10=cblp+0; $11=cbln+0; $12=cbup+0; $13=cbun+0; $14=cblup+0; $15=cblun+0; for (i=1;i<=NF;i++) printf "%s,",$i; printf "\n"}' variant-output.txt > foo
+NFILES=`head -1 header.csv | gawk -v FS=, '{print NF-17}'`
+gawk -v FS=, -v f="$NFILES" '{cbl=cbu=cblu=presp=nn=nc=cblp=cbln=cbup=cbun=cblup=cblun=0; \
+   for (i=18;i<=18+f-1;i++) {if ($i!~$1) nn++; if ($i ~ /(?+)/) presp++; if ($i ~ /nc/) nc++; \
+                             if ($i ~ /cbl/) cbl++; if ($i ~ /cbu/) cbu++; if ($i ~ /cblu/) cblu++; if ($i ~ /cbl/ && $i~$1) cblp++; if ($i ~ /cbu/ && $i~$1) cbup++; if ($i ~ /cblu/ && $i~$1) cblup++}; \
+							 cbln=cbl-cblp-cblu; cbun=cbu-cbup; cblun=cblu-cblup; $6+=presp; $7=presp+0; $8=nn+0; $9=nc+0; $10=cblp+0; $11=cbln+0; $12=cbup+0; $13=cbun+0; $14=cblup+0; $15=cblun+0; \
+							 for (i=1;i<=NF;i++) printf "%s,",$i; printf "\n"}' variant-output.txt > foo
 mv foo variant-output.txt
 
 # Remove common SNPs
 # SNPs are declared common if the number of (presumed) positives, no calls, and coverage boundaries for that SNP is greater than or equal to the number of input files (i.e. there are no definite negatives)
 # The number should never be greater than f, except in circumstances where you delete one of the input files without re-running the entire process again!
-gawk -v FS=, -v f="$NFILES" '$6+$7+$9+$11+$13+$15>=f' variant-output.txt > variant-shared.txt
-gawk -v FS=, -v f="$NFILES" '$6+$7+$9+$11+$13+$15<f' variant-output.txt > variant-not-shared.txt
+gawk -v FS=, -v f="$NFILES" '$6+$9+$11+$13+$15>=f' variant-output.txt > variant-shared.txt
+gawk -v FS=, -v f="$NFILES" '$6+$9+$11+$13+$15<f' variant-output.txt > variant-not-shared.txt
 
 # Remove bad SNPs
 gawk -v FS=, 'NR==FNR {grch[NR]=$1;n++} NR!=FNR {flag=0; for (i=1;i<=n;i++) if ($1==grch[i]) flag=1; if (flag==1) print}' badlist.txt variant-not-shared.txt > variant-bad.txt
@@ -270,7 +305,11 @@ for REP in $REPS; do
 echo "Re-sort $REP"
 
 # Sorting SNPs horizontally
-ORDER=`cat variant-not-shared.txt | gawk -v FS=, '{for (i=1;i<=NF-18;i++) {a[NR,i]=$(i+17); p[NR,i]=0; if (($(i+17)~$1 || $(i+17)~/(?+)/) && $(i+17)!~/(R)/) p[NR,i]++}} END {s=NR;for (i=1;i<=NF-18;i++) {new[i]=i}; for (s=NR;s>=1;s--) {n=0; for (i=1;i<=NF-18;i++) {if (p[s,new[i]]==1) {n++;new2[n]=new[i]}}; for (i=1;i<=NF-18;i++) {if (p[s,new[i]]==0) {n++;new2[n]=new[i]}}; for (i=1;i<=NF-18;i++) new[i]=new2[i]}; for (i=1;i<=NF-18;i++) printf "%i ",new[i]}'`
+ORDER=`cat variant-not-shared.txt | gawk -v FS=, '{for (i=1;i<=NF-17;i++) {a[NR,i]=$(i+17); p[NR,i]=0; if (($(i+17)~$1 || $(i+17)~/(?+)/) && $(i+17)!~/(R)/) p[NR,i]++}} \
+           END {s=NR;for (i=1;i<=NF-17;i++) {new[i]=i}; \
+		          for (s=NR;s>=1;s--) {n=0; for (i=1;i<=NF-17;i++) {if (p[s,new[i]]==1) {n++;new2[n]=new[i]}}; \
+				     for (i=1;i<=NF-17;i++) {if (p[s,new[i]]==0) {n++;new2[n]=new[i]}}; \
+					 for (i=1;i<=NF-17;i++) new[i]=new2[i]}; for (i=1;i<=NF-17;i++) printf "%i ",new[i]}'`
 gawk -v FS=, -v o="$ORDER" 'NR==1 {n=split(o,s," ")} {for (i=1;i<=17;i++) printf "%s,",$i; for (i=1;i<=n;i++) printf "%s,",$(s[i]+17);printf "\n"}' report.csv > foo; mv foo report.csv
 gawk -v FS=, -v o="$ORDER" 'NR==1 {n=split(o,s," ")} {for (i=1;i<=5;i++) printf "%s,",$i; for (i=6;i<=17;i++) if ($i>0) {printf "%04i,",$i} else {printf "%s,",$i}; for (i=1;i<=n;i++) printf "%s,",$(s[i]+17);printf "\n"}' variant-not-shared.txt > foo; mv foo variant-not-shared.txt
 gawk -v FS=, -v o="$ORDER" 'NR==1 {n=split(o,s," ")} {for (i=1;i<=5;i++) printf "%s,",$i; for (i=6;i<=17;i++) if ($i>0) {printf "%04i,",$i} else {printf "%s,",$i}; for (i=1;i<=n;i++) printf "%s,",$(s[i]+17);printf "\n"}' variant-shared.txt > foo; mv foo variant-shared.txt
@@ -350,22 +389,10 @@ echo "...complete after $DT seconds"
 # Strictly speaking, this isn't necessary, as the CSV output satisfies most demands
 # However, it acts as a useful backup for those "oh ****" moments and is needed if SKIPZIP is set to certain values
 # Just do sed 's/\t/,/g' report.tsv > backup.csv to recreate your backup CSV copy
-echo "Converting TSV -> CSV and creating backups..."
+echo "Converting TSV -> CSV..."
 rm report.tsv
 sed 's/,/\t/g' report.csv > report.tsv
 rm foo
-
-if [ ! -d "autobackup" ]; then
-mkdir autobackup
-else
-rm -rf autobackup/*
-fi
-cp variant-*.txt autobackup/
-cp snps_hg19.csv autobackup/
-cp snp-mapping.txt autobackup/
-cp snp-names.csv autobackup/
-cp snp-used.csv autobackup/
-cp report.csv autobackup/
 
 T1=`date +%s.%N`
 DT=`echo "$T1" "$T0" | gawk '{print $1-$2}'`
@@ -376,11 +403,9 @@ fi
 
 
 # ---------------------------------------
-# Now let's move on to the age estimation
+# Calculate the tree strcture whatever happens, because it's quick and it's useful for later reports
 
-if [ "$MAKEAGES" -gt "0" ]; then
-
-echo "CALCULATING AGES..."
+echo "CALCULATING TREE STRUCTURE..."
 
 # First we need to identify clades
 echo "Identifying clades..."
@@ -389,17 +414,87 @@ gawk -v FS=, '{if (length($2)>0) {y=$2} else {y=$1}} $4==n && $5==f {x=x","y} ($
 
 # Then we need to create the tree
 echo "Forming tree..."
-sort -nrk2 clades.csv | gawk '{a0[NR]=$3;a1[NR]=$4;split($5,b,",");a2[NR]=$6=b[1]; for (i=NR-1;i>=1;i--) {if ($3>=a0[i] && $4<=a1[i]) $6=a2[i]">"$6}; print}' | sort -k6 > tree.csv
+sort -nrk2 clades.csv | gawk '{a0[NR]=$3;a1[NR]=$4;split($5,b,",");a2[NR]=$6=b[1]; for (i=NR-1;i>=1;i--) {if ($3>=a0[i] && $4<=a1[i]) $6=a2[i]">"$6}; print}' | sort -nk3,3 -nk1 > tree.txt
+sed 's/,/;/g' tree.txt | sed 's/ /,/g' > tree.csv
+
+
+T1=`date +%s.%N`
+DT=`echo "$T1" "$T0" | gawk '{print $1-$2}'`
+echo "Tree complete after $DT seconds"
+
+
+# ---------------------------------------
+# Make a short version of the report, compressing the information in singletons
+
+if [ "$MAKESHORTREPORT" -gt "0" ]; then
+
+echo "MAKING A SHORT REPORT..."
+
+# Write report
+head -12 report.csv > short-report.csv
+gawk -v FS=, -v OFS=, '$6>1' variant-not-shared.txt >> short-report.csv
+gawk -v FS=, -v OFS=, '$6==1' variant-not-shared.txt > variant-singletons.txt
+echo '' >> short-report.csv
+head -1 report.csv | awk '{$6="";$1="Singletons"; print}' > foo; cat foo >> short-report.csv
+# This flags the singletons which are not called in adjecent tests
+gawk -v FS=, -v OFS=, 'NR==FNR {start[FNR]=$3;end[FNR]=$4;n=FNR} NR!=FNR {for (i=1;i<=n;i++) if (start[i]<=$16 && end[i]>=$16) {s=start[i];e=end[i]}; neg=0; for (i=s;i<=e;i++) if (length($i)==0) neg++; flag=""; if (neg<e-s) flag="(s?)"; if (neg==0) flag="(s?!)"; $($16)=flag""$($16); print}' tree.csv variant-singletons.txt > foo
+# This compresses them into a short format
+gawk -v FS=, -v OFS=, -v maxn=0 '{n[$16]++;a[$16,n[$16]]=$($16); if (maxn<n[$16]) maxn=n[$16]} END {for (i=1;i<=maxn;i++) {for (j=1;j<=NF;j++) printf "%s,",a[j,i]; printf "\n"}}' foo >> short-report.csv
+echo '' >> short-report.csv
+head -1 report.csv | awk '{$6="";$1="Inconsistent SNPs"; print}' > foo; cat foo >> short-report.csv
+echo 'GrCh37,Name(s),Ref,Alt,Type,N+,(?+),N-,nc,cbl+,cbl-,cbu+,cbu-,cblu+,cblu-,1stCol,Recur' >> short-report.csv
+cat variant-bad.txt >> short-report.csv
+
+# Close MAKESHORTREPORT if statement
+fi
+
+# ---------------------------------------
+# Make a short version of the report, compressing the information in singletons
+
+if [ "$MAKEHTMLREPORT" -gt "0" ]; then
+
+echo "MAKING THE HTML REPORT..."
+
+# Make HTML header
+echo "<!DOCTYPE html>" > report.html
+echo "<HTML>" >> report.html
+echo "<BODY>" >> report.html
+
+# Oopsie...
+echo "<H1>THIS ISN'T FINISHED YET!</H1>" >> report.html
+
+
+# Make table header
+echo "<TABLE border=0 cellpadding=1>" >> report.html
+
+# Insert table contents
+ gawk -v FS=, '$2+0>0 {nsnps=split($5,snpnames,";"); print "<TD colspan="$2+0" rowspan="nsnps" bgcolor=\"#FFAAAA\" align=\"center\" alt=\""$3-17"\">"$5"</TD>"}' tree.csv | sed 's/;/<BR>/g' | grep 'alt="1"' | gawk '{print "<TR>"$0"</TR>"}' >> report.html
+
+# Make table footer
+echo "</TABLE>" >> report.html
+
+# Make HTML footer
+echo "</BODY>" >> report.html
+echo "</HTML>" >> report.html
+
+# Close MAKEHTMLREPORT if statement
+fi
+
+# ---------------------------------------
+# Now let's move on to the age estimation
+
+if [ "$MAKEAGES" -gt "0" ]; then
+
+echo "CALCULATING AGES..."
 
 # Then for each branch of the tree, we need to calculate the average number of SNPs, average coverage, and form a basic age from this
 echo "Counting SNPs..."
-sed 's/,/;/g' tree.csv | sed 's/ /,/g' > foo
 gawk -v FS=, -v r="$RATE" 'NR==FNR {for (i=1;i<=6;i++) {c[FNR,i]=$i}; delete a; n=split($5,a,";"); s[FNR]=a[n]; n=FNR} \
 			  NR!=FNR && $17=="Coverage" {for (i=18;i<=NF;i++) cov[i]=$i}
               NR!=FNR && $5=="SNP" {for (i=1;i<=n;i++) { \
 			                if (flag[i]==1) {for (j=c[i,3];j<=c[i,4];j++) if (($j~$2 && length($2)>0) || ($j~$1 && $1+0>0)) {nsnp[i]++}};
 							if ($1==s[i] || $2==s[i]) {for (j=c[i,3];j<=c[i,4];j++) coverage[i]+=cov[j]; flag[i]=1}}} \
-              END {for (i=1;i<=n;i++) if (coverage[i]>0 && c[i,2]>0 && r>0) print i,nsnp[i],c[i,2]+0,nsnp[i]/c[i,2],nsnp[i]/(r*1e-9)/coverage[i],c[i,6]}' foo header.csv variant-not-shared.txt > raw-ages.txt
+              END {for (i=1;i<=n;i++) if (coverage[i]>0 && c[i,2]>0 && r>0) print i,nsnp[i],c[i,2]+0,nsnp[i]/c[i,2],nsnp[i]/(r*1e-9)/coverage[i],c[i,6]}' tree.csv header.csv variant-not-shared.txt > raw-ages.txt
 
 T1=`date +%s.%N`
 DT=`echo "$T1" "$T0" | gawk '{print $1-$2}'`
