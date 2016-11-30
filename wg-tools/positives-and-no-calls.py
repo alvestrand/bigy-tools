@@ -32,26 +32,36 @@ def analyzeBed(file):
 
 
 def makeCall(pos, index_container, bed_calls):
+  """Figure out whether this position is on a segment boundary.
+
+  Between segments = 'nc'; top of segment = 'cbu'; bottom of segment = 'cbl'.
+  Only call in a single-position segment = 'cblu'.
+  index_container contains first segment to be looked at.
+  This function must only be called for increasing values of pos, and with
+  sorted bed_calls."""
+
   call = ';nc'
   for bed_index in xrange(index_container[0], len(bed_calls)):
     pos_pair = bed_calls[bed_index]
     index_container[0] = bed_index
-    if pos_pair[0] > pos:
-      # We have not reached the right segment.
-      continue
     if pos_pair[1] >= pos:
-      # Position is within this segment.
-      if pos_pair[0] == pos_pair[1] and pos_pair[0] == pos:
-        call = ';cblu'
-      elif pos_pair[0] == pos:
-        call = ';cbl'
-      elif pos_pair[1] == pos:
-        call = ';cbu'
+      # Position is before or within this segment.
+      if pos_pair[0] <= pos:
+        # Position is within this segment.
+        if pos_pair[0] == pos_pair[1] and pos_pair[0] == pos:
+          call = ';cblu'
+        elif pos_pair[0] == pos:
+          call = ';cbl'
+        elif pos_pair[1] == pos:
+          call = ';cbu'
+        else:
+          call = ''
       else:
-        call = ''
+        # Position is before this segment.
+        call = ';nc'
       return call
-    # Else the position is after this segment. Continue.
-  return call # No segment found.
+    # If position is after segment, continue.
+  return ';nc' # After end of last segment.
 
 def main():
   parser = argparse.ArgumentParser()
