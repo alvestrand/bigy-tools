@@ -9,3 +9,5 @@ https://www.gnu.org/licenses/gpl.html
 
 By contributing to this repository, you accept that your contributions will be licensed under that license.
 
+Code in the "wg-tools" subdirectory is maintained by Ian McDonald.
+Code in the "hta-tools" subdirectory are experimental tools put together by Harald Alvestrand.
