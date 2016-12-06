@@ -2,93 +2,95 @@
 # Author: Iain McDonald
 # Contributors: Harald Alvestrand
 # Purpose: Reduction and comparison script for Family Tree DNA's BigY data
-# Release: 0.4.3 2016/10/27
+# Release: 0.5.3 2016/11/24
 # For free distribution under the terms of the GNU General Public License, version 3 (29 June 2007)
 # https://www.gnu.org/licenses/gpl.html
 
 # WARNING: This code is not yet ready for clades outside of U106. Please contact the author for details.
 
-# Set up instructions:
+# SET-UP INSTRUCTIONS
+# ===================
+# 1. Install non-native packages:
+# 	Windows WSL BASH users:
+# 	  Non-native package dependences:
+# 	     unzip
+# 	  These must be installed before the script is run, otherwise an error message will be generated. Try:
+# 	     sudo apt-get install unzip
+# 	Additional package dependencies you may need (installed by default under Windows WSL):
+#   	   gawk, sed, python
+#
+# 2. Input data setup
+# (a) Raw BigY data
 #    Create sub-directory called zip, and insert BigY zip files into the folder with the format bigy-<NAME>-<KIT NUMBER>.zip
-#    Create lists of implications, bad SNPs, recurrent SNPs and SNP names in the following files:
+# (b) Data filtering
+#	 The BigY tests (and all others) contain bad data and labels you may wish to change for whatever reason.
+#	 You will need to edit the following files:
 #		implications.txt badlist.txt recurrencies.txt cladenames.txt
-#    The first three lists should obey the following formats:
+#	 You will need to do this iteratively, running the report and tweaking the output,
+#	 in order to form a coherent tree with the labels you want.
+#	(i) Implications (implications.txt). This allows you to correct for no calls and other problems in the data,
+#		by implying that any test positive for a sub-clade must be positive for its parent, e.g.:
 #         7246726 > 23612197 : L48 > Z381
+#		implies that any L48+ test must be Z381+. The labels are not actually used: it relies on the positions
+#		before the colon. These should be in GrCh37 co-ordinates (native to BigY).
+#		The implications list can also include a number of SNPs not found in any BigY test which need to be inserted.
+#		These should have the form:
+#		  ^ 14181107 Z301 G T
+#		The correct implications then need to be put in place to populate these clades.
+#		The implications list is also used to denote positives in the reference genome, using the form:
+#		  < 22157311	P312	C	A
+#		which notes that P312 is positive in the reference genome sequence.
+#	(ii) Bad data (badlist.txt). Many SNPs are simply not correctly called, called inconsistently,
+#		or otherwise not helpful in such a report. They can be filtered out into the list of inconsistent SNPs, e.g.:
 #    	  22436300 : E206
+#	(iii) Recurrent SNPs (recurrencies.txt). Some SNPs occur more than once in the tree. Sometimes this is useful,
+#		sometimes they shouldn't be there. Identify the ones you want to keep using:
 #         20723243 : F552
-#	The first example implies that anyone who is L48+ is also Z381+. Only columns 1 and 3 are used.
-#   The second example states that E206 is an inconsistent SNP. Only the first column is used.
-#   The third example shows the (same) format for recurrent SNPs, indicating F552 is recurrent. Only the first column is used.
-#	The final file, cladenames.txt, allows the substitution of automagically generated SNP names, e.g.:
-#	
+#	(iv) Clade names (cladenames.txt). Automagically generated SNP names can be subsituted, e.g.:
+#		S263 Z381
+#	replaces the default S263 with the more familiar Z381.
 #
-# Windows WSL BASH users:
-#   Non-native package dependences:
-#      unzip
-#   These must be installed before the script is run, otherwise an error message will be generated. Try:
-#      sudo apt-get install unzip
-#
-# Additional package dependencies (installed by default under Windows WSL):
-#      gawk, sed, python
-#
-# Required internal libraries:
-#      positives-and-no-calls.py : This code reads the call status of SNPs from the BED files (Courtesy H.A.)
-#      snps_hg19.csv : Contains SNP names. Can be updated, e.g.: wget http://ybrowse.org/gbrowse2/gff/snps_hg19.csv
-#      age.bed : Contains the regions used to count SNPs for age analysis.
-#      poisson.tbl : A look-up table containing a matrix of Poisson functions
-#      cpoisson.tbl : A look-up table containing 95% confidence intervals for cumulative Poisson statistics
-#
-# Create copy using:
-#      zip redux.zip redux.bash positives-and-no-calls.py snps_hg19.csv age.bed poisson.tbl cpoisson.tbl implications.txt badlist.txt recurrencies.txt cladenames.txt
-#
-# For circa 700 kits, this process takes around 50 minutes on a heavy-duty 2014 laptop.
+# 3. Running the programme.
+# (a) Check the set-up data below.
+#		Initially, flags should be set to:
+#			MAKEREPORT=1
+#			MAKEAGES=0
+#			MAKESHORTREPORT=1
+#			MAKEHTMLREPORT=0
+#			SKIPZIP="0"
+#	  Check the other inputs are what you want them to be too.
+# (b) Run the programme.
+#		./redux.bash
+# 	  For circa 800 kits, this process takes around 25 minutes on a heavy-duty 2014 laptop.
+# (c) Examine the output:
+#		The report will be placed in: report.csv
+#		The short report will be placed in: shortreport.csv
+#		The HTML report will be placed in: report.html
+#		The tree will be output in: final-ages.txt and table.html
+#		A list of SNPs that are out of place will be placed in: warning-list.txt
+#       A list of SNPs that can be merged up into higher clades will be placed in: merge-list.txt
+#       A list of forced positives (called negative, presumed positive): forced-list.txt
+# (d) Filter the input data and repeat.
+#		Identify problematic SNPs in warning-list.txt and exclude them using the files in section 2(b).
+#		Set flags to:
+#			SKIPZIP="3"
+#		and re-run the code (./redux.bash). Rinse and repeat.
+# (e) Once you have placated the warning list, set:
+#			MAKEAGES=1
+#			MAKEHTMLREPORT=1
+#		and re-run the code to perform the age analysis.
+# 	  For circa 800 kits, this process takes another 30 minutes on a heavy-duty 2014 laptop.
+# (f) Once you're done, don't forget to reset:
+#			MAKEREPORT=1
+#			MAKEAGES=0
+#			MAKESHORTREPORT=1
+#			MAKEHTMLREPORT=0
+#			SKIPZIP="0"
+# 4. Enjoy the results.
 
-# Change log:
-# 0.4.3.20161027a - Began encoding clade naming preferences.
-# 0.4.2.20161025b - Completed final ("top-down") age analysis with uncertainties
-# 0.4.1.20161025a - Completed "bottom-up" age analysis with uncertainties
-# 0.4.0.20161002a - Began setup for uncertainty analysis in age calculations
-# 0.3.1.20160929a - EARLY RELEASE 733
-#					Replaced BED file scanning with python script from Harald A.: dramatic speed improvement
-#                   Introduced date information to header
-#					Introduced calculation for age analysis coverage, reported in header
-#					Introduced coverage restriction for age calculation
-#					Introduced full age analysis (no uncertainty ranges yet)
-#					Introduced key at top-left
-#					Introduced clade listings at top of tree (not currently part of output)
-# 0.3.0.20160909a - EARLY RELEASE 728: Added second auto-backup for fresh runs of the script
-#					Introduced number of unique SNPs into age calculation
-#					Introduced "top-down" age normalisation to account for causality
-# 0.2.2.20160905a - EARLY RELEASE 723: Fixed bug in shared SNP counting involving presumed positives being counted twice
-# 0.2.1.20160901a - BETA RELEASE (716): Introduced short report format
-#					Introduced basic age calculation (based solely on SNP counts)
-#					Fixed bug involving the NFILES parameter not being set on an initial run
-#                   Moved backup location to be more intuitive
-# 0.2.0.20160831a - Private release to Harald A.
-#					Introduced SNP counts
-#                   Encoded MAKE* flags to begin age analysis
-#                   Encoded clade identification, tree formation and basic SNP counting
-#					Fixed bug for multiple SNP names
-#					Discontinued use of forced SNP names in favour of the single YBrowse output file
-# 0.1.1.20160822a - BETA RELEASE (710): allowed basic compilation of report.csv
 
-# Wish list:
-# Basic report: include GrCh37<->GrCh38 conversion (using CrossMap?)
-# Basic report: sorting criterion to match FTDNA tree
-# Basic report: parallisation / further optimisation
-# Basic report: test equivalencies of SNPs and indels to remove duplicates and test for any missing clades they form (e.g. FGC564 / 7775535)
-# Basic report: create file to allow swaps of ancestral/derived values on reference chromosome
-# Basic report: add support for SNPs which are derived in the reference sequence
-# Basic report: artificially inserted SNPs to allow clade subdivision on the basis of other data (e.g. Z301, DF98)
-# Basic report: additional columns:
-#					Clade's primary SNP
-#					Tree position
-#				additional rows:
-#					Tree position ("R1b1a1a2...")
-#					Lowest shared clade ("terminal SNP") 
-# HTML report: in the style of Alex W's BigTree
-# General: BigY+YElite+WGS crossover
-
+# USER DEFINED VARIABLES
+# ======================
 # This label will define what your top-level SNP is called out of the (usually large number of) possible shared SNPs.
 TOPSNP="U106"
 
@@ -129,21 +131,102 @@ WARNINGSNPS=1
 #RATE1=0.814
 
 # Rates for standardised age.bed restricted region
-RATE=0.8181
-RATE0=0.7586
-RATE1=0.8767
+RATE=0.8184
+RATE0=0.7588
+RATE1=0.8770
 
 # ZEROAGE gives the date from which ages are computed
 # ERRZEROAGE gives the (95% c.i.) +/- variation in this date for individual testers
-ZEROAGE=1950
-ERRZEROAGE=16
+ZEROAGE=1950.05
+ERRZEROAGE=15.28
+
+# That's it!
+
+# List of required internal libraries:
+#      positives-and-no-calls.py : This code reads the call status of SNPs from the BED files (Courtesy H.A.)
+#      snps_hg19.csv : Contains SNP names. Can be updated, e.g.: wget http://ybrowse.org/gbrowse2/gff/snps_hg19.csv -O snps_hg19.csv
+#      age.bed : Contains the regions used to count SNPs for age analysis.
+#      poisson.tbl : A look-up table containing a matrix of Poisson functions
+#      cpoisson.tbl : A look-up table containing 95% confidence intervals for cumulative Poisson statistics
+#
+# How to make a backup:
+#      zip redux.zip redux.bash positives-and-no-calls.py snps_hg19.csv age.bed poisson.tbl cpoisson.tbl implications.txt badlist.txt recurrencies.txt cladenames.txt
+
+# Change log:
+# 0.5.3.20161124a - Fixed bug with ref. seq. positive replacement
+# 0.5.2.20161113a - Encoded test to check whether branches can be merged up
+#					Encoded test to check and list forced positives
+# 0.5.1.20161107a - Allowed correction of positives in reference sequence
+# 0.5.0.20161102a - EARLY RELEASE 755
+#					Fixed bug: added extra rows to Poisson tables
+#					Improved efficiency of clade naming process
+#					Included support for missing clades due to limited BigY coverage
+#					Re-wrote setup instructions and restructured pre-amble
+# 0.4.3.20161027a - EARLY RELEASE 748
+#					Encoded clade naming preferences.
+# 0.4.2.20161025b - Completed final ("top-down") age analysis with uncertainties
+# 0.4.1.20161025a - Completed "bottom-up" age analysis with uncertainties
+# 0.4.0.20161002a - Began setup for uncertainty analysis in age calculations
+# 0.3.1.20160929a - EARLY RELEASE 733
+#					Replaced BED file scanning with python script from Harald A.: dramatic speed improvement
+#                   Introduced date information to header
+#					Introduced calculation for age analysis coverage, reported in header
+#					Introduced coverage restriction for age calculation
+#					Introduced full age analysis (no uncertainty ranges yet)
+#					Introduced key at top-left
+#					Introduced clade listings at top of tree (not currently part of output)
+# 0.3.0.20160909a - EARLY RELEASE 728: Added second auto-backup for fresh runs of the script
+#					Introduced number of unique SNPs into age calculation
+#					Introduced "top-down" age normalisation to account for causality
+# 0.2.2.20160905a - EARLY RELEASE 723: Fixed bug in shared SNP counting involving presumed positives being counted twice
+# 0.2.1.20160901a - BETA RELEASE (716): Introduced short report format
+#					Introduced basic age calculation (based solely on SNP counts)
+#					Fixed bug involving the NFILES parameter not being set on an initial run
+#                   Moved backup location to be more intuitive
+# 0.2.0.20160831a - Private release to Harald A.
+#					Introduced SNP counts
+#                   Encoded MAKE* flags to begin age analysis
+#                   Encoded clade identification, tree formation and basic SNP counting
+#					Fixed bug for multiple SNP names
+#					Discontinued use of forced SNP names in favour of the single YBrowse output file
+# 0.1.1.20160822a - BETA RELEASE (710): allowed basic compilation of report.csv
+
+# Wish list / priority list:
+# HTML report: write outpu to support output over 1009 files
+# Basic report: support outside of U106 (create file to allow swaps of ancestral/derived values on reference chromosome?)
+# Basic report: intelligent support for "possible" clades [(?!) notation]
+# Basic report: include GrCh37<->GrCh38 conversion (using CrossMap?)
+# Basic report: test equivalencies of SNPs and indels to remove duplicates and test for any missing clades they form (e.g. FGC564 / 7775535)
+# Basic report: sorting criterion to match FTDNA tree
+# Basic report: parallisation / further optimisation
+# Basic report: ensure soft coding for number of prefix rows/columns to allow additional meta-data support
+#				additional columns:
+#					Build 38 position
+#					Clade's primary SNP
+#					Tree position
+#				additional rows:
+#					Tree position ("R1b1a1a2...")
+#					Lowest shared clade ("terminal SNP") 
+# General: support for FGC test results
+# Age analysis: support for archaeological DNA / paper trail limits in the age analysis
+# General: cross-over with STR ages - need:
+#				1. Calibration of STR pipeline
+#				2. Port of STR age pipeline to BASH
+#				3. SNP-STR tree encoding
+#				4. Age analysis merger
 
 # That should be everything you need to set up.
 # Let's do stuff.
+# Please don't edit below here unless you know what you're doing and/or want to screw something up.
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ HERE BE DRAGONS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ================================== a.k.a. START OF CODE =========================================
 
+# Set start date for timing points
 T0=`date +%s.%N`
 
-# ---------------------------------------
+# -----------------------------------------------------------------------------
+#                                   BACKUPS
+# -----------------------------------------------------------------------------
 # Always make a backup
 
 echo "CREATING BACKUP COPIES OF EXISTING FILES..."
@@ -190,6 +273,9 @@ cp clades.csv autobackup2/
 cp tree.txt autobackup2/
 cp raw-ages.txt autobackup2/
 
+# -----------------------------------------------------------------------------
+#                        CHECK NECESSARY FILES EXIST
+# -----------------------------------------------------------------------------
 # Check the folder containing the zip files exists
 if [ ! -d "zip" ]; then
 echo "Input zip folder does not appear to exist. Aborting."
@@ -226,6 +312,9 @@ fi
 # Check whether unzip is installed
 command -v unzip >/dev/null 2>&1 || { echo >&2 "Unzip package not found. Aborting."; exit 1; }
 
+# -----------------------------------------------------------------------------
+#                               UNZIP FILES
+# -----------------------------------------------------------------------------
 # Unzip each folder in turn
 echo "Unzipping..."
 FILECOUNT=0
@@ -250,6 +339,9 @@ echo ""
 # Close SKIPZIP if
 fi
 
+# -----------------------------------------------------------------------------
+#                              EXTRACT RAW DATA
+# -----------------------------------------------------------------------------
 # Skip some more if SKIPZIP set
 if [ "$SKIPZIP" -gt "1" ]; then
 cp header.csv report.csv
@@ -323,6 +415,9 @@ for BEDFILE in ${FILES[@]}; do
 done
 echo ""
 
+# Add "missing" clades from file
+gawk '$1=="^" {print $2"\t"$4"\t"$5}' implications.txt >> variant-list.txt
+
 # Create a unique list of variants
 sort -nk1 variant-list.txt | uniq -c | sort -nk2 | gawk '{n="SNP"} length($3)>1 || length($4)>1 {n="Indel"} {print $2",,"$3","$4","n","$1",,,,,,,,,,,"}' > foo; mv foo variant-list.txt
 
@@ -339,9 +434,56 @@ T1=`date +%s.%N`
 DT=`echo "$T1" "$T0" | gawk '{print $1-$2}'`
 echo "...complete after $DT seconds"
 
+# -----------------------------------------------------------------------------
+#                POST-PROCESSING OF RAW RESULTS FOR ODDITIES
+# -----------------------------------------------------------------------------
+
+# Switch reference positives
+echo "Replacing positives in the reference sequence..."
+SWAPVARIANTLIST=`gawk '$1=="<" {print $2}' implications.txt`
+for VARIANT in ${SWAPVARIANTLIST[@]}; do
+USED=`grep "$VARIANT" variant-list.txt | wc -l`
+if [ "$USED" -gt "0" ]; then
+	echo "   Variant $VARIANT is used and positive in the reference sequence: replacing..."
+	A=""
+	for BEDFILE in ${FILES[@]}; do
+		VCFFILE=`echo "$BEDFILE" | sed 's/.bed/.vcf/'`
+		B=`gawk -v v="$VARIANT" -v a=0 '$1=="chrY" && $2==v && $7=="PASS" {a=$10==0?"+":"-"} END {printf "%s",a}' "$VCFFILE"`
+		A="$A$B"
+	done
+	NPOS=`echo "$A" | awk '{for (i=1;i<=length($1);i++) if (substr($1,i,1)=="+") n++} END {print n}'`
+	gawk '$1!=v {print} $1==v {truevar=$1"."$4"."$3; printf "%s,%s,%s,%s,%s,%s,",$1,$2,$4,$3,$5,npos; for (i=7;i<=17;i++) printf "%s,",$i; for (i=18;i<=NF;i++) {if ($i~";") {split ($i,foo,";"); x=";"foo[2]} else {x=""}; q=substr(a,i-17,1); if (q=="-") o=x; if (q=="+") o=truevar""x; if (q=="0") o=x; printf "%s,",o}; printf "\n"}' v="$VARIANT" a="$A" npos="$NPOS" FS=, OFS=, variant-match.txt > foo; mv foo variant-match.txt
+fi
+done
+
+T1=`date +%s.%N`
+DT=`echo "$T1" "$T0" | gawk '{print $1-$2}'`
+echo "...complete after $DT seconds"
+
+# Merging identical and similar indels
+# The decision has been taken here to merge any indel which contains a part of its neighbour.
+# This mainly affects STR-like mutations, e.g.:
+# 24600444 CTTTC -> C
+# will be treated as the same mutation as
+# 24600443 TCTTT -> T and
+# 24600442 CTCTT -> C (CTCTT has been removed from all of them).
+# However, it will also match:
+# 24600444 CTTTCTTTC -> C, which is a longer version of the STR-like deletion but
+# 24600442 C -> CTCTTTCTTT, which is the STR "lengthening" is not matched.
+# This step has been taken to remove partial matches of STRs where coverage has been broken,
+# and match subsequent mutations that are positive for the first indel.
+# While we're there, clear up a bug that doesn't differentiate between two different mutations at the same position
+echo "Merging identical indels..."
+#sort -nrk1 -t, variant-match.txt | gawk -v a=999999999 '{if ($5=="Indel" && aa[5]=="Indel") {if (a>$1 && aa[3]==substr($3,a-$1+1,length($3-a))""aa[4]) replace=1; if (a==$1 && $3==aa[3] && $4==aa[4]) replace=1; if (replace==0) {print aa[1],aa[2],aa[3],aa[4],"....."}; if (replace==1) {print aa[1],aa[2],aa[3],aa[4],"<<<<<"; print $1,$2,$3,$4,">>>>>"} else {print aa[1],aa[2],aa[3],aa[4]}} else {print aa[1],aa[2],aa[3],aa[4]}} {a=$1;a0=$0; split(a0,aa,","); replace=0}' FS=, OFS=,
+#echo "<<<TEST PHASE>>>"
+sort -nrk1 -t, variant-match.txt | gawk -v a=999999999 '{for (i=18;i<=NF;i++) if ($i~$1 && $i!~$1"."$3"."$4) {split(i,is,";"); $i=is[2]}} {if ($5=="Indel" && aa[5]=="Indel") {if (a>$1 && aa[3]==substr($3,a-$1+1,length($3-a))""aa[4]) replace=1; if (a==$1 && (($3~aa[3] && $4~aa[4]) || (aa[3]~$3 && aa[4]~$4))) replace=1; if (replace==0) {donothing=0}; if (replace==1) {n=0; for (i=18;i<=NF;i++) {if (aa[i]~aa[1] && $i!~$1) {$i="(I)"$1"."$3"."$4$i}; if ($i~$1) n++; $6=n}} else {print a0,last}} else {print a0}} {last=replace; a=$1;a0=$0; split(a0,aa,","); replace=0}' FS=, OFS=, > foo
+mv foo variant-match.txt
+
 # Close SKIPZIP if statement
 fi
 cp variant-match.txt variant-output.txt
+
+echo "Inserting presumed positives and recurrent SNPs..."
 
 # Insert presumed positives
 gawk -v FS=, -v OFS=, 'NR==FNR {split($0,u," ");a[NR]=u[1];b[NR]=u[3];n++} \
@@ -354,7 +496,11 @@ mv foo variant-output.txt
 # Identify recurrent SNPs
 gawk -v FS=, -v OFS=, 'NR==FNR {split($0,u," ");a[NR]=u[1];n++} NR!=FNR {for (j=1;j<=n;j++) if (a[j]==$1) {$2="(R);";for (i=18;i<=NF;i++) if ($i~$1 || $i~/(?+)/) $i="(R);"$i}; print}' recurrencies.txt variant-output.txt > foo
 mv foo variant-output.txt
-	 
+
+T1=`date +%s.%N`
+DT=`echo "$T1" "$T0" | gawk '{print $1-$2}'`
+echo "...complete after $DT seconds"
+ 
 # Generate SNP stats
 echo "Generating stats and segregating for SNPs..."
 NFILES=`head -1 header.csv | gawk -v FS=, '{print NF-17}'`
@@ -365,11 +511,16 @@ gawk -v FS=, -v f="$NFILES" '{cbl=cbu=cblu=presp=nn=nc=cblp=cbln=cbup=cbun=cblup
 							 for (i=1;i<=NF;i++) printf "%s,",$i; printf "\n"}' variant-output.txt > foo
 mv foo variant-output.txt
 
+# -----------------------------------------------------------------------------
+#                      DATA CATEGORISATION (FORM TABLES)
+# -----------------------------------------------------------------------------
+
 # Remove common SNPs
 # SNPs are declared common if the number of (presumed) positives, no calls, and coverage boundaries for that SNP is greater than or equal to the number of input files (i.e. there are no definite negatives)
 # The number should never be greater than f, except in circumstances where you delete one of the input files without re-running the entire process again!
-gawk -v FS=, -v f="$NFILES" '$6+$9+$11+$13+$15>=f' variant-output.txt > variant-shared.txt
-gawk -v FS=, -v f="$NFILES" '$6+$9+$11+$13+$15<f' variant-output.txt > variant-not-shared.txt
+# The exception to this process is the artificially added SNPs, which should all be no calls (and if they aren't all no calls, you maybe shouldn't be using them!)
+gawk -v FS=, -v f="$NFILES" '$6+$9+$11+$13+$15>=f && $9!=f' variant-output.txt > variant-shared.txt
+gawk -v FS=, -v f="$NFILES" '$6+$9+$11+$13+$15<f || $9==f' variant-output.txt > variant-not-shared.txt
 
 # Remove bad SNPs
 gawk -v FS=, 'NR==FNR {grch[NR]=$1;n++} NR!=FNR {flag=0; for (i=1;i<=n;i++) if ($1==grch[i]) flag=1; if (flag==1) print}' badlist.txt variant-not-shared.txt > variant-bad.txt
@@ -379,6 +530,10 @@ mv foo variant-not-shared.txt
 T1=`date +%s.%N`
 DT=`echo "$T1" "$T0" | gawk '{print $1-$2}'`
 echo "...complete after $DT seconds"
+
+# -----------------------------------------------------------------------------
+#                                DATA ORDERING
+# -----------------------------------------------------------------------------
 
 # Initial vertical sorting of SNPs
 echo "Sorting rows/columns..."
@@ -417,6 +572,9 @@ T1=`date +%s.%N`
 DT=`echo "$T1" "$T0" | gawk '{print $1-$2}'`
 echo "...complete after $DT seconds"
 
+# -----------------------------------------------------------------------------
+#                               NAMES TO SNPS
+# -----------------------------------------------------------------------------
 
 # Replace SNP names
 # The previous set of names is used if SKIPZIP is set to above 2
@@ -424,7 +582,9 @@ echo "Introducing SNP names..."
 if [ "$SKIPZIP" -le "2" ]; then
 	gawk -v FS=, -v OFS=, 'NR>1 {print $4"."$11"."$12,$9}' snps_hg19.csv | sed 's/"//g' | sort -nk1,1 -t. | gawk -v FS=, -v OFS=, '$1==a {b=b"/"$2; print "...",$0} $1!=a {print a,b;a=$1;b=$2} END {print}' > snp-names.csv
 	gawk -v FS=, '{print $1,$1"."$3"."$4}' variant-output.txt | sort -nk1 | gawk '{print $2}' > foo
-	gawk -v FS=, 'NR==FNR {a[FNR]=$1;na++} NR!=FNR {b[FNR]=$1;bb[FNR]=$0;nb++} END {ij=1; for (i=1;i<=na;i++) {for (j=ij;j<=nb;j++) {if (a[i]==b[j]) {print bb[j]; ij=j; break}; xa=substr(a[i],1,8); xb=substr(b[i],1,8); if (xb+0>xa+0) {break}}}}' foo snp-names.csv > snp-used.csv
+	#gawk -v FS=, 'NR==FNR {a[FNR]=$1;na++} NR!=FNR {b[FNR]=$1;bb[FNR]=$0;nb++} END {ij=1; for (i=1;i<=na;i++) {for (j=ij;j<=nb;j++) {if (a[i]==b[j]) {print bb[j]; ij=j; break}; xa=substr(a[i],1,8); xb=substr(b[i],1,8); if (xb+0>xa+0) {break}}}}' foo snp-names.csv > snp-used.csv
+	join -1 1 -2 1 -t, <(sort -k1,1 -t, foo) <(sort -k1,1 -t, snp-names.csv) > snp-used.csv
+	sort -nk1,1 -t. snp-used.csv > bar; mv bar snp-used.csv
 fi
 gawk -v FS=, -v OFS=, 'NR==FNR {s[NR,1]=$1;s[NR,2]=$2;split($2,arr," ");s[NR,3]=arr[1];n=NR} NR!=FNR {m=$1"."$3"."$4; for (i=1;i<=n;i++) if (s[i,1]==m) {$2=$2""s[i,2]; gsub(m,s[i,3],$0)}; print}' snp-used.csv variant-not-shared.txt > foo; mv foo variant-not-shared.txt
 gawk -v FS=, -v OFS=, 'NR==FNR {s[NR,1]=$1;s[NR,2]=$2;split($2,arr," ");s[NR,3]=arr[1];n=NR} NR!=FNR {m=$1"."$3"."$4; for (i=1;i<=n;i++) if (s[i,1]==m) {$2=$2""s[i,2]; gsub(m,s[i,3],$0)}; print}' snp-used.csv variant-shared.txt > foo; mv foo variant-shared.txt
@@ -433,6 +593,10 @@ gawk -v FS=, -v OFS=, 'NR==FNR {s[NR,1]=$1;s[NR,2]=$2;split($2,arr," ");s[NR,3]=
 T1=`date +%s.%N`
 DT=`echo "$T1" "$T0" | gawk '{print $1-$2}'`
 echo "...complete after $DT seconds"
+
+# -----------------------------------------------------------------------------
+#                           STATISTICS GENERATION
+# -----------------------------------------------------------------------------
 
 # Count the number of SNPs and indels, count the singletons, and count the singletons for any later age analysis
 echo "Creating SNP counts..."
@@ -452,6 +616,10 @@ gawk -v FS=, -v OFS=, -v us="$U106SNPS" -v ui="$U106INDELS" -v ss="$SINGSNPS" -v
 T1=`date +%s.%N`
 DT=`echo "$T1" "$T0" | gawk '{print $1-$2}'`
 echo "...complete after $DT seconds"
+
+# -----------------------------------------------------------------------------
+#                               FORM REPORT
+# -----------------------------------------------------------------------------
 
 # Collating file
 echo "Collating file..."
@@ -486,7 +654,9 @@ echo "Report made after $DT seconds"
 fi
 
 
-# ---------------------------------------
+# -----------------------------------------------------------------------------
+#                               TREE STRUCTURE
+# -----------------------------------------------------------------------------
 # Calculate the tree strcture whatever happens, because it's quick and it's useful for later reports
 
 echo "CALCULATING TREE STRUCTURE..."
@@ -557,7 +727,44 @@ echo "Tree complete after $DT seconds"
 
 
 
-# ---------------------------------------
+# -----------------------------------------------------------------------------
+#                       FLAG CLADES THAT CAN BE MERGED
+# -----------------------------------------------------------------------------
+echo "Identifying clades that can be merged up..."
+awk 'NR==FNR {for (i=1;i<=NF;i++) t[NR,i]=$i; n[NR]=split($5,x,";"); for (j=1;j<=n[NR];j++) s[NR,j]=x[j]; nc=FNR} NR!=FNR {for (i=1;i<=NF;i++) if (i<18) {d[FNR,i]=$i} else {d[FNR,i]=length($i)>0?1:0}; ns=FNR} END {for (i=1;i<=nc;i++) for (j=1;j<i;j++) if (t[j,7]==substr(t[i,7],1,length(t[i,7])-2)) parent[i]=j; for (i=1;i<=nc;i++) for (j=1;j<=n[i];j++) {for (k=1;k<=ns;k++) if (d[k,1]==s[i,j] || d[k,2]==s[i,j]) {nneg=0; for (l=t[parent[i],3];l<=t[parent[i],4];l++) if ((l<t[i,3] || l>t[i,4]) && d[k,l]==0) {nneg++}; if (nneg==0) print s[i,j],"can be merged into",t[parent[i],8]}}}' FS=, tree.csv variant-not-shared.txt > merge-list.txt
+
+MERGESNPS=`wc -l warning-list.txt | gawk '{print $1}'`
+if [ "$MERGESNPS" -gt "0" ]; then
+echo "$MERGESNPS mutations can be merge higher in the tree."
+echo "This list will include any manually inserted SNPs."
+echo "Set SKIPZIP=3 and fix them using implications.txt."
+echo "These mutations are recorded in merge-list.txt."
+fi
+
+T1=`date +%s.%N`
+DT=`echo "$T1" "$T0" | gawk '{print $1-$2}'`
+echo "Tree complete after $DT seconds"
+
+
+
+# -----------------------------------------------------------------------------
+#          IDENTIFY FORCED POSITIVES: CLADES THAT SHOULDN'T BE MERGED?
+# -----------------------------------------------------------------------------
+# Looks through for cells just containing "(?+)", which are called negative by
+# FTDNA, but which are forced positive by earlier steps. These may be ok, but
+# if you are making a negative into a positive, you'd best be sure to check!
+echo "Identifying forced positives..."
+
+gawk '{for (i=18;i<=NF;i++) if ($i=="(?+)") print $1"."$3"."$4,$2,"Col:",i}' FS=, variant-not-shared.txt > forced-list.txt
+
+T1=`date +%s.%N`
+DT=`echo "$T1" "$T0" | gawk '{print $1-$2}'`
+echo "Tree complete after $DT seconds"
+
+
+# -----------------------------------------------------------------------------
+#                          INSERT TREE INTO REPORT
+# -----------------------------------------------------------------------------
 # Insert tree into report (if being made)
 #if [ "$MAKEREPORT" -gt "0" ]; then
 #head -1 report.csv > foo
@@ -571,7 +778,9 @@ echo "Tree complete after $DT seconds"
 #fi
 
 
-# ---------------------------------------
+# -----------------------------------------------------------------------------
+#                               SHORT REPORT
+# -----------------------------------------------------------------------------
 # Make a short version of the report, compressing the information in singletons
 
 if [ "$MAKESHORTREPORT" -gt "0" ]; then
@@ -596,7 +805,9 @@ cat variant-bad.txt >> short-report.csv
 # Close MAKESHORTREPORT if statement
 fi
 
-# ---------------------------------------
+# -----------------------------------------------------------------------------
+#                               HTML REPORT
+# -----------------------------------------------------------------------------
 # Make an HTML version of the report
 
 if [ "$MAKEHTMLREPORT" -gt "0" ]; then
@@ -629,7 +840,9 @@ echo "</HTML>" >> report.html
 # Close MAKEHTMLREPORT if statement
 fi
 
-# ---------------------------------------
+# -----------------------------------------------------------------------------
+#                           INITIAL AGE ANALYSIS
+# -----------------------------------------------------------------------------
 # Now let's move on to the age estimation
 
 if [ "$MAKEAGES" -gt "0" ]; then
@@ -679,6 +892,9 @@ T1=`date +%s.%N`
 DT=`echo "$T1" "$T0" | gawk '{print $1-$2}'`
 echo "...complete after $DT seconds"
 
+# -----------------------------------------------------------------------------
+#                               TREE MERGING
+# -----------------------------------------------------------------------------
 echo "Consolidating ages..."
 
 # This step is a complicated mess of stastistical trickery that aims to better account for two things:
@@ -763,9 +979,9 @@ SINGLES=`gawk -v FS=, '$17=="...for age analysis" {n++} n==2 {print; n++}' repor
 gawk -v rate="$RATE" -v r0="$RATE0" -v r1="$RATE1" -v max="$MAXDEPTH" -v singles="$SINGLES" -v coverages="$COVERAGE" -v ciprob=0.95 -v maxt=10000 -v dt=10 '\
 	NR==1 {p0=(1-ciprob)/2; p1=1-p0}; \
 	NR==1 {split(coverages,coverage,","); split(singles,single,",")} \
-	NR==FNR {prob[NR]=$1; pois0[NR]=$2; pois1[NR]=$3/0.3678794}; \
+	NR==FNR {prob[NR]=$1; pois0[NR]=$2; pois1[NR]=$3/0.3678794; pmax=NR-1}; \
 	NR!=FNR {r[NR]=rate; for (i=1;i<=NF;i++) inp[NR,i]=$i; n=split(inp[NR,12],clades,">"); parent[NR]=clades[n-1]; clade[NR]=clades[n]} \
-	END {inp[1,9]=18; inp[1,13]=0; parent[1]="."; for (i=max;i>=1;i--) for (j=1;j<=NR;j++) if (inp[j,8]==i) \
+	END {printf "Step 1/4 "; inp[1,9]=18; inp[1,13]=0; parent[1]="."; for (i=max;i>=1;i--) for (j=1;j<=NR;j++) if (inp[j,8]==i) \
 	         {nsubs=0; delete kprob; sage=sweight=0; age2n[j]=0; age2[j]=age2p[j]=maxt; \
 			  for (k=inp[j,9];k<=inp[j,10];k++) {flag[k]=0; \
 			     for (l=1;l<=NR;l++) {if (inp[l,9]>=inp[j,9] && inp[l,10]<=inp[j,10] && inp[l,8]+0==inp[j,8]+1 && k>=inp[l,9] && k<=inp[l,10]) \
@@ -773,25 +989,36 @@ gawk -v rate="$RATE" -v r0="$RATE0" -v r1="$RATE1" -v max="$MAXDEPTH" -v singles
 						{flag[k]=2; nsubs++; subatlevel=inp[l,13]+0; delete kprob0; delete kprob1; \
 						nt=0; for (t=0;t<=maxt;t+=dt) {nt++; kprob0[nt]=subpdf[l,nt]}; \
 						nt=0; for (t=0;t<=maxt;t+=dt) {nt++; nexpect=t*inp[l,6]*rate/1e9; \
-							if (subatlevel==0) {plookup=int(nexpect*100)+1; if (plookup<1 || plookup>1000) {kprob1[nt]=0} else 
+							if (subatlevel==0) {plookup=int(nexpect*100)+1; if (plookup<1 || plookup>pmax) {kprob1[nt]=0} else 
 								{kprob1[nt]=(nexpect-prob[plookup])/(prob[plookup+1]-prob[plookup])*(pois0[plookup+1]-pois0[plookup])+pois0[plookup]}} \
-							else if (subatlevel==1) {plookup=int(nexpect*100)+1; if (plookup<1 || plookup>1000) {kprob1[nt]=0} else 
+							else if (subatlevel==1) {plookup=int(nexpect*100)+1; if (plookup<1 || plookup>pmax) {kprob1[nt]=0} else 
 								{kprob1[nt]=(nexpect-prob[plookup])/(prob[plookup+1]-prob[plookup])*(pois1[plookup+1]-pois1[plookup])+pois1[plookup]}} \
-							else {plookup=int(nexpect/subatlevel*100)+1; if (plookup<1 || plookup>1000) {kprob1[nt]=0} else
+							else {plookup=int(nexpect/subatlevel*100)+1; if (plookup<1 || plookup>pmax) {kprob1[nt]=0} else
 								{kprob1[nt]=(nexpect/subatlevel-prob[plookup])/(prob[plookup+1]-prob[plookup])*(pois1[plookup+1]**subatlevel-pois1[plookup]**subatlevel)+pois1[plookup]**subatlevel}}}; \
 						nt=0; for (t=0;t<=maxt;t+=dt) {nt++; nt1=0; if (kprob0[nt]!=0) for (t1=0;t1<=maxt-t;t1+=dt) {nt1++; nt0=nt+nt1-1; kprob[nsubs,nt0]+=kprob0[nt]*kprob1[nt1]}}}}}; \
 				 if (k+0>0 && flag[k]==0) {nsubs++; \
 					nt=0; for (t=0;t<=maxt;t+=dt) {nt++; nexpect=t*coverage[k]*rate/1e9; \
-					if (single[k]==0) {plookup=int(nexpect*100)+1; if (plookup<1 || plookup>1000) {kprob[nsubs,nt]=0} else 
+					if (single[k]==0) {plookup=int(nexpect*100)+1; if (plookup<1 || plookup>pmax) {kprob[nsubs,nt]=0} else 
 						{kprob[nsubs,nt]=(nexpect-prob[plookup])/(prob[plookup+1]-prob[plookup])*(pois0[plookup+1]-pois0[plookup])+pois0[plookup]}} \
-					else if (single[k]==1) {plookup=int(nexpect*100)+1; if (plookup<1 || plookup>1000) {kprob[nsubs,nt]=0} else 
+					else if (single[k]==1) {plookup=int(nexpect*100)+1; if (plookup<1 || plookup>pmax) {kprob[nsubs,nt]=0} else 
 						{kprob[nsubs,nt]=(nexpect-prob[plookup])/(prob[plookup+1]-prob[plookup])*(pois1[plookup+1]-pois1[plookup])+pois1[plookup]}} \
-					else {plookup=int(nexpect/single[k]*100)+1; if (plookup<1 || plookup>1000) {kprob[nsubs,nt]=0} else
+					else {plookup=int(nexpect/single[k]*100)+1; if (plookup<1 || plookup>pmax) {kprob[nsubs,nt]=0} else
 						{kprob[nsubs,nt]=(nexpect/single[k]-prob[plookup])/(prob[plookup+1]-prob[plookup])*(pois1[plookup+1]**single[k]-pois1[plookup]**single[k])+pois1[plookup]**single[k]}}}}}; \
 				 normprob=0; nt=0; for (t=0;t<=maxt;t+=dt) {nt++; subpdf[j,nt]=1; for (m=1;m<=nsubs;m++) {subpdf[j,nt]*=kprob[m,nt]}; normprob+=subpdf[j,nt]}; \
 				 nt=0; for (t=0;t<=maxt;t+=dt) {nt++; subpdf[j,nt]/=normprob}; \
-				 }; \
-			 for (i=2;i<=max;i++) for (j=1;j<=NR;j++) if (inp[j,8]==i) {for (l=1;l<=NR;l++) if (clade[l]==parent[j]) jparent=l; \
+				 printf "."}; \
+			 print "\nStep 2/4"; \
+			 for (i=1;i<=max;i++) for (j=1;j<=NR;j++) if (inp[j,8]==i) \
+				{cumprob=0; nt=0; for (t=0;t<=maxt;t+=dt) {nt++; lastprob=cumprob; cumprob+=subpdf[j,nt]; \
+					if (cumprob>p0 && lastprob<=p0) buage2n[j]=(p0-lastprob)/(cumprob-lastprob)*dt+(t-dt); \
+					if (cumprob>0.5 && lastprob<=0.5) buage2[j]=(0.5-lastprob)/(cumprob-lastprob)*dt+(t-dt); \
+					if (cumprob>p1 && lastprob<=p1) buage2p[j]=(p1-lastprob)/(cumprob-lastprob)*dt+(t-dt)}; \
+					buage2n[j]*=rate/r1; age2p[j]*=rate/r0; \
+					printf "%i ",i > "ages-bottom-up.txt"; if (length(parent[j])==0) parent[j]="."; for (n=1;n<=13;n++) printf "%s ",inp[j,n] > "ages-bottom-up.txt";
+					printf "%s %s %s %s %s %s | ",parent[j],clade[j],age[j],age2n[j],age2[j],age2p[j] > "ages-bottom-up.txt"; \
+				nt=0; for (t=0;t<=maxt;t+=dt) {nt++; printf "%s ",subpdf[j,nt] > "ages-bottom-up.txt"}; printf "\n" > "ages-bottom-up.txt"}
+			printf "Step 3/4 "; \
+			for (i=2;i<=max;i++) for (j=1;j<=NR;j++) if (inp[j,8]==i) {for (l=1;l<=NR;l++) if (clade[l]==parent[j]) jparent=l; \
 				nt=0; for (t=0;t<=maxt;t+=dt) {nt++; parentpdf[nt]=subpdf[jparent,nt]}; \
 				subatlevel=inp[j,13]+0; delete kprob1; nt=0; for (t=0;t<=maxt;t+=dt) {nt++; nexpect=t*inp[j,6]*rate/1e9; \
 				if (subatlevel==0) {plookup=int(nexpect*100)+1; if (plookup<1 || plookup>1000) {kprob1[nt]=0} else 
@@ -803,15 +1030,27 @@ gawk -v rate="$RATE" -v r0="$RATE0" -v r1="$RATE1" -v max="$MAXDEPTH" -v singles
 				delete tprob; nt=0; for (t=0;t<=maxt;t+=dt) {nt++; nt1=0; if (kprob0[nt]!=0) for (t1=0;t1<=t;t1+=dt) {nt1++; nt0=nt-nt1-1; if (nt0>0) tprob[nt0]+=parentpdf[nt]*kprob1[nt1]}}; \
 				nt=0; for (t=0;t<=maxt;t+=dt) {nt++; subpdf[j,nt]*=tprob[nt]};
 				normprob=0; nt=0; for (t=0;t<=maxt;t+=dt) {nt++; normprob+=subpdf[j,nt]}; \
-				nt=0; for (t=0;t<=maxt;t+=dt) {nt++; subpdf[j,nt]/=normprob}}; \
+				nt=0; for (t=0;t<=maxt;t+=dt) {nt++; subpdf[j,nt]/=normprob}; \
+				printf "."}; \
+			 print "\nStep 4/4"; \
 			 for (i=1;i<=max;i++) for (j=1;j<=NR;j++) if (inp[j,8]==i) \
 				{cumprob=0; nt=0; for (t=0;t<=maxt;t+=dt) {nt++; lastprob=cumprob; cumprob+=subpdf[j,nt]; \
 					if (cumprob>p0 && lastprob<=p0) age2n[j]=(p0-lastprob)/(cumprob-lastprob)*dt+(t-dt); \
 					if (cumprob>0.5 && lastprob<=0.5) age2[j]=(0.5-lastprob)/(cumprob-lastprob)*dt+(t-dt); \
 					if (cumprob>p1 && lastprob<=p1) age2p[j]=(p1-lastprob)/(cumprob-lastprob)*dt+(t-dt)}; \
 					age2n[j]*=rate/r1; age2p[j]*=rate/r0; \
-					printf "%i ",i; if (length(parent[j])==0) parent[j]="."; for (n=1;n<=13;n++) printf "%s ",inp[j,n];; printf "%s %s %s %s %s %s | ",parent[j],clade[j],age[j],age2n[j],age2[j],age2p[j]; \
-				nt=0; for (t=0;t<=maxt;t+=dt) {nt++; printf "%s ",subpdf[j,nt]}; printf "\n"}}' poisson.tbl raw-ages-err.txt > final-ages.txt
+					printf "%i ",i > "final-ages.txt"; if (length(parent[j])==0) parent[j]="."; for (n=1;n<=13;n++) printf "%s ",inp[j,n] > "final-ages.txt";
+					printf "%s %s %s %s %s %s | ",parent[j],clade[j],age[j],age2n[j],age2[j],age2p[j] > "final-ages.txt"; \
+				nt=0; for (t=0;t<=maxt;t+=dt) {nt++; printf "%s ",subpdf[j,nt] > "final-ages.txt"}; printf "\n" > "final-ages.txt"}}' poisson.tbl raw-ages-err.txt
+
+T1=`date +%s.%N`
+DT=`echo "$T1" "$T0" | gawk '{print $1-$2}'`
+echo "...complete after $DT seconds"
+
+# -----------------------------------------------------------------------------
+#                               REPORT WRITING
+# -----------------------------------------------------------------------------
+echo "Writing final age table..."
 
 # Create the final HTML table
 # 	Strip out the information, discard the PDF
@@ -820,7 +1059,7 @@ gawk -v rate="$RATE" -v r0="$RATE0" -v r1="$RATE1" -v max="$MAXDEPTH" -v singles
 #	Sort into "ISOGG" order
 #	Encode HTML
 gawk '{print $1}' FS="|" final-ages.txt | \
-gawk -v z="$ZEROAGE" -v ez="$ERRZEROAGE" -v OFS="\t" '{print $12,$16,z+ez-int($17+.5),z-int($18+.5),z-ez-int($19+.5),$1}' | \
+gawk -v z="$ZEROAGE" -v ez="$ERRZEROAGE" -v OFS="\t" '{print $12,$16,int(z+ez-$17+.5),int(z-$18+.5),int(z-ez-$19+.5),$1}' | \
 gawk '$3<1 {$3-=2; $3=-$3" BC"} $4<1 {$4-=2; $4=-$4" BC"} $5<1 {$5-=2; $5=-$5" BC"} $3!~"BC" {$3=$3" AD"} $4!~"BC" {$4=$4" AD"} $5!~"BC" {$5=$5" AD"} {print}' FS='\t' OFS='\t' | \
 sort -rk1 | \
 gawk 'NR==1 {print "<HTML><BODY><TABLE border=\"0\">"; print "<TR><TH>Clade\t<TH>Best guess<TH>95% confidence interval"} {printf "<TR><TD><SPAN style=\"display:inline-block; width:%ipx\"></SPAN>%s \t<TD>%s\t<TD>(%s &mdash; %s)\n",$6*10,$2,$4,$5,$3} END {print "</TABLE></BODY></HTML>"}' FS='\t' > table.html
