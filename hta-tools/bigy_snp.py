@@ -62,19 +62,25 @@ class KitCollection(object):
     return candidates
 
   def inconsistent_snps(self):
-    """SNPs that vary over this set."""
+    """SNPs that vary over this set.
+
+    An SNP must be explicitly present in some and absent in others;
+    kits with only no-calls or cbl/cbu + 1 value are skipped."""
     candidates = self.snps() - self.consistent_snps()
     verified_inconsistent = set()
+    verified_present = set()
+    verified_absent = set()
     for person in self.persons.values():
       # If we know an SNP is inconsistent, don't look at it again.
       candidates.difference_update(verified_inconsistent)
       for snp in candidates:
         if not snp in person:
           # This means a negative call on the SNP, not just a no-call.
-          verified_inconsistent.add(snp)
+          verified_absent.add(snp)
+        elif person[snp] == snp:
+          verified_present.add(snp)
+        verified_inconsistent = (verified_present & verified_absent)
     return verified_inconsistent
-    # Old - this is still wrong for the case of conflicts despite NCs.
-    #return self.snps() - self.consistent_snps() - self.uncertain_snps()
 
   def subclade_candidates(self, minimum_subclade=1):
     """SNPs that may be first-level subclades.
@@ -188,11 +194,16 @@ def load_spreadsheet(filename):
         break
       if row[1]:
         name = row[1].split(' ')[0]
+        if ';' in name:
+          _, name = name.split(';');
       else:
         name = position
       for pos in xrange(4,len(row)):
         if row[pos]:
-          #print 'set', pos, kitnames[pos], name
-          kits[kitnames[pos]][name] = row[pos]
+          status = row[pos]
+          if '(R);' in status:
+            pieces = status.split(';')
+            status = pieces[1]
+          kits[kitnames[pos]][name] = status
 
   return KitCollection(kits)

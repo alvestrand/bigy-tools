@@ -1,0 +1,42 @@
+#!/usr/bin/python
+#
+# List the named kits,
+# giving the SNPs that differ over the collection.
+#
+import argparse
+import collections
+import csv
+import sys
+
+import bigy_snp
+
+def main():
+  parser = argparse.ArgumentParser()
+  parser.add_argument('kits', nargs='+')
+  parser.add_argument('--file', default='bigy-768-short.csv')
+  args = parser.parse_args()
+  kitset = bigy_snp.load_spreadsheet(args.file)
+  filtered = bigy_snp.KitCollection({})
+  
+  for kit in args.kits:
+    filtered.add_person(kit, kitset.persons[kit])
+
+  snps_of_interest = filtered.inconsistent_snps()
+  print '%-10s' % ' ',
+  for personkey in filtered.persons.keys():
+    print ' %-6s' % personkey,
+  print
+  for snpkey in snps_of_interest:
+    print '%-10s ' % snpkey,
+    for personkey in filtered.persons.keys():
+      if snpkey in filtered.persons[personkey]:
+        if filtered.persons[personkey][snpkey] == snpkey:
+          print '%-6s' % 'Y',
+        else:
+          print '%-6s' % filtered.persons[personkey][snpkey],
+      else:
+        print '%-6s' % '-',
+    print ''
+
+if __name__ == '__main__':
+  sys.exit(main())

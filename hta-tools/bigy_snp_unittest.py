@@ -52,6 +52,17 @@ class TestBigY(unittest.TestCase):
     self.assertEquals(1, len(collection.consistent_snps()))
     self.assertEquals(3, len(collection.inconsistent_snps()))
 
+  def test_only_nocall(self):
+    collection = bigy_snp.KitCollection(test_tree())
+    # Add a new mutation that is only present as a no-call.
+    # It should be entirely ignored.
+    collection.add_person('uncertain', {'mut1': 'mut1', 'newmut': 'nocall'})
+    self.assertEquals(5, collection.count())
+    self.assertEquals(1, len(collection.uncertain_snps()))
+    # The uncertain one shouldn't change any of the other counts.
+    self.assertEquals(1, len(collection.consistent_snps()))
+    self.assertEquals(3, len(collection.inconsistent_snps()))
+
   def test_split(self):
     collection = bigy_snp.KitCollection(test_tree())
     filtered = collection.filter('mut2')
