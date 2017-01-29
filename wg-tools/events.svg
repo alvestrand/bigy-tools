@@ -1,0 +1,554 @@
+<rect x="@-3300@" y="@0@" width="@500@" height="@16@" style="fill:rgb(192,255,192);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Yamnaya culture in Dniper-Don valley</title></rect>
+<text x="@-3050@" y="@12@" font-family="Verdana" style="fill:rgb(0,192,0)" text-anchor="middle">Yamnaya</text>
+<rect x="@-2800@" y="@0@" width="@600@" height="@16@" style="fill:rgb(192,224,160);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Catacomb culture in Ukraine, also Poltavka, Potapovka</title></rect>
+<text x="@-2500@" y="@12@" font-family="Verdana" style="fill:rgb(32,128,0)" text-anchor="middle">Catacomb culture</text>
+<rect x="@-2200@" y="@0@" width="@400@" height="@16@" style="fill:rgb(192,196,128);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Multi-cordoned Ware Culture (MVK)</title></rect>
+<text x="@-2000@" y="@12@" font-family="Verdana" style="fill:rgb(32,96,0)" text-anchor="middle">Mnogovalikovaya</text>
+<rect x="@-1800@" y="@0@" width="@600@" height="@16@" style="fill:rgb(192,160,96);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Srubna culture</title></rect>
+<text x="@-1500@" y="@12@" font-family="Verdana" style="fill:rgb(32,96,0)" text-anchor="middle">Srubna culture</text>
+<rect x="@-1200@" y="@0@" width="@550@" height="@16@" style="fill:rgb(192,128,64);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Likely transition to Scythian cultures</title></rect>
+<text x="@-0930@" y="@12@" font-family="Verdana" style="fill:rgb(32,64,0)" text-anchor="middle"></text>
+<rect x="@-0650@" y="@0@" width="@320@" height="@16@" style="fill:rgb(192,96,32);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Scythian cultures</title></rect>
+<text x="@-0930@" y="@12@" font-family="Verdana" style="fill:rgb(32,64,0)" text-anchor="middle">Scythians</text>
+<rect x="@-0330@" y="@0@" width="@568@" height="@16@" style="fill:rgb(192,96,0);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Sarmatians cultures</title></rect>
+<text x="@-0050@" y="@12@" font-family="Verdana" style="fill:rgb(32,64,0)" text-anchor="middle">Sarmatians</text>
+<rect x="@00238@" y="@0@" width="@137@" height="@16@" style="fill:rgb(160,96,255);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Gothic domination of Black Sea</title></rect>
+<text x="@00300@" y="@12@" font-family="Verdana" style="fill:rgb(0,0,128)" text-anchor="middle">Goths</text>
+<rect x="@00375@" y="@0@" width="@94@" height="@16@" style="fill:rgb(255,0,128);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Hun invasion</title></rect>
+<text x="@00420@" y="@12@" font-family="Verdana" style="fill:rgb(128,0,0)" text-anchor="middle">Huns</text>
+<rect x="@00469@" y="@0@" width="@166@" height="@16@" style="fill:rgb(192,64,0);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Slavic tribes</title></rect>
+<text x="@00550@" y="@12@" font-family="Verdana" style="fill:rgb(64,0,0)" text-anchor="middle">Slavs</text>
+<rect x="@00635@" y="@0@" width="@247@" height="@16@" style="fill:rgb(160,32,0);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Bulgar tribes / Khazars in east</title></rect>
+<text x="@00760@" y="@12@" font-family="Verdana" style="fill:rgb(32,0,0)" text-anchor="middle">Bulgars/Khazars</text>
+<rect x="@00882@" y="@0@" width="@287@" height="@16@" style="fill:rgb(192,0,0);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Kievan Rus</title></rect>
+<text x="@01030@" y="@12@" font-family="Verdana" style="fill:rgb(64,0,0)" text-anchor="middle">Kiev Rus</text>
+<rect x="@01169@" y="@0@" width="@71@" height="@16@" style="fill:rgb(160,0,0);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Regional principalities</title></rect>
+<text x="@01200@" y="@12@" font-family="Verdana" style="fill:rgb(64,0,0)" text-anchor="middle"></text>
+<rect x="@01240@" y="@0@" width="@283@" height="@16@" style="fill:rgb(255,192,0);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Domination by Mongols / Golden Horde / Lithuania in north-west</title></rect>
+<text x="@01380@" y="@12@" font-family="Verdana" style="fill:rgb(128,64,0)" text-anchor="middle">Mongols &amp;c.</text>
+<rect x="@01523@" y="@0@" width="@125@" height="@16@" style="fill:rgb(255,0,128);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Domination by Poland-Lithuania, Ottoman vassalate in south</title></rect>
+<text x="@01580@" y="@12@" font-family="Verdana" style="fill:rgb(64,0,0)" text-anchor="middle">P.-L.</text>
+<rect x="@01648@" y="@0@" width="@147@" height="@16@" style="fill:rgb(255,0,64);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Cossack era, Ottoman Empire in south</title></rect>
+<text x="@01720@" y="@12@" font-family="Verdana" style="fill:rgb(64,0,0)" text-anchor="middle">Cossacks</text>
+<rect x="@01795@" y="@0@" width="@205@" height="@16@" style="fill:rgb(255,0,0);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Russian rule (Galicia to Aust.-Hung.), transition to modern state</title></rect>
+<text x="@01900@" y="@12@" font-family="Verdana" style="fill:rgb(64,0,0)" text-anchor="middle">Russian rule</text>
+<text x="@-3300@" y="@12@" font-family="Verdana" style="fill:rgb(0,0,0);font-weight:bolder" text-anchor="start" fill-opacity="0.8">UKRAINE</text>
+<text x="@02250@" y="@12@" font-family="Verdana" style="fill:rgb(0,0,0);font-weight:bolder" text-anchor="end" fill-opacity="0.8">UKRAINE</text>
+
+<rect x="@-3300@" y="@20@" width="@310@" height="@16@" style="fill:rgb(255,192,192);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Neolthic cultures (e.g. Narva)</title></rect>
+<text x="@-3050@" y="@32@" font-family="Verdana" style="fill:rgb(192,0,0)" text-anchor="middle"></text>
+<rect x="@-2990@" y="@20@" width="@60@" height="@16@" style="fill:rgb(224,255,127);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Globular amphorae</title></rect>
+<text x="@-2960@" y="@32@" font-family="Verdana" style="fill:rgb(160,192,0)" text-anchor="middle">KAK</text>
+<rect x="@-2930@" y="@20@" width="@830@" height="@16@" style="fill:rgb(128,255,192);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Corded Ware culture</title></rect>
+<text x="@-2400@" y="@32@" font-family="Verdana" style="fill:rgb(0,192,96)" text-anchor="middle">Corded Ware [EGK]</text>
+<rect x="@-2100@" y="@20@" width="@400@" height="@16@" style="fill:rgb(160,192,192);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Late Neolithic Baltic cultures (Mierzanowice)</title></rect>
+<text x="@-1900@" y="@32@" font-family="Verdana" style="fill:rgb(0,96,96)" text-anchor="middle">Late Neol.</text>
+<rect x="@-1700@" y="@20@" width="@400@" height="@16@" style="fill:rgb(192,128,160);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Bronze Age Baltic peoples (no indigenous Bronze Age)</title></rect>
+<text x="@-1900@" y="@32@" font-family="Verdana" style="fill:rgb(0,0,0)" text-anchor="middle"></text>
+<rect x="@-1300@" y="@20@" width="@400@" height="@16@" style="fill:rgb(224,96,192);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Bronze Age Baltic peoples (no indigenous Bronze Age)</title></rect>
+<text x="@-1900@" y="@32@" font-family="Verdana" style="fill:rgb(0,0,0)" text-anchor="middle"></text>
+<rect x="@-0900@" y="@20@" width="@400@" height="@16@" style="fill:rgb(255,64,224);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Bronze Age Baltic peoples (no indigenous Bronze Age)</title></rect>
+<text x="@-1100@" y="@32@" font-family="Verdana" style="fill:rgb(0,0,0)" text-anchor="middle">Bronze Age Baltic peoples</text>
+<rect x="@-0500@" y="@20@" width="@500@" height="@16@" style="fill:rgb(255,32,192);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Early Iron Age: amber trade with Greece</title></rect>
+<text x="@-0250@" y="@32@" font-family="Verdana" style="fill:rgb(0,0,0)" text-anchor="middle">Iron Age Baltic peoples</text>
+<rect x="@00000@" y="@20@" width="@100@" height="@16@" style="fill:rgb(224,64,255);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Uncertain early Gothic migrations to N. Poland / W. Balts</title></rect>
+<text x="@00050@" y="@32@" font-family="Verdana" style="fill:rgb(0,0,128)" text-anchor="middle"></text>
+<rect x="@00100@" y="@20@" width="@300@" height="@16@" style="fill:rgb(160,96,255);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Wielbark culture in Poland / rise of W. Balts to north</title></rect>
+<text x="@00300@" y="@32@" font-family="Verdana" style="fill:rgb(0,0,128)" text-anchor="middle">Wielbark</text>
+<rect x="@00400@" y="@20@" width="@150@" height="@16@" style="fill:rgb(160,64,224);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Migration Age</title></rect>
+<text x="@00100@" y="@32@" font-family="Verdana" style="fill:rgb(0,0,128)" text-anchor="middle"></text>
+<rect x="@00550@" y="@20@" width="@240@" height="@16@" style="fill:rgb(192,32,224);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Vendel period (migrations of Slavs from south, Swedish from west)</title></rect>
+<text x="@00670@" y="@32@" font-family="Verdana" style="fill:rgb(0,0,128)" text-anchor="middle">Vendel</text>
+<rect x="@00790@" y="@20@" width="@395@" height="@16@" style="fill:rgb(96,0,192);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Viking Age: sporadic coastal settlement from Sweden</title></rect>
+<text x="@00990@" y="@32@" font-family="Verdana" style="fill:rgb(0,64,64)" text-anchor="middle">Viking Age</text>
+<rect x="@01185@" y="@20@" width="@75@" height="@16@" style="fill:rgb(96,96,128);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Livonia (conquest by Teutonic Order)</title></rect>
+<text x="@01150@" y="@32@" font-family="Verdana" style="fill:rgb(0,64,0)" text-anchor="middle"></text>
+<rect x="@01260@" y="@20@" width="@59@" height="@16@" style="fill:rgb(96,128,96);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Livonia (and rise of Lithuania inland)</title></rect>
+<text x="@01250@" y="@32@" font-family="Verdana" style="fill:rgb(0,64,0)" text-anchor="middle">Livonia</text>
+<rect x="@01319@" y="@20@" width="@204@" height="@16@" style="fill:rgb(128,0,255);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Livonia / Lithuania / Hanseatic League</title></rect>
+<text x="@01420@" y="@32@" font-family="Verdana" style="fill:rgb(64,0,128)" text-anchor="middle">Hanseatic</text>
+<rect x="@01523@" y="@20@" width="@243@" height="@16@" style="fill:rgb(255,0,128);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Domination by Poland-Lithuania</title></rect>
+<text x="@01640@" y="@32@" font-family="Verdana" style="fill:rgb(64,0,128)" text-anchor="middle">Pol.-Lith.</text>
+<rect x="@01768@" y="@20@" width="@150@" height="@16@" style="fill:rgb(128,0,255);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Domination by Prussia</title></rect>
+<text x="@01840@" y="@32@" font-family="Verdana" style="fill:rgb(64,0,128)" text-anchor="middle">Prussia</text>
+<rect x="@01914@" y="@20@" width="@86@" height="@16@" style="fill:rgb(255,0,0);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>USSR / transition to modern states</title></rect>
+<text x="@01950@" y="@32@" font-family="Verdana" style="fill:rgb(64,0,128)" text-anchor="middle"></text>
+<text x="@-3300@" y="@32@" font-family="Verdana" style="fill:rgb(0,0,0);font-weight:bolder" text-anchor="start" fill-opacity="0.8">E. BALTIC</text>
+<text x="@02250@" y="@32@" font-family="Verdana" style="fill:rgb(0,0,0);font-weight:bolder" text-anchor="end" fill-opacity="0.8">E. BATLIC</text>
+
+<rect x="@-3300@" y="@40@" width="@320@" height="@16@" style="fill:rgb(255,192,192);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Funnelbeaker culture</title></rect>
+<text x="@-3050@" y="@52@" font-family="Verdana" style="fill:rgb(192,0,0)" text-anchor="middle">TBK</text>
+<rect x="@-2980@" y="@40@" width="@50@" height="@16@" style="fill:rgb(224,192,255);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Baden</title></rect>
+<text x="@-2960@" y="@52@" font-family="Verdana" style="fill:rgb(96,0,128)" text-anchor="middle">Ba.</text>
+<rect x="@-2940@" y="@40@" width="@180@" height="@16@" style="fill:rgb(224,255,127);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Globular amphorae</title></rect>
+<text x="@-2830@" y="@52@" font-family="Verdana" style="fill:rgb(160,192,0)" text-anchor="middle">KAK</text>
+<rect x="@-2760@" y="@40@" width="@380@" height="@16@" style="fill:rgb(128,255,192);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Corded Ware culture</title></rect>
+<text x="@-2570@" y="@52@" font-family="Verdana" style="fill:rgb(0,192,96)" text-anchor="middle">Corded Ware</text>
+<rect x="@-2380@" y="@40@" width="@150@" height="@16@" style="fill:rgb(255,255,128);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Bell Beaker culture</title></rect>
+<text x="@-2300@" y="@52@" font-family="Verdana" style="fill:rgb(128,128,0)" text-anchor="middle">Bell B.</text>
+<rect x="@-2230@" y="@40@" width="@530@" height="@16@" style="fill:rgb(192,255,128);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Unetice and related cultures, e.g. Mierzanowice </title></rect>
+<text x="@-1910@" y="@52@" font-family="Verdana" style="fill:rgb(64,128,0)" text-anchor="middle">Unetice Culture</text>
+<rect x="@-1700@" y="@40@" width="@350@" height="@16@" style="fill:rgb(128,255,128);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Tumulus culture</title></rect>
+<text x="@-1520@" y="@52@" font-family="Verdana" style="fill:rgb(0,128,0)" text-anchor="middle">Tumulus Culture</text>
+<rect x="@-1350@" y="@40@" width="@650@" height="@16@" style="fill:rgb(224,255,128);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Urnfield system: Lusatian culture (Nordic influenced), Piliny culture</title></rect>
+<text x="@-1000@" y="@52@" font-family="Verdana" style="fill:rgb(0,64,0)" text-anchor="middle">Lusatian Culture: (Urnfield)</text>
+<rect x="@-0750@" y="@40@" width="@300@" height="@16@" style="fill:rgb(196,255,128);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Lusatian culture: strong Hallstatt influence</title></rect>
+<text x="@-0600@" y="@52@" font-family="Verdana" style="fill:rgb(0,128,0)" text-anchor="middle">(Hallstatt)</text>
+<rect x="@-0450@" y="@40@" width="@250@" height="@16@" style="fill:rgb(160,255,64);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>La Tene Celtic culture / Pomeranian culture to north</title></rect>
+<text x="@-0330@" y="@52@" font-family="Verdana" style="fill:rgb(0,64,0)" text-anchor="middle">(La Tene)</text>
+<rect x="@-0200@" y="@40@" width="@366@" height="@16@" style="fill:rgb(160,160,64);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Przeworsk (Vandal?) culture / East Germanic settlement</title></rect>
+<text x="@-0020@" y="@52@" font-family="Verdana" style="fill:rgb(0,64,0)" text-anchor="middle">Przeworsk</text>
+<rect x="@00166@" y="@40@" width="@234@" height="@16@" style="fill:rgb(160,96,255);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>East Germanic dominance</title></rect>
+<text x="@00280@" y="@52@" font-family="Verdana" style="fill:rgb(0,64,0)" text-anchor="middle">E. Germans</text>
+<rect x="@00400@" y="@40@" width="@100@" height="@16@" style="fill:rgb(255,0,128);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Hun invasion</title></rect>
+<text x="@00450@" y="@52@" font-family="Verdana" style="fill:rgb(128,0,0)" text-anchor="middle">Huns</text>
+<rect x="@00480@" y="@40@" width="@353@" height="@16@" style="fill:rgb(255,64,192);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Slavic consolidation</title></rect>
+<text x="@00640@" y="@52@" font-family="Verdana" style="fill:rgb(128,0,64)" text-anchor="middle">Slavs</text>
+<rect x="@00833@" y="@40@" width="@74@" height="@16@" style="fill:rgb(192,64,255);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Great Moravia &amp; Nitra</title></rect>
+<text x="@00870@" y="@52@" font-family="Verdana" style="fill:rgb(0,64,64)" text-anchor="middle"></text>
+<rect x="@00907@" y="@40@" width="@619@" height="@16@" style="fill:rgb(255,0,128);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Split between Bohemia, Poland and Hungary, Jewish settlement 1264 onwards</title></rect>
+<text x="@01220@" y="@52@" font-family="Verdana" style="fill:rgb(128,0,0)" text-anchor="middle">Bohemia / Poland / Hungary</text>
+<rect x="@01526@" y="@40@" width="@341@" height="@16@" style="fill:rgb(224,192,255);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Mainly Hapsburg posession of Bohemia (Silesia until 1742)</title></rect>
+<text x="@01700@" y="@52@" font-family="Verdana" style="fill:rgb(0,0,0)" text-anchor="middle">Hapsburgs</text>
+<rect x="@01867@" y="@40@" width="@47@" height="@16@" style="fill:rgb(255,160,224);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Austro-Hungary</title></rect>
+<text x="@01890@" y="@52@" font-family="Verdana" style="fill:rgb(0,0,0)" text-anchor="middle"></text>
+<rect x="@01914@" y="@40@" width="@85@" height="@16@" style="fill:rgb(255,127,127);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Modern states</title></rect>
+<text x="@01950@" y="@52@" font-family="Verdana" style="fill:rgb(128,0,128)" text-anchor="middle">Mod.</text>
+<text x="@-3300@" y="@52@" font-family="Verdana" style="fill:rgb(0,0,0);font-weight:bolder" text-anchor="start" fill-opacity="0.8">E. EUROPE</text>
+<text x="@02250@" y="@52@" font-family="Verdana" style="fill:rgb(0,0,0);font-weight:bolder" text-anchor="end" fill-opacity="0.8">E. EUROPE</text>
+
+<rect x="@-3300@" y="@60@" width="@200@" height="@16@" style="fill:rgb(255,192,192);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Neolithic</title></rect>
+<text x="@-3200@" y="@72@" font-family="Verdana" style="fill:rgb(192,0,0)" text-anchor="middle"></text>
+<rect x="@-3100@" y="@60@" width="@1100@" height="@16@" style="fill:rgb(255,224,224);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Neolithic to Bronze Age transition, including Baden &amp; Ezero cultures</title></rect>
+<text x="@-2500@" y="@72@" font-family="Verdana" style="fill:rgb(96,0,0)" text-anchor="middle">Neol. / Br. Age transition / Baden / Ezero</text>
+<rect x="@-2000@" y="@60@" width="@350@" height="@16@" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Middle Helladic in Greece / Early BA elsewhere</title></rect>
+<text x="@-1780@" y="@72@" font-family="Verdana" style="fill:rgb(0,0,0)" text-anchor="middle">Helladic</text>
+<rect x="@-1650@" y="@60@" width="@550@" height="@16@" style="fill:rgb(224,224,224);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Late Helladic in Greece / Mycenaean cultures</title></rect>
+<text x="@-1420@" y="@72@" font-family="Verdana" style="fill:rgb(0,0,0)" text-anchor="middle">Mycenaean</text>
+<rect x="@-1100@" y="@60@" width="@300@" height="@16@" style="fill:rgb(160,160,160);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Greek Dark Ages / post-BA collapse</title></rect>
+<text x="@-0950@" y="@72@" font-family="Verdana" style="fill:rgb(0,0,0)" text-anchor="middle">Greek Dark Ages</text>
+<rect x="@-0800@" y="@60@" width="@320@" height="@16@" style="fill:rgb(224,224,224);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Archaic period in Greek culture</title></rect>
+<text x="@-0640@" y="@72@" font-family="Verdana" style="fill:rgb(0,0,0)" text-anchor="middle">Archaic</text>
+<rect x="@-0480@" y="@60@" width="@334@" height="@16@" style="fill:rgb(224,224,224);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Classical period of Greek history</title></rect>
+<text x="@-0310@" y="@72@" font-family="Verdana" style="fill:rgb(0,0,0)" text-anchor="middle">Classical</text>
+<rect x="@-0146@" y="@60@" width="@471@" height="@16@" style="fill:rgb(255,128,128);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Roman Empire</title></rect>
+<text x="@00100@" y="@72@" font-family="Verdana" style="fill:rgb(128,0,0)" text-anchor="middle">Roman Empire</text>
+<rect x="@00324@" y="@60@" width="@1129@" height="@16@" style="fill:rgb(255,192,128);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Byzantine Empire</title></rect>
+<text x="@00720@" y="@72@" font-family="Verdana" style="fill:rgb(128,64,0)" text-anchor="middle">Byzantine Empire</text>
+<rect x="@01453@" y="@60@" width="@425@" height="@16@" style="fill:rgb(255,160,128);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Ottoman Empire</title></rect>
+<text x="@01660@" y="@72@" font-family="Verdana" style="fill:rgb(128,32,0)" text-anchor="middle">Ottoman Empire</text>
+<rect x="@01878@" y="@60@" width="@122@" height="@16@" style="fill:rgb(255,224,128);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Modern states</title></rect>
+<text x="@01950@" y="@72@" font-family="Verdana" style="fill:rgb(128,32,0)" text-anchor="middle">Modern</text>
+<text x="@-3300@" y="@72@" font-family="Verdana" style="fill:rgb(0,0,0);font-weight:bolder" text-anchor="start" fill-opacity="0.8">S.E. EUROPE</text>
+<text x="@02250@" y="@72@" font-family="Verdana" style="fill:rgb(0,0,0);font-weight:bolder" text-anchor="end" fill-opacity="0.8">S.E. EUROPE</text>
+
+<rect x="@-3300@" y="@80@" width="@420@" height="@16@" style="fill:rgb(224,192,255);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Baden</title></rect>
+<text x="@-3000@" y="@92@" font-family="Verdana" style="fill:rgb(96,0,128)" text-anchor="middle">Baden</text>
+<rect x="@-2880@" y="@80@" width="@100@" height="@16@" style="fill:rgb(224,255,127);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Globular amphorae</title></rect>
+<text x="@-2830@" y="@92@" font-family="Verdana" style="fill:rgb(160,192,0)" text-anchor="middle">KAK</text>
+<rect x="@-2780@" y="@80@" width="@420@" height="@16@" style="fill:rgb(128,255,192);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Corded Ware culture</title></rect>
+<text x="@-2570@" y="@92@" font-family="Verdana" style="fill:rgb(0,192,96)" text-anchor="middle">Corded Ware</text>
+<rect x="@-2360@" y="@80@" width="@130@" height="@16@" style="fill:rgb(255,255,128);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Bell Beaker culture</title></rect>
+<text x="@-2300@" y="@92@" font-family="Verdana" style="fill:rgb(128,128,0)" text-anchor="middle">Bell B.</text>
+<rect x="@-2230@" y="@80@" width="@630@" height="@16@" style="fill:rgb(192,255,128);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Unetice and related cultures, e.g. Straubing</title></rect>
+<text x="@-1910@" y="@92@" font-family="Verdana" style="fill:rgb(64,128,0)" text-anchor="middle">Unetice Culture</text>
+<rect x="@-1600@" y="@80@" width="@400@" height="@16@" style="fill:rgb(128,255,128);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Tumulus culture</title></rect>
+<text x="@-1400@" y="@92@" font-family="Verdana" style="fill:rgb(0,128,0)" text-anchor="middle">Tumulus Culture</text>
+<rect x="@-1250@" y="@80@" width="@500@" height="@16@" style="fill:rgb(64,255,64);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Urnfield culture</title></rect>
+<text x="@-1000@" y="@92@" font-family="Verdana" style="fill:rgb(0,64,0)" text-anchor="middle">Urnfield Culture</text>
+<rect x="@-0750@" y="@80@" width="@300@" height="@16@" style="fill:rgb(128,255,128);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Hallstatt Celtic culture</title></rect>
+<text x="@-0600@" y="@92@" font-family="Verdana" style="fill:rgb(0,128,0)" text-anchor="middle">Hallstatt</text>
+<rect x="@-0450@" y="@80@" width="@250@" height="@16@" style="fill:rgb(64,255,64);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>La Tene Celtic culture</title></rect>
+<text x="@-0330@" y="@92@" font-family="Verdana" style="fill:rgb(0,64,0)" text-anchor="middle">La Tene</text>
+<rect x="@-0200@" y="@80@" width="@120@" height="@16@" style="fill:rgb(128,255,32);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Norici and Raeti Celtic tribes, Roman raids</title></rect>
+<text x="@-0120@" y="@92@" font-family="Verdana" style="fill:rgb(0,64,0)" text-anchor="middle">Norici/Raeti</text>
+<rect x="@-0080@" y="@80@" width="@67@" height="@16@" style="fill:rgb(255,192,128);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Roman influence, Germanic (Jastorf/Elbe) settlement</title></rect>
+<text x="@-0040@" y="@92@" font-family="Verdana" style="fill:rgb(64,32,0)" text-anchor="middle"></text>
+<rect x="@-0015@" y="@80@" width="@392@" height="@16@" style="fill:rgb(255,128,128);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Roman Empire (south) Marcomanni, Quadi (north))</title></rect>
+<text x="@00120@" y="@92@" font-family="Verdana" style="fill:rgb(128,0,0)" text-anchor="middle">Roman Empire</text>
+<rect x="@00377@" y="@80@" width="@191@" height="@16@" style="fill:rgb(255,0,128);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Hun invasion / settlement by Ostrogoths, Lombards, Gepids, Heruli, etc.</title></rect>
+<text x="@00470@" y="@92@" font-family="Verdana" style="fill:rgb(128,0,0)" text-anchor="middle">Huns</text>
+<rect x="@00568@" y="@80@" width="@236@" height="@16@" style="fill:rgb(192,0,64);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Avar power in Panonnia</title></rect>
+<text x="@00680@" y="@92@" font-family="Verdana" style="fill:rgb(128,0,0)" text-anchor="middle">Avars</text>
+<rect x="@00800@" y="@80@" width="@162@" height="@16@" style="fill:rgb(64,255,255);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Carolingians overrun Avars: Duchy of Bavaria / Moravia &amp; Nitra</title></rect>
+<text x="@00870@" y="@92@" font-family="Verdana" style="fill:rgb(0,64,64)" text-anchor="middle">Franks</text>
+<rect x="@00962@" y="@80@" width="@316@" height="@16@" style="fill:rgb(96,128,96);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Holy Roman Empire as Bavarian and eastern marches</title></rect>
+<text x="@01150@" y="@92@" font-family="Verdana" style="fill:rgb(0,64,0)" text-anchor="middle">HRE (Bav./Aust.)</text>
+<rect x="@01278@" y="@80@" width="@248@" height="@16@" style="fill:rgb(192,160,192);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Hapsburg/Austrian rise to power, Hungarian expansion (1470s)</title></rect>
+<text x="@01430@" y="@92@" font-family="Verdana" style="fill:rgb(0,0,0)" text-anchor="middle">Aust. &amp; Hung.</text>
+<rect x="@01526@" y="@80@" width="@341@" height="@16@" style="fill:rgb(224,192,255);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Mainly Hapsburg posession of upper Danube valley</title></rect>
+<text x="@01700@" y="@92@" font-family="Verdana" style="fill:rgb(0,0,0)" text-anchor="middle">Hapsburgs</text>
+<rect x="@01867@" y="@80@" width="@47@" height="@16@" style="fill:rgb(255,160,224);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Austro-Hungary</title></rect>
+<text x="@01890@" y="@92@" font-family="Verdana" style="fill:rgb(0,0,0)" text-anchor="middle"></text>
+<rect x="@01914@" y="@80@" width="@85@" height="@16@" style="fill:rgb(255,127,127);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Modern states</title></rect>
+<text x="@01950@" y="@92@" font-family="Verdana" style="fill:rgb(128,0,128)" text-anchor="middle">Mod.</text>
+<text x="@-3300@" y="@92@" font-family="Verdana" style="fill:rgb(0,0,0);font-weight:bolder" text-anchor="start" fill-opacity="0.8">DANUBE</text>
+<text x="@02250@" y="@92@" font-family="Verdana" style="fill:rgb(0,0,0);font-weight:bolder" text-anchor="end" fill-opacity="0.8">DANUBE</text>
+
+<rect x="@-3300@" y="@100@" width="@500@" height="@16@" style="fill:rgb(255,192,192);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Funnelbeaker / Pitted Ware cultures</title></rect>
+<text x="@-2900@" y="@112@" font-family="Verdana" style="fill:rgb(192,0,0)" text-anchor="middle">TBK/PWC</text>
+<rect x="@-2800@" y="@100@" width="@550@" height="@16@" style="fill:rgb(128,255,192);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Battle Axe culture</title></rect>
+<text x="@-2580@" y="@112@" font-family="Verdana" style="fill:rgb(0,192,96)" text-anchor="middle">Corded Ware (Battle Axe)</text>
+<rect x="@-2250@" y="@100@" width="@500@" height="@16@" style="fill:rgb(96,224,224);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Late Neolithic cultures</title></rect>
+<text x="@-2000@" y="@112@" font-family="Verdana" style="fill:rgb(0,96,96)" text-anchor="middle">Late Neolithic</text>
+<rect x="@-1750@" y="@100@" width="@650@" height="@16@" style="fill:rgb(96,224,255);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Early Nordic Bronze Age</title></rect>
+<text x="@-1400@" y="@112@" font-family="Verdana" style="fill:rgb(0,96,96)" text-anchor="middle">Early Nordic BA</text>
+<rect x="@-1100@" y="@100@" width="@200@" height="@16@" style="fill:rgb(96,192,255);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Late Nordic Bronze Age</title></rect>
+<text x="@-1030@" y="@112@" font-family="Verdana" style="fill:rgb(0,64,64)" text-anchor="middle">Late N. BA</text>
+<rect x="@-0900@" y="@100@" width="@350@" height="@16@" style="fill:rgb(128,128,255);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Bronze Age cooling: lack of archaeological finds, Germanic exodus</title></rect>
+<text x="@-0720@" y="@112@" font-family="Verdana" style="fill:rgb(0,64,64)" text-anchor="middle">Cooling, Germ. exodus</text>
+<rect x="@-0550@" y="@100@" width="@559@" height="@16@" style="fill:rgb(128,96,224);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Pre-Roman Iron Age: lack of archaeological finds, little social strata</title></rect>
+<text x="@-0270@" y="@112@" font-family="Verdana" style="fill:rgb(0,64,64)" text-anchor="middle">Early Iron Age</text>
+<rect x="@00009@" y="@100@" width="@391@" height="@16@" style="fill:rgb(96,64,192);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Roman-influenced Iron Age</title></rect>
+<text x="@00200@" y="@112@" font-family="Verdana" style="fill:rgb(0,64,64)" text-anchor="middle">Late Iron Age</text>
+<rect x="@00400@" y="@100@" width="@135@" height="@16@" style="fill:rgb(96,32,255);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Migration period: Scandinavian golden age</title></rect>
+<text x="@00470@" y="@112@" font-family="Verdana" style="fill:rgb(0,64,64)" text-anchor="middle">Mig. Per.</text>
+<rect x="@00535@" y="@100@" width="@265@" height="@16@" style="fill:rgb(96,0,192);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Consolidation of nation states</title></rect>
+<text x="@00670@" y="@112@" font-family="Verdana" style="fill:rgb(0,64,64)" text-anchor="middle">Statehood</text>
+<rect x="@00800@" y="@100@" width="@240@" height="@16@" style="fill:rgb(128,0,255);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Viking Age</title></rect>
+<text x="@00930@" y="@112@" font-family="Verdana" style="fill:rgb(64,0,128)" text-anchor="middle">Viking Age</text>
+<rect x="@01040@" y="@100@" width="@279@" height="@16@" style="fill:rgb(64,0,255);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Consolidation into modern states</title></rect>
+<text x="@01180@" y="@112@" font-family="Verdana" style="fill:rgb(64,0,128)" text-anchor="middle">Expansion</text>
+<rect x="@01319@" y="@100@" width="@204@" height="@16@" style="fill:rgb(128,0,255);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Hanseatic League / Kalmar Union</title></rect>
+<text x="@01420@" y="@112@" font-family="Verdana" style="fill:rgb(64,0,128)" text-anchor="middle">Hans. L./Kalmar</text>
+<rect x="@01523@" y="@100@" width="@284@" height="@16@" style="fill:rgb(64,0,255);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Denmark-Norway / Sweden-Finland</title></rect>
+<text x="@01665@" y="@112@" font-family="Verdana" style="fill:rgb(64,0,128)" text-anchor="middle">D-N/S-F</text>
+<rect x="@01807@" y="@100@" width="@108@" height="@16@" style="fill:rgb(128,0,255);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Sweden-Norway</title></rect>
+<text x="@01860@" y="@112@" font-family="Verdana" style="fill:rgb(64,0,128)" text-anchor="middle">S-N</text>
+<rect x="@01915@" y="@100@" width="@85@" height="@16@" style="fill:rgb(64,0,255);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Modern states</title></rect>
+<text x="@01950@" y="@112@" font-family="Verdana" style="fill:rgb(128,0,128)" text-anchor="middle">Mod.</text>
+<text x="@-3300@" y="@112@" font-family="Verdana" style="fill:rgb(0,0,0);font-weight:bolder" text-anchor="start" fill-opacity="0.8">NOR./SWE.</text>
+<text x="@02250@" y="@112@" font-family="Verdana" style="fill:rgb(0,0,0);font-weight:bolder" text-anchor="end" fill-opacity="0.8">NOR./SWE.</text>
+
+<rect x="@-3300@" y="@120@" width="@330@" height="@16@" style="fill:rgb(255,192,192);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Funnelbeaker cultures</title></rect>
+<text x="@-3010@" y="@132@" font-family="Verdana" style="fill:rgb(192,0,0)" text-anchor="middle">TBK</text>
+<rect x="@-2970@" y="@120@" width="@170@" height="@16@" style="fill:rgb(224,255,127);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Globular amphorae</title></rect>
+<text x="@-2890@" y="@132@" font-family="Verdana" style="fill:rgb(160,192,0)" text-anchor="middle">KAK</text>
+<rect x="@-2800@" y="@120@" width="@450@" height="@16@" style="fill:rgb(128,255,192);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Battle Axe culture</title></rect>
+<text x="@-2580@" y="@132@" font-family="Verdana" style="fill:rgb(0,192,96)" text-anchor="middle">Corded Ware (Single Grave)</text>
+<rect x="@-2350@" y="@120@" width="@100@" height="@16@" style="fill:rgb(255,255,128);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Bell Beaker influence</title></rect>
+<text x="@-2300@" y="@132@" font-family="Verdana" style="fill:rgb(128,128,0)" text-anchor="middle">Bell B.</text>
+<rect x="@-2250@" y="@120@" width="@550@" height="@16@" style="fill:rgb(128,255,192);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Battle Axe culture</title></rect>
+<text x="@-1980@" y="@132@" font-family="Verdana" style="fill:rgb(0,192,96)" text-anchor="middle">Battle Axe culture</text>
+<rect x="@-1700@" y="@120@" width="@200@" height="@16@" style="fill:rgb(128,224,224);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Neolithic - Bronze Age transition</title></rect>
+<text x="@-1600@" y="@132@" font-family="Verdana" style="fill:rgb(0,192,96)" text-anchor="middle"></text>
+<rect x="@-1500@" y="@120@" width="@400@" height="@16@" style="fill:rgb(96,224,255);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Early Nordic Bronze Age</title></rect>
+<text x="@-1300@" y="@132@" font-family="Verdana" style="fill:rgb(0,96,96)" text-anchor="middle">Early Nordic BA</text>
+<rect x="@-1100@" y="@120@" width="@350@" height="@16@" style="fill:rgb(96,192,255);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Late Nordic Bronze Age</title></rect>
+<text x="@-0920@" y="@132@" font-family="Verdana" style="fill:rgb(0,64,64)" text-anchor="middle">Late Nordic BA</text>
+<rect x="@-0750@" y="@120@" width="@750@" height="@16@" style="fill:rgb(128,128,255);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Iron Age Germanic expansion (Jastorf)</title></rect>
+<text x="@-0375@" y="@132@" font-family="Verdana" style="fill:rgb(0,0,64)" text-anchor="middle">Jastorf culture</text>
+<rect x="@00000@" y="@120@" width="@250@" height="@16@" style="fill:rgb(64,64,255);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Germanic tribes (with Roman influence)</title></rect>
+<text x="@00125@" y="@132@" font-family="Verdana" style="fill:rgb(0,0,64)" text-anchor="middle">Germanic tribes</text>
+<rect x="@00250@" y="@120@" width="@210@" height="@16@" style="fill:rgb(128,128,255);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Rise of Saxon power (also Angles, Jutes, Frisians)</title></rect>
+<text x="@00360@" y="@132@" font-family="Verdana" style="fill:rgb(0,0,64)" text-anchor="middle"></text>
+<rect x="@00460@" y="@120@" width="@344@" height="@16@" style="fill:rgb(64,64,255);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Saxon conflicts with Franks</title></rect>
+<text x="@00630@" y="@132@" font-family="Verdana" style="fill:rgb(0,0,64)" text-anchor="middle">Saxons/Jutes</text>
+<rect x="@00804@" y="@120@" width="@39@" height="@16@" style="fill:rgb(64,255,255);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Carolingian dynasty overruns Saxons</title></rect>
+<text x="@00830@" y="@132@" font-family="Verdana" style="fill:rgb(0,64,64)" text-anchor="middle"></text>
+<rect x="@00843@" y="@120@" width="@192@" height="@16@" style="fill:rgb(128,0,255);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Viking Age Danes / German Kingdom</title></rect>
+<text x="@00940@" y="@132@" font-family="Verdana" style="fill:rgb(64,0,128)" text-anchor="middle">Viking Age</text>
+<rect x="@01035@" y="@120@" width="@439@" height="@16@" style="fill:rgb(255,96,160);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Denmark / Duchy of Saxony</title></rect>
+<text x="@01250@" y="@132@" font-family="Verdana" style="fill:rgb(0,0,0)" text-anchor="middle">Denmark / Saxony</text>
+<rect x="@01474@" y="@120@" width="@392@" height="@16@" style="fill:rgb(255,64,128);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Denmark / Duchy of Holstein</title></rect>
+<text x="@01670@" y="@132@" font-family="Verdana" style="fill:rgb(0,0,0)" text-anchor="middle">Denmark / Holstein</text>
+<rect x="@01866@" y="@120@" width="@134@" height="@16@" style="fill:rgb(255,0,128);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Modern state of Denmark and later Germany</title></rect>
+<text x="@01940@" y="@132@" font-family="Verdana" style="fill:rgb(0,0,0)" text-anchor="middle">Mod.</text>
+<text x="@-3300@" y="@132@" font-family="Verdana" style="fill:rgb(0,0,0);font-weight:bolder" text-anchor="start" fill-opacity="0.8">N. GER./DEN.</text>
+<text x="@02250@" y="@132@" font-family="Verdana" style="fill:rgb(0,0,0);font-weight:bolder" text-anchor="end" fill-opacity="0.8">N. GER./DEN.</text>
+
+<rect x="@-3300@" y="@140@" width="@520@" height="@16@" style="fill:rgb(255,192,192);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Western Funnelbeaker / Horgen cultures</title></rect>
+<text x="@-2920@" y="@152@" font-family="Verdana" style="fill:rgb(192,0,0)" text-anchor="middle">TBK/Horgen</text>
+<rect x="@-2780@" y="@140@" width="@430@" height="@16@" style="fill:rgb(128,255,192);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Corded Ware culture</title></rect>
+<text x="@-2580@" y="@152@" font-family="Verdana" style="fill:rgb(0,192,96)" text-anchor="middle">Corded Ware [EGK]</text>
+<rect x="@-2350@" y="@140@" width="@150@" height="@16@" style="fill:rgb(255,255,128);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Bell Beaker culture</title></rect>
+<text x="@-2280@" y="@152@" font-family="Verdana" style="fill:rgb(128,128,0)" text-anchor="middle">Bell B.</text>
+<rect x="@-2200@" y="@140@" width="@600@" height="@16@" style="fill:rgb(192,255,128);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>EBA cultures: Beaker groups, Unetice (Adlerberg), Reisenbecher</title></rect>
+<text x="@-1900@" y="@152@" font-family="Verdana" style="fill:rgb(64,128,0)" text-anchor="middle">Early BA / Adlerberg</text>
+<rect x="@-1600@" y="@140@" width="@400@" height="@16@" style="fill:rgb(128,255,128);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Tumulus culture</title></rect>
+<text x="@-1400@" y="@152@" font-family="Verdana" style="fill:rgb(0,128,0)" text-anchor="middle">Tumulus Culture</text>
+<rect x="@-1250@" y="@140@" width="@500@" height="@16@" style="fill:rgb(64,255,64);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Urnfield culture</title></rect>
+<text x="@-1000@" y="@152@" font-family="Verdana" style="fill:rgb(0,64,0)" text-anchor="middle">Urnfield Culture</text>
+<rect x="@-0750@" y="@140@" width="@300@" height="@16@" style="fill:rgb(128,255,128);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Hallstatt Celtic culture</title></rect>
+<text x="@-0600@" y="@152@" font-family="Verdana" style="fill:rgb(0,128,0)" text-anchor="middle">Hallstatt</text>
+<rect x="@-0450@" y="@140@" width="@300@" height="@16@" style="fill:rgb(64,255,64);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>La Tene Celtic culture</title></rect>
+<text x="@-0290@" y="@152@" font-family="Verdana" style="fill:rgb(0,64,0)" text-anchor="middle">La Tene / Gaul</text>
+<rect x="@-0150@" y="@140@" width="@93@" height="@16@" style="fill:rgb(128,128,255);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Germanic tribes partially over-run Celtic tribes</title></rect>
+<text x="@-0150@" y="@152@" font-family="Verdana" style="fill:rgb(0,0,128)" text-anchor="middle"></text>
+<rect x="@-0057@" y="@140@" width="@317@" height="@16@" style="fill:rgb(255,128,128);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Roman Empire</title></rect>
+<text x="@00100@" y="@152@" font-family="Verdana" style="fill:rgb(128,0,0)" text-anchor="middle">Roman Empire</text>
+<rect x="@00260@" y="@140@" width="@150@" height="@16@" style="fill:rgb(255,192,128);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Roman Empire in west, Germanic tribes (esp. Allemanni) in east</title></rect>
+<text x="@00340@" y="@152@" font-family="Verdana" style="fill:rgb(128,0,0)" text-anchor="middle"></text>
+<rect x="@00410@" y="@140@" width="@86@" height="@16@" style="fill:rgb(128,128,255);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Germanic tribal control</title></rect>
+<text x="@-0150@" y="@152@" font-family="Verdana" style="fill:rgb(0,0,128)" text-anchor="middle"></text>
+<rect x="@00496@" y="@140@" width="@255@" height="@16@" style="fill:rgb(128,255,255);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Merovingian dynasty</title></rect>
+<text x="@00610@" y="@152@" font-family="Verdana" style="fill:rgb(0,64,64)" text-anchor="middle">Merovingian</text>
+<rect x="@00751@" y="@140@" width="@211@" height="@16@" style="fill:rgb(64,255,255);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Carolingian dynasty</title></rect>
+<text x="@00850@" y="@152@" font-family="Verdana" style="fill:rgb(0,64,64)" text-anchor="middle">Carol.</text>
+<rect x="@00962@" y="@140@" width="@844@" height="@16@" style="fill:rgb(96,128,96);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Holy Roman Empire</title></rect>
+<text x="@01380@" y="@152@" font-family="Verdana" style="fill:rgb(0,64,0)" text-anchor="middle">Holy Roman Empire</text>
+<rect x="@01806@" y="@140@" width="@112@" height="@16@" style="fill:rgb(160,96,96);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Small states under German empire</title></rect>
+<text x="@01860@" y="@152@" font-family="Verdana" style="fill:rgb(0,64,0)" text-anchor="middle"></text>
+<rect x="@01918@" y="@140@" width="@82@" height="@16@" style="fill:rgb(192,64,64);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Modern states</title></rect>
+<text x="@01960@" y="@152@" font-family="Verdana" style="fill:rgb(64,0,0)" text-anchor="middle">Mod.</text>
+<text x="@-3300@" y="@152@" font-family="Verdana" style="fill:rgb(0,0,0);font-weight:bolder" text-anchor="start" fill-opacity="0.8">UPPER RHINE</text>
+<text x="@02250@" y="@152@" font-family="Verdana" style="fill:rgb(0,0,0);font-weight:bolder" text-anchor="end" fill-opacity="0.8">UPPER RHINE</text>
+
+<rect x="@-3300@" y="@160@" width="@550@" height="@16@" style="fill:rgb(255,192,192);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Funnelbeaker cultures</title></rect>
+<text x="@-3000@" y="@172@" font-family="Verdana" style="fill:rgb(192,0,0)" text-anchor="middle">TBK</text>
+<rect x="@-2750@" y="@160@" width="@150@" height="@16@" style="fill:rgb(128,255,192);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Battle Axe culture</title></rect>
+<text x="@-2680@" y="@172@" font-family="Verdana" style="fill:rgb(0,192,96)" text-anchor="middle">EGK (SG)</text>
+<rect x="@-2600@" y="@160@" width="@220@" height="@16@" style="fill:rgb(192,255,128);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>All Over Ornamented Beaker culture</title></rect>
+<text x="@-2490@" y="@172@" font-family="Verdana" style="fill:rgb(92,128,48)" text-anchor="middle">AOO Beaker</text>
+<rect x="@-2380@" y="@160@" width="@180@" height="@16@" style="fill:rgb(255,255,128);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Bell Beaker culture</title></rect>
+<text x="@-2300@" y="@172@" font-family="Verdana" style="fill:rgb(128,128,0)" text-anchor="middle">Bell B.</text>
+<rect x="@-2200@" y="@160@" width="@400@" height="@16@" style="fill:rgb(192,255,128);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Bronze Age Barbed Wire (Bell Beaker) culture</title></rect>
+<text x="@-2000@" y="@172@" font-family="Verdana" style="fill:rgb(64,128,0)" text-anchor="middle">Barbed-Wire</text>
+<rect x="@-1800@" y="@160@" width="@600@" height="@16@" style="fill:rgb(128,255,128);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Tumulus stage of the Hilversum culture</title></rect>
+<text x="@-1500@" y="@172@" font-family="Verdana" style="fill:rgb(0,128,0)" text-anchor="middle">Hilversum (tumuli)</text>
+<rect x="@-1200@" y="@160@" width="@450@" height="@16@" style="fill:rgb(64,255,64);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Urnfield stage of the Hilversum culture</title></rect>
+<text x="@-0980@" y="@172@" font-family="Verdana" style="fill:rgb(0,64,0)" text-anchor="middle">(Urnfield)</text>
+<rect x="@-0750@" y="@160@" width="@300@" height="@16@" style="fill:rgb(128,255,128);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Hallstatt Celtic culture</title></rect>
+<text x="@-0600@" y="@172@" font-family="Verdana" style="fill:rgb(0,128,0)" text-anchor="middle">Hallstatt</text>
+<rect x="@-0450@" y="@160@" width="@200@" height="@16@" style="fill:rgb(64,255,64);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>La Tene Celtic culture</title></rect>
+<text x="@-0350@" y="@172@" font-family="Verdana" style="fill:rgb(0,64,0)" text-anchor="middle">La Tene</text>
+<rect x="@-0250@" y="@160@" width="@193@" height="@16@" style="fill:rgb(128,128,255);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Germanic tribes partially over-run Celtic tribes</title></rect>
+<text x="@-0150@" y="@172@" font-family="Verdana" style="fill:rgb(0,0,128)" text-anchor="middle">Germanic tribes</text>
+<rect x="@-0057@" y="@160@" width="@467@" height="@16@" style="fill:rgb(255,128,128);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Roman Empire</title></rect>
+<text x="@00220@" y="@172@" font-family="Verdana" style="fill:rgb(128,0,0)" text-anchor="middle">Roman Empire</text>
+<rect x="@00410@" y="@160@" width="@71@" height="@16@" style="fill:rgb(128,128,255);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Germanic tribes</title></rect>
+<text x="@00450@" y="@172@" font-family="Verdana" style="fill:rgb(0,0,128)" text-anchor="middle"></text>
+<rect x="@00481@" y="@160@" width="@369@" height="@16@" style="fill:rgb(128,255,255);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Franks (Fresians in north)</title></rect>
+<text x="@00670@" y="@172@" font-family="Verdana" style="fill:rgb(0,128,128)" text-anchor="middle">Franks</text>
+<rect x="@00850@" y="@160@" width="@112@" height="@16@" style="fill:rgb(64,0,128);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Fresians conquered by Vikings</title></rect>
+<text x="@00910@" y="@172@" font-family="Verdana" style="fill:rgb(64,0,128)" text-anchor="middle">Vik.</text>
+<rect x="@00962@" y="@160@" width="@471@" height="@16@" style="fill:rgb(96,128,96);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Holy Roman Empire</title></rect>
+<text x="@01200@" y="@172@" font-family="Verdana" style="fill:rgb(0,64,0)" text-anchor="middle">Holy Roman Empire</text>
+<rect x="@01433@" y="@160@" width="@67@" height="@16@" style="fill:rgb(0,255,255);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Burgundian period</title></rect>
+<text x="@01460@" y="@172@" font-family="Verdana" style="fill:rgb(0,128,128)" text-anchor="middle">B.</text>
+<rect x="@01500@" y="@160@" width="@68@" height="@16@" style="fill:rgb(224,192,255);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Hapsburgs (Spain &amp; Italy), City States</title></rect>
+<text x="@01540@" y="@172@" font-family="Verdana" style="fill:rgb(0,0,0)" text-anchor="middle">H.</text>
+<rect x="@01568@" y="@160@" width="@80@" height="@16@" style="fill:rgb(127,63,127);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Eighty years war</title></rect>
+<text x="@01610@" y="@172@" font-family="Verdana" style="fill:rgb(0,0,0)" text-anchor="middle">80y</text>
+<rect x="@01648@" y="@160@" width="@137@" height="@16@" style="fill:rgb(192,160,128);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Dutch Republic</title></rect>
+<text x="@01710@" y="@172@" font-family="Verdana" style="fill:rgb(64,32,0)" text-anchor="middle">Rep.</text>
+<rect x="@01785@" y="@160@" width="@30@" height="@16@" style="fill:rgb(128,255,255);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>French annexation</title></rect>
+<text x="@01800@" y="@172@" font-family="Verdana" style="fill:rgb(0,128,128)" text-anchor="middle"></text>
+<rect x="@01815@" y="@160@" width="@185@" height="@16@" style="fill:rgb(255,0,0);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Modern states</title></rect>
+<text x="@01900@" y="@172@" font-family="Verdana" style="fill:rgb(128,0,0)" text-anchor="middle">Modern states</text>
+<text x="@-3300@" y="@172@" font-family="Verdana" style="fill:rgb(0,0,0);font-weight:bolder" text-anchor="start" fill-opacity="0.8">LOW CTRIES.</text>
+<text x="@02250@" y="@172@" font-family="Verdana" style="fill:rgb(0,0,0);font-weight:bolder" text-anchor="end" fill-opacity="0.8">LOW CTRIES.</text>
+
+<rect x="@-3300@" y="@180@" width="@200@" height="@16@" style="fill:rgb(255,192,192);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title></title></rect>
+<text x="@-3200@" y="@192@" font-family="Verdana" style="fill:rgb(192,0,0)" text-anchor="middle"></text>
+<rect x="@-3100@" y="@180@" width="@530@" height="@16@" style="fill:rgb(255,224,160);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Seine-Oise-Marne culture</title></rect>
+<text x="@-2850@" y="@192@" font-family="Verdana" style="fill:rgb(192,64,0)" text-anchor="middle">Seine-Oise-Marne culture</text>
+<rect x="@-2570@" y="@180@" width="@670@" height="@16@" style="fill:rgb(255,255,128);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Bell Beaker &amp; Chasseen culture</title></rect>
+<text x="@-2230@" y="@192@" font-family="Verdana" style="fill:rgb(128,128,0)" text-anchor="middle">Bell Beaker &amp; Chasseen cultures</text>
+<rect x="@-1900@" y="@180@" width="@300@" height="@16@" style="fill:rgb(192,255,128);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Copper - Bronze Age transition cultures, influence by Wessex culture</title></rect>
+<text x="@-1750@" y="@192@" font-family="Verdana" style="fill:rgb(64,128,0)" text-anchor="middle">Early BA (Wessex C.)</text>
+<rect x="@-1600@" y="@180@" width="@400@" height="@16@" style="fill:rgb(128,255,128);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Tumulus culture</title></rect>
+<text x="@-1400@" y="@192@" font-family="Verdana" style="fill:rgb(0,128,0)" text-anchor="middle">Tumulus Culture</text>
+<rect x="@-1200@" y="@180@" width="@450@" height="@16@" style="fill:rgb(64,255,64);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Urnfield culture</title></rect>
+<text x="@-0980@" y="@192@" font-family="Verdana" style="fill:rgb(0,64,0)" text-anchor="middle">Urnfield Culture</text>
+<rect x="@-0750@" y="@180@" width="@300@" height="@16@" style="fill:rgb(128,255,128);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Hallstatt Celtic culture</title></rect>
+<text x="@-0600@" y="@192@" font-family="Verdana" style="fill:rgb(0,128,0)" text-anchor="middle">Hallstatt</text>
+<rect x="@-0450@" y="@180@" width="@329@" height="@16@" style="fill:rgb(64,255,64);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>La Tene Celtic culture, transitioning into pre-Roman Gaul</title></rect>
+<text x="@-0290@" y="@192@" font-family="Verdana" style="fill:rgb(0,64,0)" text-anchor="middle">La Tene / Gaul</text>
+<rect x="@-0118@" y="@180@" width="@67@" height="@16@" style="fill:rgb(255,192,128);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Roman Invasions</title></rect>
+<text x="@-0080@" y="@192@" font-family="Verdana" style="fill:rgb(64,32,0)" text-anchor="middle"></text>
+<rect x="@-0051@" y="@180@" width="@461@" height="@16@" style="fill:rgb(255,128,128);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Roman Empire</title></rect>
+<text x="@00220@" y="@192@" font-family="Verdana" style="fill:rgb(128,0,0)" text-anchor="middle">Roman Empire</text>
+<rect x="@00410@" y="@180@" width="@76@" height="@16@" style="fill:rgb(255,192,192);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Sub-Roman Empire</title></rect>
+<text x="@00440@" y="@192@" font-family="Verdana" style="fill:rgb(128,0,0)" text-anchor="middle"></text>
+<rect x="@00481@" y="@180@" width="@270@" height="@16@" style="fill:rgb(128,255,255);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Merovingian dynasty</title></rect>
+<text x="@00610@" y="@192@" font-family="Verdana" style="fill:rgb(0,64,64)" text-anchor="middle">Merovingian</text>
+<rect x="@00751@" y="@180@" width="@114@" height="@16@" style="fill:rgb(64,255,255);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Carolingian dynasty</title></rect>
+<text x="@00820@" y="@192@" font-family="Verdana" style="fill:rgb(0,64,64)" text-anchor="middle">Carol.</text>
+<rect x="@00865@" y="@180@" width="@265@" height="@16@" style="fill:rgb(224,192,255);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Normans</title></rect>
+<text x="@01000@" y="@192@" font-family="Verdana" style="fill:rgb(64,0,128)" text-anchor="middle">Normans</text>
+<rect x="@01130@" y="@180@" width="@198@" height="@16@" style="fill:rgb(64,255,255);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Capetians</title></rect>
+<text x="@01230@" y="@192@" font-family="Verdana" style="fill:rgb(64,0,128)" text-anchor="middle">Capetians</text>
+<rect x="@01328@" y="@180@" width="@125@" height="@16@" style="fill:rgb(0,192,192);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Hundred Years War</title></rect>
+<text x="@01390@" y="@192@" font-family="Verdana" style="fill:rgb(0,0,0)" text-anchor="middle">100y war</text>
+<rect x="@01453@" y="@180@" width="@336@" height="@16@" style="fill:rgb(64,255,255);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Houses of Valois &amp; Bourbon</title></rect>
+<text x="@01630@" y="@192@" font-family="Verdana" style="fill:rgb(64,0,128)" text-anchor="middle">Valois/Bourbon</text>
+<rect x="@01789@" y="@180@" width="@81@" height="@16@" style="fill:rgb(0,192,192);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Napoleon, the long century, Franco-Prussian war</title></rect>
+<text x="@01830@" y="@192@" font-family="Verdana" style="fill:rgb(0,0,0)" text-anchor="middle">Nap. &amp;c.</text>
+<rect x="@01870@" y="@180@" width="@130@" height="@16@" style="fill:rgb(64,255,255);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Modern France</title></rect>
+<text x="@01930@" y="@192@" font-family="Verdana" style="fill:rgb(64,0,128)" text-anchor="middle"></text>
+<text x="@-3300@" y="@192@" font-family="Verdana" style="fill:rgb(0,0,0);font-weight:bolder" text-anchor="start" fill-opacity="0.8">FRANCE</text>
+<text x="@02250@" y="@192@" font-family="Verdana" style="fill:rgb(0,0,0);font-weight:bolder" text-anchor="end" fill-opacity="0.8">FRANCE</text>
+
+<rect x="@-3300@" y="@200@" width="@400@" height="@16@" style="fill:rgb(255,192,192);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Middle Neolithic</title></rect>
+<text x="@-3010@" y="@212@" font-family="Verdana" style="fill:rgb(192,0,0)" text-anchor="middle">Mid. N'lith.</text>
+<rect x="@-2900@" y="@200@" width="@425@" height="@16@" style="fill:rgb(255,192,127);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Late Neolithic, inc. Grooved Ware</title></rect>
+<text x="@-2700@" y="@212@" font-family="Verdana" style="fill:rgb(192,64,0)" text-anchor="middle">Late Neolithic</text>
+<rect x="@-2475@" y="@200@" width="@325@" height="@16@" style="fill:rgb(255,255,128);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Bell Beaker culture</title></rect>
+<text x="@-2310@" y="@212@" font-family="Verdana" style="fill:rgb(128,128,0)" text-anchor="middle">Bell B.</text>
+<rect x="@-2150@" y="@200@" width="@950@" height="@16@" style="fill:rgb(192,255,64);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Early Bronze Age, likely pre-Brythonnic, inc. Wessex culture</title></rect>
+<text x="@-1700@" y="@212@" font-family="Verdana" style="fill:rgb(96,128,0)" text-anchor="middle">Early B.A. (Wessex C.)</text>
+<rect x="@-1200@" y="@200@" width="@450@" height="@16@" style="fill:rgb(128,255,64);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Late Bronze Age, possibly pre-Brythonnic</title></rect>
+<text x="@-0970@" y="@212@" font-family="Verdana" style="fill:rgb(64,128,0)" text-anchor="middle">Late Bronze Age</text>
+<rect x="@-0750@" y="@200@" width="@450@" height="@16@" style="fill:rgb(64,255,64);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Brythonnic Celts, influenced by Hallstatt &amp; La Tene cultures</title></rect>
+<text x="@-0520@" y="@212@" font-family="Verdana" style="fill:rgb(0,128,0)" text-anchor="middle">Iron A.: Hallstatt/La Tene</text>
+<rect x="@-0300@" y="@200@" width="@245@" height="@16@" style="fill:rgb(128,255,128);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Brythonnic Celts / invasions by Parisii &amp; Belgae</title></rect>
+<text x="@-0170@" y="@212@" font-family="Verdana" style="fill:rgb(0,128,0)" text-anchor="middle">Parisii/Belgae</text>
+<rect x="@-0055@" y="@200@" width="@98@" height="@16@" style="fill:rgb(255,192,128);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Roman Invasions</title></rect>
+<text x="@00220@" y="@212@" font-family="Verdana" style="fill:rgb(64,32,0)" text-anchor="middle"></text>
+<rect x="@00043@" y="@200@" width="@407@" height="@16@" style="fill:rgb(255,128,128);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Roman Empire</title></rect>
+<text x="@00220@" y="@212@" font-family="Verdana" style="fill:rgb(128,0,0)" text-anchor="middle">Roman Empire</text>
+<rect x="@00410@" y="@200@" width="@40@" height="@16@" style="fill:rgb(255,192,192);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Sub-Roman Empire</title></rect>
+<text x="@00430@" y="@212@" font-family="Verdana" style="fill:rgb(128,0,0)" text-anchor="middle"></text>
+<rect x="@00450@" y="@200@" width="@415@" height="@16@" style="fill:rgb(128,128,255);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Germanic Tribes (Angles, Saxons, Jutes, etc.) / Dal Riata</title></rect>
+<text x="@00620@" y="@212@" font-family="Verdana" style="fill:rgb(0,0,128)" text-anchor="middle">Germanic tribes</text>
+<rect x="@00865@" y="@200@" width="@201@" height="@16@" style="fill:rgb(128,0,255);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Danelaw (England)</title></rect>
+<text x="@00960@" y="@212@" font-family="Verdana" style="fill:rgb(64,0,128)" text-anchor="middle">Danes</text>
+<rect x="@01066@" y="@200@" width="@535@" height="@16@" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Normans</title></rect>
+<text x="@01300@" y="@212@" font-family="Verdana" style="fill:rgb(0,0,0)" text-anchor="middle">Normans</text>
+<rect x="@01601@" y="@200@" width="@399@" height="@16@" style="fill:rgb(255,128,128);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>United Kingdom</title></rect>
+<text x="@01800@" y="@212@" font-family="Verdana" style="fill:rgb(64,0,0)" text-anchor="middle">United Kingdom</text>
+<text x="@-3300@" y="@212@" font-family="Verdana" style="fill:rgb(0,0,0);font-weight:bolder" text-anchor="start" fill-opacity="0.8">ENG./WAL.</text>
+<text x="@02250@" y="@212@" font-family="Verdana" style="fill:rgb(0,0,0);font-weight:bolder" text-anchor="end" fill-opacity="0.8">ENG./WAL.</text>
+
+<rect x="@-3300@" y="@220@" width="@800@" height="@16@" style="fill:rgb(255,192,127);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Neolithic</title></rect>
+<text x="@-2800@" y="@232@" font-family="Verdana" style="fill:rgb(192,64,0)" text-anchor="middle">Neolithic</text>
+<rect x="@-2500@" y="@220@" width="@1000@" height="@16@" style="fill:rgb(255,255,128);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Bell Beaker culture</title></rect>
+<text x="@-2000@" y="@232@" font-family="Verdana" style="fill:rgb(128,128,0)" text-anchor="middle">Bell Beaker</text>
+<rect x="@-1500@" y="@220@" width="@600@" height="@16@" style="fill:rgb(255,255,192);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Earlier Bronze Age cultures</title></rect>
+<text x="@-1200@" y="@232@" font-family="Verdana" style="fill:rgb(128,128,64)" text-anchor="middle">Early Bronze Age</text>
+<rect x="@-0900@" y="@220@" width="@200@" height="@16@" style="fill:rgb(192,255,128);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Late Bronze Age cultures</title></rect>
+<text x="@-0780@" y="@232@" font-family="Verdana" style="fill:rgb(96,128,32)" text-anchor="middle">Late BA</text>
+<rect x="@-0700@" y="@220@" width="@841@" height="@16@" style="fill:rgb(128,255,128);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Brythonic Celtic cultures</title></rect>
+<text x="@-0300@" y="@232@" font-family="Verdana" style="fill:rgb(0,128,0)" text-anchor="middle">Brythonic Celts / Iron Age</text>
+<rect x="@00141@" y="@220@" width="@69@" height="@16@" style="fill:rgb(255,128,128);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Roman Empire</title></rect>
+<text x="@00170@" y="@232@" font-family="Verdana" style="fill:rgb(128,0,0)" text-anchor="middle">Rom.</text>
+<rect x="@00210@" y="@220@" width="@290@" height="@16@" style="fill:rgb(192,255,64);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Pictish Kingdoms</title></rect>
+<text x="@00350@" y="@232@" font-family="Verdana" style="fill:rgb(32,64,0)" text-anchor="middle">Picts</text>
+<rect x="@00500@" y="@220@" width="@364@" height="@16@" style="fill:rgb(128,255,64);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Pictish and Gaelic Kingdoms</title></rect>
+<text x="@00700@" y="@232@" font-family="Verdana" style="fill:rgb(16,64,0)" text-anchor="middle">Picts/Dal Riata</text>
+<rect x="@00864@" y="@220@" width="@260@" height="@16@" style="fill:rgb(64,0,128);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Unified Scotland / Viking presence</title></rect>
+<text x="@01000@" y="@232@" font-family="Verdana" style="fill:rgb(64,0,128)" text-anchor="middle">Scotland/Vikings</text>
+<rect x="@01124@" y="@220@" width="@477@" height="@16@" style="fill:rgb(224,255,224);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Norman influence</title></rect>
+<text x="@01300@" y="@232@" font-family="Verdana" style="fill:rgb(0,0,0)" text-anchor="middle">Norman influence</text>
+<rect x="@01601@" y="@220@" width="@399@" height="@16@" style="fill:rgb(255,128,128);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>United Kingdom</title></rect>
+<text x="@01800@" y="@232@" font-family="Verdana" style="fill:rgb(64,0,0)" text-anchor="middle">United Kingdom</text>
+<text x="@-3300@" y="@232@" font-family="Verdana" style="fill:rgb(0,0,0);font-weight:bolder" text-anchor="start" fill-opacity="0.8">SCOTLAND</text>
+<text x="@02250@" y="@232@" font-family="Verdana" style="fill:rgb(0,0,0);font-weight:bolder" text-anchor="end" fill-opacity="0.8">SCOTLAND</text>
+
+<rect x="@-3300@" y="@240@" width="@800@" height="@16@" style="fill:rgb(255,192,127);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Neolithic</title></rect>
+<text x="@-2800@" y="@252@" font-family="Verdana" style="fill:rgb(192,64,0)" text-anchor="middle">Neolithic</text>
+<rect x="@-2500@" y="@240@" width="@500@" height="@16@" style="fill:rgb(255,255,128);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Bell Beaker culture</title></rect>
+<text x="@-2250@" y="@252@" font-family="Verdana" style="fill:rgb(128,128,0)" text-anchor="middle">Bell Beaker</text>
+<rect x="@-2000@" y="@240@" width="@1400@" height="@16@" style="fill:rgb(255,255,192);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Bronze Age cultures</title></rect>
+<text x="@-1300@" y="@252@" font-family="Verdana" style="fill:rgb(128,128,64)" text-anchor="middle">Bronze Age</text>
+<rect x="@-0600@" y="@240@" width="@300@" height="@16@" style="fill:rgb(192,255,128);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Iron Age cultures</title></rect>
+<text x="@-0450@" y="@252@" font-family="Verdana" style="fill:rgb(96,128,32)" text-anchor="middle">Iron Age</text>
+<rect x="@-0300@" y="@240@" width="@731@" height="@16@" style="fill:rgb(128,255,128);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>La Tene influenced cultures</title></rect>
+<text x="@00050@" y="@252@" font-family="Verdana" style="fill:rgb(0,128,0)" text-anchor="middle">`La Tene' Celts</text>
+<rect x="@00431@" y="@240@" width="@421@" height="@16@" style="fill:rgb(64,255,64);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Historical Christian Ireland</title></rect>
+<text x="@00650@" y="@252@" font-family="Verdana" style="fill:rgb(0,64,0)" text-anchor="middle">Christianity</text>
+<rect x="@00852@" y="@240@" width="@316@" height="@16@" style="fill:rgb(128,0,255);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Viking settlement (SE Ireland)</title></rect>
+<text x="@01000@" y="@252@" font-family="Verdana" style="fill:rgb(64,0,128)" text-anchor="middle">Vikings</text>
+<rect x="@01168@" y="@240@" width="@368@" height="@16@" style="fill:rgb(224,255,224);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Norman influence (the Pale, etc.)</title></rect>
+<text x="@01320@" y="@252@" font-family="Verdana" style="fill:rgb(0,0,0)" text-anchor="middle">Norman influence</text>
+<rect x="@01536@" y="@240@" width="@382@" height="@16@" style="fill:rgb(255,128,128);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Plantations</title></rect>
+<text x="@01750@" y="@252@" font-family="Verdana" style="fill:rgb(64,0,0)" text-anchor="middle">Plantations</text>
+<rect x="@01918@" y="@240@" width="@82@" height="@16@" style="fill:rgb(255,128,0);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Republic</title></rect>
+<text x="@01950@" y="@252@" font-family="Verdana" style="fill:rgb(128,64,0)" text-anchor="middle">Rep.</text>
+<text x="@-3300@" y="@252@" font-family="Verdana" style="fill:rgb(0,0,0);font-weight:bolder" text-anchor="start" fill-opacity="0.8">IRELAND</text>
+<text x="@02250@" y="@252@" font-family="Verdana" style="fill:rgb(0,0,0);font-weight:bolder" text-anchor="end" fill-opacity="0.8">IRELAND</text>
+
+<rect x="@-3300@" y="@260@" width="@350@" height="@16@" style="fill:rgb(255,192,127);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Neolithic</title></rect>
+<text x="@-3030@" y="@272@" font-family="Verdana" style="fill:rgb(192,64,0)" text-anchor="middle">Neolithic</text>
+<rect x="@-2950@" y="@260@" width="@750@" height="@16@" style="fill:rgb(255,255,128);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Bell Beaker culture</title></rect>
+<text x="@-2600@" y="@272@" font-family="Verdana" style="fill:rgb(128,128,0)" text-anchor="middle">Bell Beaker</text>
+<rect x="@-2200@" y="@260@" width="@400@" height="@16@" style="fill:rgb(192,255,0);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Copper Age, transition to early Bronze Age</title></rect>
+<text x="@-2000@" y="@272@" font-family="Verdana" style="fill:rgb(64,96,0)" text-anchor="middle">Chalcolithic / Early B.A.</text>
+<rect x="@-1800@" y="@260@" width="@700@" height="@16@" style="fill:rgb(192,255,64);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Bronze Age</title></rect>
+<text x="@-1450@" y="@272@" font-family="Verdana" style="fill:rgb(64,96,0)" text-anchor="middle">Bronze Age</text>
+<rect x="@-1100@" y="@260@" width="@300@" height="@16@" style="fill:rgb(255,255,192);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Regional powers, inc. Phoenicians, Hallstadt in Iberia</title></rect>
+<text x="@-0950@" y="@272@" font-family="Verdana" style="fill:rgb(128,128,0)" text-anchor="middle">Phoenicians / Hallstadt</text>
+<rect x="@-0800@" y="@260@" width="@518@" height="@16@" style="fill:rgb(255,255,224);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Regional powers, inc. Etruscans and Greeks, some Iberian Celts</title></rect>
+<text x="@-0490@" y="@272@" font-family="Verdana" style="fill:rgb(128,128,0)" text-anchor="middle">Etruscans / Greeks</text>
+<rect x="@-0282@" y="@260@" width="@758@" height="@16@" style="fill:rgb(255,128,128);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Roman Empire</title></rect>
+<text x="@00050@" y="@272@" font-family="Verdana" style="fill:rgb(128,0,0)" text-anchor="middle">Roman Empire</text>
+<rect x="@00476@" y="@260@" width="@235@" height="@16@" style="fill:rgb(160,96,255);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Migration Age: Goths &amp; Lombards</title></rect>
+<text x="@00520@" y="@272@" font-family="Verdana" style="fill:rgb(0,0,128)" text-anchor="middle">Germanics/Goths</text>
+<rect x="@00711@" y="@260@" width="@350@" height="@16@" style="fill:rgb(96,128,96);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Franks (France, Italy) &amp; Moors (Iberia)</title></rect>
+<text x="@00890@" y="@272@" font-family="Verdana" style="fill:rgb(0,0,0)" text-anchor="middle">Franks/Moors</text>
+<rect x="@01061@" y="@260@" width="@431@" height="@16@" style="fill:rgb(96,128,96);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Holy Roman Empire (Italy), Crusades (Sicily:Normans), Reconquista (Iberia)</title></rect>
+<text x="@01280@" y="@272@" font-family="Verdana" style="fill:rgb(0,0,0)" text-anchor="middle">HRE/Crusades/Reconq.</text>
+<rect x="@01492@" y="@260@" width="@208@" height="@16@" style="fill:rgb(224,192,255);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Hapsburgs (Spain &amp; Italy), City States</title></rect>
+<text x="@01600@" y="@272@" font-family="Verdana" style="fill:rgb(0,0,0)" text-anchor="middle">Hapsburgs &amp;c.</text>
+<rect x="@01700@" y="@260@" width="@161@" height="@16@" style="fill:rgb(192,128,224);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Consolidation of regional powers</title></rect>
+<text x="@01780@" y="@272@" font-family="Verdana" style="fill:rgb(0,0,0)" text-anchor="middle"></text>
+<rect x="@01861@" y="@260@" width="@139@" height="@16@" style="fill:rgb(224,128,64);stroke-width:1;stroke:rgb(191,191,191)" fill-opacity="0.5" stroke-opacity="0.7"><title>Modern states</title></rect>
+<text x="@01900@" y="@272@" font-family="Verdana" style="fill:rgb(0,0,0)" text-anchor="middle">Modern states</text>
+<text x="@-3300@" y="@272@" font-family="Verdana" style="fill:rgb(0,0,0);font-weight:bolder" text-anchor="start" fill-opacity="0.8">MED.</text>
+<text x="@02250@" y="@272@" font-family="Verdana" style="fill:rgb(0,0,0);font-weight:bolder" text-anchor="end" fill-opacity="0.8">MED.</text>
+
+<rect x="@-3300@" y="@280@" width="@100@" height="@16@" style="fill:rgb(255,128,192);stroke-width:0" fill-opacity="0.7"><title></title></rect>
+<rect x="@-3200@" y="@280@" width="@100@" height="@16@" style="fill:rgb(192,96,224);stroke-width:0" fill-opacity="0.7"><title></title></rect>
+<rect x="@-3100@" y="@280@" width="@100@" height="@16@" style="fill:rgb(128,64,255);stroke-width:0" fill-opacity="0.7"><title></title></rect>
+<rect x="@-3000@" y="@280@" width="@100@" height="@16@" style="fill:rgb(64,32,255);stroke-width:0" fill-opacity="0.7"><title></title></rect>
+<rect x="@-2900@" y="@280@" width="@100@" height="@16@" style="fill:rgb(0,0,255);stroke-width:0" fill-opacity="0.7"><title></title></rect>
+<rect x="@-2800@" y="@280@" width="@100@" height="@16@" style="fill:rgb(64,16,224);stroke-width:0" fill-opacity="0.7"><title></title></rect>
+<rect x="@-2700@" y="@280@" width="@100@" height="@16@" style="fill:rgb(96,32,192);stroke-width:0" fill-opacity="0.7"><title></title></rect>
+<rect x="@-2600@" y="@280@" width="@100@" height="@16@" style="fill:rgb(128,48,160);stroke-width:0" fill-opacity="0.7"><title></title></rect>
+<rect x="@-2500@" y="@280@" width="@100@" height="@16@" style="fill:rgb(160,64,128);stroke-width:0" fill-opacity="0.7"><title></title></rect>
+<rect x="@-2400@" y="@280@" width="@100@" height="@16@" style="fill:rgb(192,96,96);stroke-width:0" fill-opacity="0.7"><title></title></rect>
+<rect x="@-2300@" y="@280@" width="@100@" height="@16@" style="fill:rgb(192,96,96);stroke-width:0" fill-opacity="0.7"><title></title></rect>
+<rect x="@-2200@" y="@280@" width="@100@" height="@16@" style="fill:rgb(192,192,0);stroke-width:0" fill-opacity="0.7"><title></title></rect>
+<rect x="@-2100@" y="@280@" width="@100@" height="@16@" style="fill:rgb(128,0,128);stroke-width:0" fill-opacity="0.7"><title></title></rect>
+<rect x="@-2000@" y="@280@" width="@100@" height="@16@" style="fill:rgb(96,0,160);stroke-width:0" fill-opacity="0.7"><title></title></rect>
+<rect x="@-1900@" y="@280@" width="@100@" height="@16@" style="fill:rgb(64,0,192);stroke-width:0" fill-opacity="0.7"><title></title></rect>
+<rect x="@-1800@" y="@280@" width="@100@" height="@16@" style="fill:rgb(96,0,160);stroke-width:0" fill-opacity="0.7"><title></title></rect>
+<rect x="@-1700@" y="@280@" width="@100@" height="@16@" style="fill:rgb(128,0,128);stroke-width:0" fill-opacity="0.7"><title></title></rect>
+<rect x="@-1600@" y="@280@" width="@100@" height="@16@" style="fill:rgb(96,0,192);stroke-width:0" fill-opacity="0.7"><title></title></rect>
+<rect x="@-1500@" y="@280@" width="@100@" height="@16@" style="fill:rgb(128,0,160);stroke-width:0" fill-opacity="0.7"><title></title></rect>
+<rect x="@-1400@" y="@280@" width="@100@" height="@16@" style="fill:rgb(160,0,128);stroke-width:0" fill-opacity="0.7"><title></title></rect>
+<rect x="@-1300@" y="@280@" width="@100@" height="@16@" style="fill:rgb(255,0,64);stroke-width:0" fill-opacity="0.7"><title></title></rect>
+<rect x="@-1200@" y="@280@" width="@100@" height="@16@" style="fill:rgb(255,128,128);stroke-width:0" fill-opacity="0.7"><title></title></rect>
+<rect x="@-1100@" y="@280@" width="@100@" height="@16@" style="fill:rgb(64,0,192);stroke-width:0" fill-opacity="0.7"><title></title></rect>
+<rect x="@-1000@" y="@280@" width="@100@" height="@16@" style="fill:rgb(128,0,160);stroke-width:0" fill-opacity="0.7"><title></title></rect>
+<rect x="@-0900@" y="@280@" width="@100@" height="@16@" style="fill:rgb(128,0,160);stroke-width:0" fill-opacity="0.7"><title></title></rect>
+<rect x="@-0800@" y="@280@" width="@100@" height="@16@" style="fill:rgb(64,0,224);stroke-width:0" fill-opacity="0.7"><title></title></rect>
+<rect x="@-0700@" y="@280@" width="@100@" height="@16@" style="fill:rgb(92,0,192);stroke-width:0" fill-opacity="0.7"><title></title></rect>
+<rect x="@-0600@" y="@280@" width="@100@" height="@16@" style="fill:rgb(64,0,224);stroke-width:0" fill-opacity="0.7"><title></title></rect>
+<rect x="@-0500@" y="@280@" width="@100@" height="@16@" style="fill:rgb(92,0,192);stroke-width:0" fill-opacity="0.7"><title></title></rect>
+<rect x="@-0400@" y="@280@" width="@100@" height="@16@" style="fill:rgb(160,0,128);stroke-width:0" fill-opacity="0.7"><title></title></rect>
+<rect x="@-0300@" y="@280@" width="@100@" height="@16@" style="fill:rgb(128,0,192);stroke-width:0" fill-opacity="0.7"><title></title></rect>
+<rect x="@-0200@" y="@280@" width="@100@" height="@16@" style="fill:rgb(192,0,128);stroke-width:0" fill-opacity="0.7"><title></title></rect>
+<rect x="@-0100@" y="@280@" width="@100@" height="@16@" style="fill:rgb(224,0,96);stroke-width:0" fill-opacity="0.7"><title></title></rect>
+<rect x="@00000@" y="@280@" width="@100@" height="@16@" style="fill:rgb(160,0,128);stroke-width:0" fill-opacity="0.7"><title></title></rect>
+<rect x="@00100@" y="@280@" width="@100@" height="@16@" style="fill:rgb(32,0,255);stroke-width:0" fill-opacity="0.7"><title></title></rect>
+<rect x="@00200@" y="@280@" width="@100@" height="@16@" style="fill:rgb(32,0,255);stroke-width:0" fill-opacity="0.7"><title></title></rect>
+<rect x="@00300@" y="@280@" width="@100@" height="@16@" style="fill:rgb(64,0,224);stroke-width:0" fill-opacity="0.7"><title></title></rect>
+<rect x="@00400@" y="@280@" width="@100@" height="@16@" style="fill:rgb(64,0,224);stroke-width:0" fill-opacity="0.7"><title></title></rect>
+<rect x="@00500@" y="@280@" width="@100@" height="@16@" style="fill:rgb(0,0,255);stroke-width:0" fill-opacity="0.7"><title></title></rect>
+<rect x="@00600@" y="@280@" width="@100@" height="@16@" style="fill:rgb(0,0,224);stroke-width:0" fill-opacity="0.7"><title></title></rect>
+<rect x="@00700@" y="@280@" width="@100@" height="@16@" style="fill:rgb(0,0,192);stroke-width:0" fill-opacity="0.7"><title></title></rect>
+<rect x="@00800@" y="@280@" width="@100@" height="@16@" style="fill:rgb(0,0,255);stroke-width:0" fill-opacity="0.7"><title></title></rect>
+<rect x="@00900@" y="@280@" width="@100@" height="@16@" style="fill:rgb(128,0,255);stroke-width:0" fill-opacity="0.7"><title></title></rect>
+<rect x="@01000@" y="@280@" width="@100@" height="@16@" style="fill:rgb(128,0,255);stroke-width:0" fill-opacity="0.7"><title></title></rect>
+<rect x="@01100@" y="@280@" width="@100@" height="@16@" style="fill:rgb(0,0,255);stroke-width:0" fill-opacity="0.7"><title></title></rect>
+<rect x="@01200@" y="@280@" width="@100@" height="@16@" style="fill:rgb(0,0,224);stroke-width:0" fill-opacity="0.7"><title></title></rect>
+<rect x="@01300@" y="@280@" width="@100@" height="@16@" style="fill:rgb(0,0,192);stroke-width:0" fill-opacity="0.7"><title></title></rect>
+<rect x="@01400@" y="@280@" width="@100@" height="@16@" style="fill:rgb(0,0,192);stroke-width:0" fill-opacity="0.7"><title></title></rect>
+<rect x="@01500@" y="@280@" width="@100@" height="@16@" style="fill:rgb(0,0,160);stroke-width:0" fill-opacity="0.7"><title></title></rect>
+<rect x="@01600@" y="@280@" width="@100@" height="@16@" style="fill:rgb(0,0,128);stroke-width:0" fill-opacity="0.7"><title></title></rect>
+<rect x="@01700@" y="@280@" width="@100@" height="@16@" style="fill:rgb(0,0,192);stroke-width:0" fill-opacity="0.7"><title></title></rect>
+<rect x="@01800@" y="@280@" width="@100@" height="@16@" style="fill:rgb(0,0,255);stroke-width:0" fill-opacity="0.7"><title></title></rect>
+<rect x="@01900@" y="@280@" width="@100@" height="@16@" style="fill:rgb(128,0,255);stroke-width:0" fill-opacity="0.7"><title></title></rect>
+<text x="@-2850@" y="@292@" font-family="Verdana" style="fill:rgb(0,0,0)" text-anchor="middle">Piora Osc.</text>
+<text x="@-2150@" y="@292@" font-family="Verdana" style="fill:rgb(0,0,0)" text-anchor="middle">4.2 kyr</text>
+<text x="@-1650@" y="@292@" font-family="Verdana" style="fill:rgb(0,0,0)" text-anchor="middle">Mid. Br. Age Cold Epoch</text>
+<text x="@-1150@" y="@292@" font-family="Verdana" style="fill:rgb(0,0,0)" text-anchor="middle">Br. Age Collapse</text>
+<text x="@-0650@" y="@292@" font-family="Verdana" style="fill:rgb(0,0,0)" text-anchor="middle">Iron Age Cold Epoch</text>
+<text x="@-0050@" y="@292@" font-family="Verdana" style="fill:rgb(0,0,0)" text-anchor="middle">Roman Warm Per.</text>
+<text x="@00550@" y="@292@" font-family="Verdana" style="fill:rgb(0,0,0)" text-anchor="middle">Dark Ages</text>
+<text x="@00950@" y="@292@" font-family="Verdana" style="fill:rgb(0,0,0)" text-anchor="middle">Med. Warm. Per.</text>
+<text x="@01550@" y="@292@" font-family="Verdana" style="fill:rgb(0,0,0)" text-anchor="middle">Little Ice Age</text>
+<text x="@-3300@" y="@292@" font-family="Verdana" style="fill:rgb(0,0,0);font-weight:bolder;font-style:italic" text-anchor="start" fill-opacity="0.8">CLIMATE</text>
+<text x="@02250@" y="@292@" font-family="Verdana" style="fill:rgb(0,0,0);font-weight:bolder;font-style:italic" text-anchor="end" fill-opacity="0.8">CLIMATE</text>
