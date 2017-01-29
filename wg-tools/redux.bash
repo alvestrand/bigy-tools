@@ -2,7 +2,7 @@
 # Author: Iain McDonald
 # Contributors: Harald Alvestrand
 # Purpose: Reduction and comparison script for Family Tree DNA's BigY data
-# Release: 0.5.3 2016/11/24
+# Version: 0.6.5 2016/01/28
 # For free distribution under the terms of the GNU General Public License, version 3 (29 June 2007)
 # https://www.gnu.org/licenses/gpl.html
 
@@ -28,18 +28,21 @@
 #		implications.txt badlist.txt recurrencies.txt cladenames.txt
 #	 You will need to do this iteratively, running the report and tweaking the output,
 #	 in order to form a coherent tree with the labels you want.
-#	(i) Implications (implications.txt). This allows you to correct for no calls and other problems in the data,
-#		by implying that any test positive for a sub-clade must be positive for its parent, e.g.:
-#         7246726 > 23612197 : L48 > Z381
-#		implies that any L48+ test must be Z381+. The labels are not actually used: it relies on the positions
-#		before the colon. These should be in GrCh37 co-ordinates (native to BigY).
-#		The implications list can also include a number of SNPs not found in any BigY test which need to be inserted.
-#		These should have the form:
-#		  ^ 14181107 Z301 G T
-#		The correct implications then need to be put in place to populate these clades.
-#		The implications list is also used to denote positives in the reference genome, using the form:
-#		  < 22157311	P312	C	A
-#		which notes that P312 is positive in the reference genome sequence.
+#	(i) Implications (implications.txt). This allows you to correct for no calls and other problems in the data, including:
+#		[A] Forcing that any test positive for a sub-clade must be positive for its parent, e.g.:
+#             7246726 > 23612197 : L48 > Z381
+#		    implies that any L48+ test must be Z381+. The labels are not actually used: it relies on the positions
+#		    before the colon. These should be in GrCh37 co-ordinates (native to BigY).
+#       [B] Implications can also include two different SNPs, e.g.:
+#             7246726 & 8796078 > 23612197 : L48 & U106 > Z381
+#           enforces Z381+ if L48+ and U106+. This reduced false implied positives, but takes slightly longer.
+#		[C] The implications list can also include a number of SNPs not found in any BigY test which need to be inserted.
+#		    These should have the form:
+#		      ^ 14181107 Z301 G T
+#		    The correct implications then need to be put in place to populate these clades.
+#		[D] The implications list is also used to denote positives in the reference genome, using the form:
+#		      < 22157311	P312	C	A
+#		    which notes that P312 is positive in the reference genome sequence.
 #	(ii) Bad data (badlist.txt). Many SNPs are simply not correctly called, called inconsistently,
 #		or otherwise not helpful in such a report. They can be filtered out into the list of inconsistent SNPs, e.g.:
 #    	  22436300 : E206
@@ -56,12 +59,13 @@
 #			MAKEREPORT=1
 #			MAKEAGES=0
 #			MAKESHORTREPORT=1
-#			MAKEHTMLREPORT=0
-#			SKIPZIP="0"
+#			MAKEHTMLREPORT=1
+#           CHECKDATA=1
+#			SKIPZIP=0
 #	  Check the other inputs are what you want them to be too.
 # (b) Run the programme.
 #		./redux.bash
-# 	  For circa 800 kits, this process takes around 25 minutes on a heavy-duty 2014 laptop.
+# 	  For circa 800 kits, this process takes around 25 minutes on a medium-range 2016 laptop.
 # (c) Examine the output:
 #		The report will be placed in: report.csv
 #		The short report will be placed in: shortreport.csv
@@ -71,22 +75,28 @@
 #       A list of SNPs that can be merged up into higher clades will be placed in: merge-list.txt
 #       A list of forced positives (called negative, presumed positive): forced-list.txt
 # (d) Filter the input data and repeat.
-#		Identify problematic SNPs in warning-list.txt and exclude them using the files in section 2(b).
+#		Identify problematic SNPs in:
+#			warning-list.txt and merge-list.txt
+#		Exclude them using the files in section 2(b).
+#		Also check warnings in report.html if the output looks odd:
+#			grep WARNING report.html
 #		Set flags to:
-#			SKIPZIP="3"
+#			SKIPZIP=3
 #		and re-run the code (./redux.bash). Rinse and repeat.
 # (e) Once you have placated the warning list, set:
+#           CHECKDATA=0
 #			MAKEAGES=1
-#			MAKEHTMLREPORT=1
 #		and re-run the code to perform the age analysis.
-# 	  For circa 800 kits, this process takes another 30 minutes on a heavy-duty 2014 laptop.
+# 	  For circa 800 kits, this process takes another 30 minutes on a medium-range 2016 laptop.
 # (f) Once you're done, don't forget to reset:
 #			MAKEREPORT=1
 #			MAKEAGES=0
 #			MAKESHORTREPORT=1
-#			MAKEHTMLREPORT=0
-#			SKIPZIP="0"
+#			MAKEHTMLREPORT=1
+#           CHECKDATA=1
+#			SKIPZIP=0
 # 4. Enjoy the results.
+# (Note you may want to adjust the SVG output options, and the events.svg and treefoot.html files to suit your haplogroup.)
 
 
 # USER DEFINED VARIABLES
@@ -100,11 +110,19 @@ TOPSNP="U106"
 # MAKEAGES = perform age analysis
 # MAKESHORTREPORT = make a shorter version of the report, collapsing the singleton section and removing the shared and inconsistent list of SNPs
 # MAKEHTMLTREE = make an HTML version of the tree for easier visualisation
+# CHECKDATA = display warnings and create lists if inconsistencies detected in report (0 = no; >0 = yes)
+# SKIPZIP = skip certain parts of the script: see below
+# ZIPUPDATEONLY = don't re-extract that already exist # There's a bug here somewhere!
+# TESTFORREFPOS = test for positives in the references sequence and swap if needed: see below
 MAKEREPORT=1
 MAKEAGES=1
 MAKESHORTREPORT=1
 MAKEHTMLREPORT=1
-
+CHECKDATA=1
+SKIPZIP=0
+ZIPUPDATEONLY=1
+TESTFORREFPOS=0
+# Notes on SKIPZIP
 # Set SKIPZIP to >0 skip the labour-intensive parts of the script. Requires MAKEREPORT=TRUE
 # This should only be done if you have run the script before on the same dataset!
 # If set to 1, unzipping and VCF/BED file scanning will be ignored
@@ -114,10 +132,13 @@ MAKEHTMLREPORT=1
 #    It also uses the ORDER of the previous run, taken from order.txt
 #    This requires a complete successful previous run
 # If set to 3, SNP names aren't updated either. The previous SNP names are used.
-SKIPZIP="0"
 
-# Display warning if inconsistencies detected in report (0=no; 1=yes)
-WARNINGSNPS=1
+# Notes on TESTFORREFPOS
+# This should be set for clades where the reference sequence contains positives
+# For BigY, this includes clades in R1b-U152 and G2.
+# Clades which include ancestral SNPs of these regions (e.g. R, R1, R1b-M343, R1b-M269, R1b-L11, R1b-P312, ...)
+# should have this set. However, self-contained branches of these clades do not (e.g. R1b-U106)
+# as test results should be all positive or all negative for the group.
 
 # The following parameters set the mutation rate for the age analysis.
 # The rate is set in SNP mutations per year per *billion* base pairs.
@@ -131,14 +152,14 @@ WARNINGSNPS=1
 #RATE1=0.814
 
 # Rates for standardised age.bed restricted region
-RATE=0.8184
-RATE0=0.7588
-RATE1=0.8770
+RATE=0.8191
+RATE0=0.7594
+RATE1=0.8777
 
 # ZEROAGE gives the date from which ages are computed
 # ERRZEROAGE gives the (95% c.i.) +/- variation in this date for individual testers
-ZEROAGE=1950.05
-ERRZEROAGE=15.28
+ZEROAGE=1949.85
+ERRZEROAGE=15.26
 
 # That's it!
 
@@ -148,12 +169,28 @@ ERRZEROAGE=15.28
 #      age.bed : Contains the regions used to count SNPs for age analysis.
 #      poisson.tbl : A look-up table containing a matrix of Poisson functions
 #      cpoisson.tbl : A look-up table containing 95% confidence intervals for cumulative Poisson statistics
+#      events.svg : A customisable list of historical events to be included in the SVG file
 #
 # How to make a backup:
-#      zip redux.zip redux.bash positives-and-no-calls.py snps_hg19.csv age.bed poisson.tbl cpoisson.tbl implications.txt badlist.txt recurrencies.txt cladenames.txt
+#      zip redux.zip redux.bash positives-and-no-calls.py snps_hg19.csv age.bed poisson.tbl cpoisson.tbl implications.txt badlist.txt recurrencies.txt cladenames.txt events.svg treefoot.html
 
 # Change log:
-# 0.5.3.20161124a - Fixed bug with ref. seq. positive replacement
+VERSION="0.6.5"
+# 0.6.5.20160126a - Allowed combined "if (A+ & B+) then C+" implications
+# 0.6.4.20160120a - EARLY RELEASE 861
+#					Added header to SVG tree, swapped horizontal/vertical
+# 0.6.3.20160110a - EARLY RELEAESE 844
+#					Fixed bug with labelling column headers U106 regardless of $TOPSNP
+#					Encoded basic SVG tree
+#					Improved memory performance in horizontal sort
+# 0.6.2.20161220a - Efficiency savings: option for only updating unzipped files
+#					Efficiency savings: preliminary statistics generation
+# 0.6.1.20161216a - Added test "newness" colour coding to HTML report
+# 0.6.0.20161213b - Creating a basic working HTML report
+# 0.5.4.20161213a - Fixed bug with merging identical insertions
+#					Made data checking routines optional (CHECKDATA)
+# 0.5.3.20161124a - EARLY RELEASE 783
+#					Fixed bug with ref. seq. positive replacement
 # 0.5.2.20161113a - Encoded test to check whether branches can be merged up
 #					Encoded test to check and list forced positives
 # 0.5.1.20161107a - Allowed correction of positives in reference sequence
@@ -192,11 +229,14 @@ ERRZEROAGE=15.28
 # 0.1.1.20160822a - BETA RELEASE (710): allowed basic compilation of report.csv
 
 # Wish list / priority list:
-# HTML report: write outpu to support output over 1009 files
-# Basic report: support outside of U106 (create file to allow swaps of ancestral/derived values on reference chromosome?)
+# HTML report: ensure clade name is prioritised (<STRONG>?)
+# HTML report: links to YBrowse
+# HTML report: list quality information
+# HTML report: display age information
+# HTML report: display Build 37 / 38 locations
+# HTML report: list gene information?
 # Basic report: intelligent support for "possible" clades [(?!) notation]
 # Basic report: include GrCh37<->GrCh38 conversion (using CrossMap?)
-# Basic report: test equivalencies of SNPs and indels to remove duplicates and test for any missing clades they form (e.g. FGC564 / 7775535)
 # Basic report: sorting criterion to match FTDNA tree
 # Basic report: parallisation / further optimisation
 # Basic report: ensure soft coding for number of prefix rows/columns to allow additional meta-data support
@@ -207,6 +247,7 @@ ERRZEROAGE=15.28
 #				additional rows:
 #					Tree position ("R1b1a1a2...")
 #					Lowest shared clade ("terminal SNP") 
+# Basic report: "wish list"
 # General: support for FGC test results
 # Age analysis: support for archaeological DNA / paper trail limits in the age analysis
 # General: cross-over with STR ages - need:
@@ -223,6 +264,10 @@ ERRZEROAGE=15.28
 
 # Set start date for timing points
 T0=`date +%s.%N`
+
+# This is the number of columns on the left-hand side of the CSV reports
+LEFTCOLS=17
+# Use is currently under development
 
 # -----------------------------------------------------------------------------
 #                                   BACKUPS
@@ -249,7 +294,7 @@ cp raw-ages.txt autobackup/
 if [ "$MAKEREPORT" -gt "0" ]; then
 
 echo "MAKING REPORT..."
-rm -f report.csv
+#rm -f report.csv
 
 if [ "$SKIPZIP" == "0" ]; then
 
@@ -295,7 +340,9 @@ fi
 if [ ! -d "unzip" ]; then
 mkdir unzip
 else
-rm -f unzip/*.bed unzip/*.vcf
+if [ "$ZIPUPDATEONLY" == 0 ]; then
+	rm -f unzip/*.bed unzip/*.vcf
+fi
 fi
 
 # Get the list of input files
@@ -317,6 +364,10 @@ command -v unzip >/dev/null 2>&1 || { echo >&2 "Unzip package not found. Abortin
 # -----------------------------------------------------------------------------
 # Unzip each folder in turn
 echo "Unzipping..."
+if [ "$ZIPUPDATEONLY" == 1 ]; then
+	FILES=(`diff <(ls zip/bigy-*.zip | sed 's/zip\/bigy-//' | sed 's/.zip//') <(ls unzip/*.vcf | sed 's/unzip\///' | sed 's/.vcf//') | grep '<' | awk '{print "zip/bigy-"$2".zip"}'`)
+	echo ${#FILES[@]} "new files found"
+fi
 FILECOUNT=0
 for ZIPFILE in ${FILES[@]}; do
 	let FILECOUNT+=1
@@ -332,7 +383,7 @@ for ZIPFILE in ${FILES[@]}; do
 		mv working/"$PREFIX".bed unzip/;
 		else echo ""; echo "Warning: could not identify VCF and/or BED file for $PREFIX"; fi
 	rm -r working; mkdir working
-    echo -n "."
+	echo -n "."
 done
 echo ""
 
@@ -363,37 +414,62 @@ echo "...complete after $DT seconds"
 # Generate statistics from BED & VCF files
 echo "Generating preliminary statistics..."
 FILES=(`ls unzip/*.bed`)
-echo "Total Kits:,,,,,"${#FILES[@]}',,,,,,,,,,,Kit' >> report.csv
-echo 'KEY:,,,,,,,,,,,,,,,,Date' >> report.csv
-echo 'N+/N-,Number of +/- calls,,,,,,,,,,,,,,,Coverage' >> report.csv
-echo '(?+),Call uncertain but presumed positive,(position forced),,,,,,,,,,,,,,...for age analysis' >> report.csv
-echo 'cbl,Occurs on lower boundary of coverage,(often problematic),,,,,,,,,,,,,,Regions' >> report.csv
-echo 'cbu,Occurs on upper boundary of coverage,(usually ok),,,,,,,,,,,,,,Variants' >> report.csv
-echo 'cblu,Occurs as a 1-base-pair region,,,,,,,,,,,,,,,Passed' >> report.csv
-echo '1stCol,First column which is positive,,,,,,,,,,,,,,,Simple SNPs' >> report.csv
-echo 'Recur,Recurrencies in tree,(check: 1 or (R)),,,,,,,,,,,,,,SNPs under U106' >> report.csv
-echo '(s?),Questionable singleton,(not negative in some clademates),,,,,,,,,,,,,,Singleton SNPs' >> report.csv
-echo '(s?!),Questionable singleton,(not negative in all clademates),,,,,,,,,,,,,,...for age analysis' >> report.csv
-echo '(R),Allowed recurrency,,,,,,,,,,,,,,,Indels' >> report.csv
-echo 'Blank,Securely called negative,,,,,,,,,,,,,,,Indels under U106' >> report.csv
-echo 'Full report at:,www.jb.man.ac.uk/~mcdonald/genetics/report.csv,,,,,,,,,,,,,,,Singleton Indels' >> report.csv
-echo 'Non-shared SNPs' >> report.csv
-echo 'GrCh37,Name(s),Ref,Alt,Type,N+,(?+),N-,nc,cbl+,cbl-,cbu+,cbu-,cblu+,cblu-,1stCol,Recur' >> report.csv
+echo "Total Kits:,,,,,"${#FILES[@]}',,,,,,,,,,,Kit' > header.csv
+echo 'KEY:,,,,,,,,,,,,,,,,Date' >> header.csv
+echo 'N+/N-,Number of +/- calls,,,,,,,,,,,,,,,Coverage' >> header.csv
+echo '(?+),Call uncertain but presumed positive,(position forced),,,,,,,,,,,,,,...for age analysis' >> header.csv
+echo 'cbl,Occurs on lower boundary of coverage,(often problematic),,,,,,,,,,,,,,Regions' >> header.csv
+echo 'cbu,Occurs on upper boundary of coverage,(usually ok),,,,,,,,,,,,,,Variants' >> header.csv
+echo 'cblu,Occurs as a 1-base-pair region,,,,,,,,,,,,,,,Passed' >> header.csv
+echo '1stCol,First column which is positive,,,,,,,,,,,,,,,Simple SNPs' >> header.csv
+echo 'Recur,Recurrencies in tree,(check: 1 or (R)),,,,,,,,,,,,,,SNPs under' "$TOPSNP" >> header.csv
+echo '(s?),Questionable singleton,(not negative in some clademates),,,,,,,,,,,,,,Singleton SNPs' >> header.csv
+echo '(s?!),Questionable singleton,(not negative in all clademates),,,,,,,,,,,,,,...for age analysis' >> header.csv
+echo '(R),Allowed recurrency,,,,,,,,,,,,,,,Indels' >> header.csv
+echo 'Blank,Securely called negative,,,,,,,,,,,,,,,Indels under' "$TOPSNP" >> header.csv
+echo 'Full report at:,www.jb.man.ac.uk/~mcdonald/genetics/report.csv,,,,,,,,,,,,,,,Singleton Indels' >> header.csv
+echo 'Non-shared SNPs' >> header.csv
+echo 'GrCh37,Name(s),Ref,Alt,Type,N+,(?+),N-,nc,cbl+,cbl-,cbu+,cbu-,cblu+,cblu-,1stCol,Recur' >> header.csv
 echo "Generating statistics for" ${#FILES[@]} "BED files..."
-for BEDFILE in ${FILES[@]}; do
-	VCFFILE=`echo "$BEDFILE" | sed 's/.bed/.vcf/'`
-	KITNAME=`echo "$BEDFILE" | gawk -F/ '{print $2}' | sed 's/.bed//'`
-	KITDATE=`ls -l --time-style +%Y-%m-%d "$BEDFILE" | cut -d\  -f6`
-	#STATS=`gawk '{s+=$3-$2-1} END {print k,s,NR}' k="$KITNAME" "$BEDFILE"`
-	STATS=`gawk 'NR==FNR {a[NR]=$1;b[NR]=$2;n=NR} NR!=FNR {s+=$3-$2-$1; for (i=1;i<=n;i++) if ($2<=b[i] && $3>=a[i]) {x=($3>b[i]?b[i]:$3)-($2>a[i]?$2:a[i])+1; if (x<0) x=0; as+=x}} END {print s,as,FNR}' age.bed "$BEDFILE"`
-	STATS2=`gawk '$1=="chrY" {n++} $1=="chrY" && $7=="PASS" {v++; if ($4!="." && $5!=".") {if (length($4)==1 && length($5)==1) {s++} else {i++}}} END {print n,v,s,0,0,0,i,0,0}' "$VCFFILE"`
-	STATS="$KITNAME $KITDATE $STATS $STATS2"
-	gawk -v s="$STATS" 'NR==1 {split(s,stat," ")} {print $0","stat[NR]}' report.csv > foo
-	mv foo report.csv
-	echo -n "."
-done
+echo -n '[1/5] '
+KITNAMES=`ls unzip/*.bed | sed 's/unzip\///g' | sed 's/.bed//g' | awk '1' ORS=,`
+echo -n '[2/5] '
+KITDATES=`ls -l --time-style +%Y-%m-%d unzip/*.bed | cut -d\  -f6 | awk '{print}' ORS=,`
+echo -n '[3/5] '
+STATS1=`gawk 'NR==FNR {a[NR]=$1;b[NR]=$2;n=NR} NR!=FNR {s+=$3-$2-$1; for (i=1;i<=n;i++) if ($2<=b[i] && $3>=a[i]) {x=($3>b[i]?b[i]:$3)-($2>a[i]?$2:a[i])+1; if (x<0) x=0; as+=x}} FNR==1 && NR!=1 {if (nfiles>0) print s,as,nrf;s=as=0;nfiles++} {nrf=FNR} END {print s,as,FNR}' age.bed unzip/*.bed`
+echo -n '[4/5] '
+STATS2=`gawk '$1=="chrY" {n++} $1=="chrY" && $7=="PASS" {v++; if ($4!="." && $5!=".") {if (length($4)==1 && length($5)==1) {s++} else {i++}}} FNR==1 && NR!=1 {print n,v,s,0,0,0,i,0,0} END {print n,v,s,0,0,0,i,0,0}' unzip/*.vcf`
+echo -n '[5/5] '
+echo "$KITNAMES" | awk '{print substr($0,1,length($0)-1)}' > foo
+echo "$KITDATES" | awk '{print substr($0,1,length($0)-1)}' >> foo
+echo "$STATS1" | awk '{print $1}' ORS=, | awk '{print substr($0,1,length($0)-1)}' >> foo
+echo "$STATS1" | awk '{print $2}' ORS=, | awk '{print substr($0,1,length($0)-1)}' >> foo
+echo "$STATS1" | awk '{print $3}' ORS=, | awk '{print substr($0,1,length($0)-1)}' >> foo
+echo "$STATS2" | awk '{print $1}' ORS=, | awk '{print substr($0,1,length($0)-1)}' >> foo
+echo "$STATS2" | awk '{print $2}' ORS=, | awk '{print substr($0,1,length($0)-1)}' >> foo
+echo "$STATS2" | awk '{print $3}' ORS=, | awk '{print substr($0,1,length($0)-1)}' >> foo
+echo "$STATS2" | awk '{print $4}' ORS=, | awk '{print substr($0,1,length($0)-1)}' >> foo
+echo "$STATS2" | awk '{print $5}' ORS=, | awk '{print substr($0,1,length($0)-1)}' >> foo
+echo "$STATS2" | awk '{print $6}' ORS=, | awk '{print substr($0,1,length($0)-1)}' >> foo
+echo "$STATS2" | awk '{print $7}' ORS=, | awk '{print substr($0,1,length($0)-1)}' >> foo
+echo "$STATS2" | awk '{print $8}' ORS=, | awk '{print substr($0,1,length($0)-1)}' >> foo
+echo "$STATS2" | awk '{print $9}' ORS=, | awk '{print substr($0,1,length($0)-1)}' >> foo
+paste header.csv foo | sed 's/\t/,/' > fubar
+mv fubar header.csv
+# This does the same thing, but slower. From version 0.6.1
+#for BEDFILE in ${FILES[@]}; do
+#	VCFFILE=`echo "$BEDFILE" | sed 's/.bed/.vcf/'`
+#	KITNAME=`echo "$BEDFILE" | gawk -F/ '{print $2}' | sed 's/.bed//'`
+#	KITDATE=`ls -l --time-style +%Y-%m-%d "$BEDFILE" | cut -d\  -f6`
+#	STATS=`gawk 'NR==FNR {a[NR]=$1;b[NR]=$2;n=NR} NR!=FNR {s+=$3-$2-$1; for (i=1;i<=n;i++) if ($2<=b[i] && $3>=a[i]) {x=($3>b[i]?b[i]:$3)-($2>a[i]?$2:a[i])+1; if (x<0) x=0; as+=x}} END {print s,as,FNR}' age.bed "$BEDFILE"`
+#	STATS2=`gawk '$1=="chrY" {n++} $1=="chrY" && $7=="PASS" {v++; if ($4!="." && $5!=".") {if (length($4)==1 && length($5)==1) {s++} else {i++}}} END {print n,v,s,0,0,0,i,0,0}' "$VCFFILE"`
+#	STATS="$KITNAME $KITDATE $STATS $STATS2"
+#	gawk -v s="$STATS" 'NR==1 {split(s,stat," ")} {print $0","stat[NR]}' header.csv > foo
+#	mv foo header.csv
+#	echo -n "."
+#done
 echo ""
-cp report.csv header.csv
+cp header.csv report.csv
 
 T1=`date +%s.%N`
 DT=`echo "$T1" "$T0" | gawk '{print $1-$2}'`
@@ -416,10 +492,11 @@ done
 echo ""
 
 # Add "missing" clades from file
-gawk '$1=="^" {print $2"\t"$4"\t"$5}' implications.txt >> variant-list.txt
+# ! marks the implication so that is not counted when the SNP counts are made in the next section
+gawk '$1=="^" {print $2"\t"$4"\t"$5"\t!"}' implications.txt >> variant-list.txt
 
 # Create a unique list of variants
-sort -nk1 variant-list.txt | uniq -c | sort -nk2 | gawk '{n="SNP"} length($3)>1 || length($4)>1 {n="Indel"} {print $2",,"$3","$4","n","$1",,,,,,,,,,,"}' > foo; mv foo variant-list.txt
+sort -nk1 variant-list.txt | uniq -c | sort -nk2 | gawk '{n="SNP"} $5=="!" {$1=0} length($3)>1 || length($4)>1 {n="Indel"} {print $2",,"$3","$4","n","$1",,,,,,,,,,,"}' > foo; mv foo variant-list.txt
 
 T1=`date +%s.%N`
 DT=`echo "$T1" "$T0" | gawk '{print $1-$2}'`
@@ -439,6 +516,7 @@ echo "...complete after $DT seconds"
 # -----------------------------------------------------------------------------
 
 # Switch reference positives
+if [ "$TESTFORREFPOS" -gt 0 ]; then
 echo "Replacing positives in the reference sequence..."
 SWAPVARIANTLIST=`gawk '$1=="<" {print $2}' implications.txt`
 for VARIANT in ${SWAPVARIANTLIST[@]}; do
@@ -452,13 +530,15 @@ if [ "$USED" -gt "0" ]; then
 		A="$A$B"
 	done
 	NPOS=`echo "$A" | awk '{for (i=1;i<=length($1);i++) if (substr($1,i,1)=="+") n++} END {print n}'`
-	gawk '$1!=v {print} $1==v {truevar=$1"."$4"."$3; printf "%s,%s,%s,%s,%s,%s,",$1,$2,$4,$3,$5,npos; for (i=7;i<=17;i++) printf "%s,",$i; for (i=18;i<=NF;i++) {if ($i~";") {split ($i,foo,";"); x=";"foo[2]} else {x=""}; q=substr(a,i-17,1); if (q=="-") o=x; if (q=="+") o=truevar""x; if (q=="0") o=x; printf "%s,",o}; printf "\n"}' v="$VARIANT" a="$A" npos="$NPOS" FS=, OFS=, variant-match.txt > foo; mv foo variant-match.txt
+	gawk '$1!=v {print} $1==v {truevar=$1"."$4"."$3; printf "%s,%s,%s,%s,%s,%s,",$1,$2,$4,$3,$5,npos; for (i=7;i<=lc;i++) printf "%s,",$i; for (i=lc+1;i<=NF;i++) {if ($i~";") {split ($i,foo,";"); x=";"foo[2]} else {x=""}; q=substr(a,i-lc,1); if (q=="-") o=x; if (q=="+") o=truevar""x; if (q=="0") o=x; printf "%s,",o}; printf "\n"}' v="$VARIANT" a="$A" npos="$NPOS" lc="$LEFTCOLS" FS=, OFS=, variant-match.txt > foo; mv foo variant-match.txt
 fi
 done
 
 T1=`date +%s.%N`
 DT=`echo "$T1" "$T0" | gawk '{print $1-$2}'`
 echo "...complete after $DT seconds"
+fi
+# Close test for reference positives zip
 
 # Merging identical and similar indels
 # The decision has been taken here to merge any indel which contains a part of its neighbour.
@@ -476,7 +556,7 @@ echo "...complete after $DT seconds"
 echo "Merging identical indels..."
 #sort -nrk1 -t, variant-match.txt | gawk -v a=999999999 '{if ($5=="Indel" && aa[5]=="Indel") {if (a>$1 && aa[3]==substr($3,a-$1+1,length($3-a))""aa[4]) replace=1; if (a==$1 && $3==aa[3] && $4==aa[4]) replace=1; if (replace==0) {print aa[1],aa[2],aa[3],aa[4],"....."}; if (replace==1) {print aa[1],aa[2],aa[3],aa[4],"<<<<<"; print $1,$2,$3,$4,">>>>>"} else {print aa[1],aa[2],aa[3],aa[4]}} else {print aa[1],aa[2],aa[3],aa[4]}} {a=$1;a0=$0; split(a0,aa,","); replace=0}' FS=, OFS=,
 #echo "<<<TEST PHASE>>>"
-sort -nrk1 -t, variant-match.txt | gawk -v a=999999999 '{for (i=18;i<=NF;i++) if ($i~$1 && $i!~$1"."$3"."$4) {split(i,is,";"); $i=is[2]}} {if ($5=="Indel" && aa[5]=="Indel") {if (a>$1 && aa[3]==substr($3,a-$1+1,length($3-a))""aa[4]) replace=1; if (a==$1 && (($3~aa[3] && $4~aa[4]) || (aa[3]~$3 && aa[4]~$4))) replace=1; if (replace==0) {donothing=0}; if (replace==1) {n=0; for (i=18;i<=NF;i++) {if (aa[i]~aa[1] && $i!~$1) {$i="(I)"$1"."$3"."$4$i}; if ($i~$1) n++; $6=n}} else {print a0,last}} else {print a0}} {last=replace; a=$1;a0=$0; split(a0,aa,","); replace=0}' FS=, OFS=, > foo
+sort -nrk1 -t, variant-match.txt | gawk -v a=999999999 '{for (i=18;i<=NF;i++) if ($i~$1 && $i!~$1"."$3"."$4) {split(i,is,";"); $i=is[2]}} {if ($5=="Indel" && aa[5]=="Indel") {if (a>$1 && aa[3]==substr($3,a-$1+1,length($3)-a)""aa[4]) replace=1; if (a>$1 && aa[4]==substr($4,a-$1+1,length($4)-(a-$1))""aa[3]) replace=1; if (a==$1 && (($3~aa[3] && $4~aa[4]) || (aa[3]~$3 && aa[4]~$4))) replace=1; if (replace==1) {n=0; for (i=18;i<=NF;i++) {if (aa[i]~aa[1] && $i!~$1) {$i="(I)"$1"."$3"."$4$i}; if ($i~$1) n++; $6=n}} else {print a0,last}} else {print a0}} {last=replace; a=$1;a0=$0; split(a0,aa,","); replace=0}' FS=, OFS=, > foo
 mv foo variant-match.txt
 
 # Close SKIPZIP if statement
@@ -486,12 +566,14 @@ cp variant-match.txt variant-output.txt
 echo "Inserting presumed positives and recurrent SNPs..."
 
 # Insert presumed positives
-gawk -v FS=, -v OFS=, 'NR==FNR {split($0,u," ");a[NR]=u[1];b[NR]=u[3];n++} \
-NR!=FNR {m=NF; for (i=1;i<=m;i++) d[FNR,i]=$i; s[FNR]=$1; l=FNR} \
-END {for (i=1;i<=n;i++) {delete t; for (j=1;j<=l;j++) {if (s[j]==a[i]) {for (k=18;k<=m;k++) if (length(d[j,k])>5 && substr(d[j,k],1,1)!=";") {t[k]=1} else {t[k]=0}}}; \
-                         for (j=1;j<=l;j++) {if (s[j]==b[i]) {for (k=18;k<=m;k++) if (length(d[j,k])<=5 && t[k]==1 && (substr(d[j,k],1,1)==";" || length(d[j,k]==0))) d[j,k]="(?+)"d[j,k]}}}; \
-     for (i=1;i<=l;i++) {for (j=1;j<=m;j++)  {printf "%s,",d[i,j]}; printf "\n"}}' implications.txt variant-output.txt > foo
-mv foo variant-output.txt
+# Translate matrix for better memory efficiency
+gawk -v FS=, '{n=NF; for (i=1;i<=NF;i++) if (NR==1) {t[i]=$i} else {t[i]=t[i]","$i}} END {for (i=1;i<=n;i++) print t[i]}' variant-output.txt > foo
+gawk -v FS=, -v OFS=, 'NR==FNR && $1+0>0 {n++;split($0,u," ");a[n]=u[1]; if (u[2]==">") {b[n]=u[3]; c[n]=""} else if (u[2]=="&") {b[n]=u[5]; c[n]=u[3]}} \
+    NR!=FNR && FNR==1 {for (i=1;i<=NF;i++) grch[i]=$i; m=NF; for (i=1;i<=n;i++) {ja[i]=jb[i]=jc[i]=m+1; test=1; for (j=1;j<=m;j++) {if (grch[j]==a[i]) ja[i]=j; if (grch[j]==b[i]) jb[i]=j; if (grch[j]==c[i] && length(c[i])>0) jc[i]=j}}} \
+	NR!=FNR && FNR>17 {for (i=1;i<=n;i++) {ap=bp=cp=0; \
+	    if (length($ja[i])>5 && substr($ja[i],1,1)!=";") ap=1; if (length($jb[i])>5 && substr($jb[i],1,1)!=";") bp=1; if (jc[i]>m || (jc[i]<=m && length($jc[i])>5 && substr($jc[i],1,1)!=";")) cp=1; \
+		if (ap==1 && (jb[i]<=m && bp==0) && cp==1) $jb[i]="(?+)"$jb[i]}} NR!=FNR {print}' implications.txt foo > bar
+gawk -v FS=, '{n=NF; for (i=1;i<=NF;i++) if (NR==1) {t[i]=$i} else {t[i]=t[i]","$i}} END {for (i=1;i<=n;i++) print t[i]}' bar > variant-output.txt
 
 # Identify recurrent SNPs
 gawk -v FS=, -v OFS=, 'NR==FNR {split($0,u," ");a[NR]=u[1];n++} NR!=FNR {for (j=1;j<=n;j++) if (a[j]==$1) {$2="(R);";for (i=18;i<=NF;i++) if ($i~$1 || $i~/(?+)/) $i="(R);"$i}; print}' recurrencies.txt variant-output.txt > foo
@@ -539,29 +621,48 @@ echo "...complete after $DT seconds"
 echo "Sorting rows/columns..."
 sort -nk6,6r -nk8,8 -nk1,1 -t, variant-not-shared.txt > foo; mv foo variant-not-shared.txt
 
-# Rinse and repeat...
-# Increase the number of repetitions (e.g. seq 1 10) if clades fail to sort
-REPS=`seq 1 2`
-for REP in $REPS; do
-
-echo "Re-sort $REP"
-
+echo "Horizontal re-sort #1"
 # Sorting SNPs horizontally
-ORDER=`cat variant-not-shared.txt | gawk -v FS=, '{for (i=1;i<=NF-17;i++) {a[NR,i]=$(i+17); p[NR,i]=0; if (($(i+17)~$1 || $(i+17)~/(?+)/) && $(i+17)!~/(R)/) p[NR,i]++}} \
+ORDER=`gawk -v FS=, '{for (i=1;i<=NF-17;i++) {p[NR,i]=0; if (($(i+17)~$1 || $(i+17)~/(?+)/) && $(i+17)!~/(R)/) p[NR,i]++}} \
            END {s=NR;for (i=1;i<=NF-17;i++) {new[i]=i}; \
 		          for (s=NR;s>=1;s--) {n=0; for (i=1;i<=NF-17;i++) {if (p[s,new[i]]==1) {n++;new2[n]=new[i]}}; \
 				     for (i=1;i<=NF-17;i++) {if (p[s,new[i]]==0) {n++;new2[n]=new[i]}}; \
-					 for (i=1;i<=NF-17;i++) new[i]=new2[i]}; for (i=1;i<=NF-17;i++) printf "%i ",new[i]}'`
+					 for (i=1;i<=NF-17;i++) new[i]=new2[i]}; for (i=1;i<=NF-17;i++) printf "%i ",new[i]}' variant-not-shared.txt`
 gawk -v FS=, -v o="$ORDER" 'NR==1 {n=split(o,s," ")} {for (i=1;i<=17;i++) printf "%s,",$i; for (i=1;i<=n;i++) printf "%s,",$(s[i]+17);printf "\n"}' report.csv > foo; mv foo report.csv
 gawk -v FS=, -v o="$ORDER" 'NR==1 {n=split(o,s," ")} {for (i=1;i<=5;i++) printf "%s,",$i; for (i=6;i<=17;i++) if ($i>0) {printf "%04i,",$i} else {printf "%s,",$i}; for (i=1;i<=n;i++) printf "%s,",$(s[i]+17);printf "\n"}' variant-not-shared.txt > foo; mv foo variant-not-shared.txt
 gawk -v FS=, -v o="$ORDER" 'NR==1 {n=split(o,s," ")} {for (i=1;i<=5;i++) printf "%s,",$i; for (i=6;i<=17;i++) if ($i>0) {printf "%04i,",$i} else {printf "%s,",$i}; for (i=1;i<=n;i++) printf "%s,",$(s[i]+17);printf "\n"}' variant-shared.txt > foo; mv foo variant-shared.txt
 gawk -v FS=, -v o="$ORDER" 'NR==1 {n=split(o,s," ")} {for (i=1;i<=5;i++) printf "%s,",$i; for (i=6;i<=17;i++) if ($i>0) {printf "%04i,",$i} else {printf "%s,",$i}; for (i=1;i<=n;i++) printf "%s,",$(s[i]+17);printf "\n"}' variant-bad.txt > foo; mv foo variant-bad.txt
 
 # Re-sort SNPs vertically
+echo "Vertical re-sort #1"
 gawk -v FS=, -v OFS=, '{$16=NF; for (i=NF;i>=18;i--) if ($i~$1 || $i~/(?+)/) $16=i; pruns=prun=0; for (i=18;i<=NF;i++) if ($i~$1 || $i ~ /(?+)/) {if (prun==0) {prun=1; pruns++}} else {if (length($i)<2) prun=0}; $17=pruns; print}' variant-not-shared.txt > foo
 sort -n -nk6,6r -nk16,16 -nk1,1 -t, foo > variant-not-shared.txt
 
-done
+echo "Horizontal re-sort #2"
+# Sorting SNPs horizontally
+ORDER=`gawk -v FS=, '{for (i=1;i<=NF-17;i++) {p[NR,i]=0; if (($(i+17)~$1 || $(i+17)~/(?+)/) && $(i+17)!~/(R)/) p[NR,i]++}} \
+           END {s=NR;for (i=1;i<=NF-17;i++) {new[i]=i}; \
+		          for (s=NR;s>=1;s--) {n=0; for (i=1;i<=NF-17;i++) {if (p[s,new[i]]==1) {n++;new2[n]=new[i]}}; \
+				     for (i=1;i<=NF-17;i++) {if (p[s,new[i]]==0) {n++;new2[n]=new[i]}}; \
+					 for (i=1;i<=NF-17;i++) new[i]=new2[i]}; for (i=1;i<=NF-17;i++) printf "%i ",new[i]}' variant-not-shared.txt`
+gawk -v FS=, -v o="$ORDER" 'NR==1 {n=split(o,s," ")} {for (i=1;i<=17;i++) printf "%s,",$i; for (i=1;i<=n;i++) printf "%s,",$(s[i]+17);printf "\n"}' report.csv > foo; mv foo report.csv
+gawk -v FS=, -v o="$ORDER" 'NR==1 {n=split(o,s," ")} {for (i=1;i<=5;i++) printf "%s,",$i; for (i=6;i<=17;i++) if ($i>0) {printf "%04i,",$i} else {printf "%s,",$i}; for (i=1;i<=n;i++) printf "%s,",$(s[i]+17);printf "\n"}' variant-not-shared.txt > foo; mv foo variant-not-shared.txt
+gawk -v FS=, -v o="$ORDER" 'NR==1 {n=split(o,s," ")} {for (i=1;i<=5;i++) printf "%s,",$i; for (i=6;i<=17;i++) if ($i>0) {printf "%04i,",$i} else {printf "%s,",$i}; for (i=1;i<=n;i++) printf "%s,",$(s[i]+17);printf "\n"}' variant-shared.txt > foo; mv foo variant-shared.txt
+gawk -v FS=, -v o="$ORDER" 'NR==1 {n=split(o,s," ")} {for (i=1;i<=5;i++) printf "%s,",$i; for (i=6;i<=17;i++) if ($i>0) {printf "%04i,",$i} else {printf "%s,",$i}; for (i=1;i<=n;i++) printf "%s,",$(s[i]+17);printf "\n"}' variant-bad.txt > foo; mv foo variant-bad.txt
+
+# Re-sort SNPs vertically
+echo "Vertical re-sort #2"
+gawk -v FS=, -v OFS=, '{$16=NF; for (i=NF;i>=18;i--) if ($i~$1 || $i~/(?+)/) $16=i; pruns=prun=0; for (i=18;i<=NF;i++) if ($i~$1 || $i ~ /(?+)/) {if (prun==0) {prun=1; pruns++}} else {if (length($i)<2) prun=0}; $17=pruns; print}' variant-not-shared.txt > foo
+sort -n -nk6,6r -nk16,16 -nk1,1 -t, foo > variant-not-shared.txt
+
+# Extract recurrent SNPs, then repeat
+# [To be done]
+#grep "(R)" variant-not-shared.txt | grep cbl | head -1 | awk '{split($2,a,";"); for (i=18;i<=NF;i++) if ($i~$1 || ($i~a[2] && length($2)>1) || $i~"(?+)") n[i]=1; q=0; for (i=18;i<=NF;i++) {if (n[i-1]+0==0 && n[i]==1) q++; print i,q,n[i],$i}}' FS=, | more^
+
+# Re-sort SNPs vertically
+#echo "Vertical re-sort #3"
+#gawk -v FS=, -v OFS=, '{$16=NF; for (i=NF;i>=18;i--) if ($i~$1 || $i~/(?+)/) $16=i; pruns=prun=0; for (i=18;i<=NF;i++) if ($i~$1 || $i ~ /(?+)/) {if (prun==0) {prun=1; pruns++}} else {if (length($i)<2) prun=0}; $17=pruns; print}' variant-not-shared.txt > foo
+#sort -n -nk6,6r -nk16,16 -nk1,1 -t, foo > variant-not-shared.txt
 
 # Sort other files
 gawk -v FS=, -v OFS=, '{pruns=prun=0; for (i=18;i<=NF;i++) if ($i~$1 || $i ~ /(?+)/) {if (prun==0) {prun=1; pruns++}} else {if (length($i)<2) prun=0}; $17=pruns; print}' variant-shared.txt > foo; mv foo variant-shared.txt
@@ -710,7 +811,11 @@ sed 's/,/;/g' tree.txt | sed 's/ /,/g' > tree.csv
 #sort -nrk2 cladecounts.csv | gawk -v lead="$TOPSNP" '{a0[NR]=$3;a1[NR]=$4;split($5,b,",");a2[NR]=$6=b[1]; if (NR==1) a2[NR]=""; for (i=NR-1;i>=1;i--) {if ($3>=a0[i] && $4<=a1[i]) $6=a2[i]">"$6}; $6=lead""$6; if (NR==1) {$7=$5;$5=".";$6=lead}; print}' | 
 #gawk -v lead="$TOPSNP" '{a0[NR]=$3;a1[NR]=$4;a2[NR]=$6; if (NR==1) a2[NR]=""; for (i=NR-1;i>=1;i--) {if ($3>=a0[i] && $4<=a1[i]) $6=a2[i]">"$6}; $6=lead""$6; if (NR==1) {$7=$5;$5=".";$6=lead}; print}' | \
 
-# Performing consistency check
+# -----------------------------------------------------------------------------
+#                            CONSISTENCY CHECKING
+# -----------------------------------------------------------------------------
+if [ "$CHECKDATA" -gt "0" ]; then
+
 gawk -v FS=, '$17>1 && $2 !~ /(R)/ && $6>1 {print $1,$2,$5,$6,$17,"Inconsistent: conflicting calls"}' variant-not-shared.txt > warning-list.txt
 gawk -v FS=, '$17>1 && $2 !~ /(R)/ && $6==1 {print $1,$2,$5,$6,$17,"Inconsistent: multiple calls as singleton"}' variant-not-shared.txt >> warning-list.txt
 gawk -v FS=, '$6>1 && $17==1 {first=0; last=0; for (i=NF;i>=18;i--) if ($i~$1 || ($i~$2 && length($2)>0) || $i~/(?+)/) first=i; for (i=18;i<=NF;i++) if ($i~$1 || ($i~$2 && length($2)>0) || $i~/(?+)/) last=i; if (last-first+1>$6+0) print $1,$2,$6,$17,"Inconsistent: out of order"}' variant-not-shared.txt >> warning-list.txt
@@ -761,6 +866,9 @@ T1=`date +%s.%N`
 DT=`echo "$T1" "$T0" | gawk '{print $1-$2}'`
 echo "Tree complete after $DT seconds"
 
+fi
+# End CHECKDATA if statement
+
 
 # -----------------------------------------------------------------------------
 #                          INSERT TREE INTO REPORT
@@ -802,6 +910,17 @@ head -1 report.csv | awk '{$6="";$1="Inconsistent SNPs"; print}' > foo; cat foo 
 echo 'GrCh37,Name(s),Ref,Alt,Type,N+,(?+),N-,nc,cbl+,cbl-,cbu+,cbu-,cblu+,cblu-,1stCol,Recur' >> short-report.csv
 cat variant-bad.txt >> short-report.csv
 
+# Also make an HTML version
+# This will work, but because of dynamic width allocation to tables, it runs REALLY slowly.
+#echo "Making an HTML version...."
+#echo "<HTML>" > short-report.html
+#echo "<BODY>" >> short-report.html
+#echo '<TABLE style="padding: 1px; td {background-color:rgb(239,239,239)}">' >> short-report.html
+#gawk '{print "<TR><TD>"$0}' short-report.csv | sed 's/,/<TD>/g' >> short-report.html
+#echo "</TABLE>" >> short-report.html
+#echo "</BODY>" >> short-report.html
+#echo "</HTML>" >> short-report.html
+
 # Close MAKESHORTREPORT if statement
 fi
 
@@ -816,26 +935,52 @@ echo "MAKING THE HTML REPORT..."
 
 # Make HTML header
 echo "<!DOCTYPE html>" > report.html
-echo "<HTML>" >> report.html
-echo "<BODY>" >> report.html
+echo "<html>" >> report.html
+echo "<head>" >> report.html
+echo "<title> Tree structure of $TOPSNP </title>" >> report.html
+echo '<meta name="Description" content="Tree structure of $TOPSNP automatically compiled from called VCF/BED data">'  >> report.html
+echo '<meta name="Author" content="Created using the REDUX pipeline by Iain McDonald (version '$VERSION')">'  >> report.html
+echo "</head>" >> report.html
+echo "<body>" >> report.html
 
 # Oopsie...
-echo "<H1>THIS ISN'T FINISHED YET!</H1>" >> report.html
+echo "<h1>Tree structure of $TOPSNP </h1>" >> report.html
 
 
 # Make table header
-echo "<TABLE border=0 cellpadding=1>" >> report.html
+echo "<table border=0 cellpadding=1>" >> report.html
+
+# Identify the correct row in the table for each clade (column 10) and its correct column (column 3)
+gawk '{dat[NR]=$0;c[NR]=$7;n[NR]=split($5,snps,";");nxx=split($7,xx,".");x[NR]=xx[nxx]; numr=NR} END {for (i=1;i<=numr;i++) for (j=1;j<=i;j++) if (c[j]"."x[i]==c[i]) parent[i]=j; for (i=1;i<=numr;i++) {nsnp[i]=nsnp[parent[i]]+n[i]; print dat[i],nsnp[parent[i]]+1,nsnp[i]}}' FS=, OFS=, tree.csv | sort -t, -nk10,10 -nk3,3 > foo
 
 # Insert table contents
- gawk -v FS=, '$2+0>0 {nsnps=split($5,snpnames,";"); print "<TD colspan="$2+0" rowspan="nsnps" bgcolor=\"#FFAAAA\" align=\"center\" alt=\""$3-17"\">"$5"</TD>"}' tree.csv | sed 's/;/<BR>/g' | grep 'alt="1"' | gawk '{print "<TR>"$0"</TR>"}' >> report.html
+gawk -v FS=, '{dat[NR]=$0;npos[NR]=$2+0;snplist[NR]=$5;col[NR]=$3+0;row[NR]=$10+0;row2[NR]=$11+0;maxrows=row2[NR]>maxrows+0?row2[NR]:maxrows+0;nbr=split($8,br,">");branch[NR]=br[nbr]} \
+END {maxrows=maxrows>99?99:maxrows; for (r=1;r<=maxrows;r++) {colcount=1; print "<tr><! -------- Row "r">"; \
+	for (i=1;i<=NR;i++) {if (row[i]==r && npos[i]>0) { \
+			if (colcount>col[i]-17) {print "<! WARNING: Check presumed positive implications for",snplist[i],"and parent clades>"}; \
+			if (colcount<col[i]-17) {missing=col[i]-17-colcount; for (j=1;j<i;j++) if (row[j]<=r && row2[j]>=r && col[j]-17>=colcount && col[j]-17<=col[i]-17) {missing-=npos[j]; print "<!",colcount,col[i]-17,col[j]-17,col[j]-17+npos[j],npos[j],missing">"}; \
+				for (j=1;j<=missing;j++) print "<TD colspan=1 rowspan=1 bgcolor=\"#FFCCCC\" align=\"center\" title=\"null,"colcount"\">";colcount=col[i]-17}; \
+			nsnps=split(snplist[i],snpnames,";"); \
+			print "<td colspan="npos[i]" rowspan="nsnps" bgcolor=\"#FFAAAA\" align=\"center\" title=\""branch[i]"\" alt=\""col[i]-17","colcount","colcount+npos[i]","npos[i]"\">"; colcount+=npos[i]; \
+			for (j=1;j<=nsnps;j++) printf " %s<br>",snpnames[j]; \
+			print "</td>"}}; \
+	if (colcount<npos[1]) missing=npos[1]-colcount+1; \
+	for (j=1;j<NR;j++) if (row[j]<r && row2[j]>=r && col[j]-17>=colcount) {missing-=npos[j]}; \
+	for (j=1;j<=missing;j++) print "<td colspan=1 rowspan=1 bgcolor=\"#FFCCCC\" align=\"center\" title=\"null,"colcount"\">";colcount=col[i]-17; \
+	print "</tr>"}}' foo >> report.html
+#gawk -v FS=, '$2+0>0 {nsnps=split($5,snpnames,";"); print "<TD colspan="$2+0" rowspan="nsnps" bgcolor=\"#FFAAAA\" align=\"center\" title=\""$3-17"\">"$5"</TD>"}' tree.csv | sed 's/;/<BR>/g' | grep 'title="1"' | gawk '{print "<TR>"$0"</TR>"}' >> report.html
 # XXX STILL TO DO XXX
- 
+
+# Insert kit numbers 
+head -2 report.csv | gawk -v FS=, -v now=`date +%Y-%m-%d` 'NR==1 {for (i=18;i<=NF;i++) if (length($i)>0) {name[i]=$i;gsub(/-/," ",name[i])}} \
+	NR==2 {gsub(/-/," ",now); print "<! ===== Kit names ===== >"; print "<tr>"; for (i=18;i<=NF;i++) if (length($i)>0) {gsub(/-/," ",$i); testage=(mktime(now " 00 00 00")-mktime($i " 00 00 00"))/86400; t=testage>63?0:63-testage; r=255-t*4; g=128+t*2; b=128; hex=sprintf("#%02x%02x%02x",r,g,b); print " <td bgcolor=\""hex"\" align=\"center\" title=\""$i" = "int(testage)" days ago\">"name[i]"</td>"}; print "</tr>"}' >> report.html
+
 # Make table footer
-echo "</TABLE>" >> report.html
+echo "</table>" >> report.html
 
 # Make HTML footer
-echo "</BODY>" >> report.html
-echo "</HTML>" >> report.html
+echo "</body>" >> report.html
+echo "</html>" >> report.html
 
 # Close MAKEHTMLREPORT if statement
 fi
@@ -1048,7 +1193,7 @@ DT=`echo "$T1" "$T0" | gawk '{print $1-$2}'`
 echo "...complete after $DT seconds"
 
 # -----------------------------------------------------------------------------
-#                               REPORT WRITING
+#                             AGE REPORT WRITING
 # -----------------------------------------------------------------------------
 echo "Writing final age table..."
 
@@ -1071,6 +1216,166 @@ echo "Age analysis complete after $DT seconds"
 
 # Close MAKEAGES if statement
 fi
+
+# -----------------------------------------------------------------------------
+#                            TREE SVG WRITING
+# -----------------------------------------------------------------------------
+
+# Create the final SVG tree
+
+if [ "$MAKEHTMLREPORT" -gt "0" ]; then
+
+echo "Writing final SVG tree..."
+
+#WIDTHPERTEST = width assigned to each test, in pixels
+#PXPERYEAR = height assigned for each year, in pixels
+#DOTSIZE = basic dot size, in pixels
+#DOTMULT = increase in dot area per test [not coded]
+#FONTSIZE = base font size
+#FONTMULT = [squared] increase in font size per test [not coded]
+#TEXTOFFX = text offset from circle (x)
+#TEXTOFFY = text offset from circle (y)
+#XMARGIN = left margin in pixels
+#YMARGIN = top margin in pixels
+#X2MARGIN = right margin in pixels
+#Y2MARGIN = bottom margin in pixels
+#TINTERVAL = background banding interval
+#TTEXTOFFX = time text padding offset (x)
+#TTEXTOFFY = time text offset (y)
+#HEADOFFY = header offset from top (y)
+#SVGTMIN = end time to show on chart (years AD)
+WIDTHPERTEST=4
+PXPERYEAR=0.5
+DOTSIZE=8
+DOTMULT=0.1
+FONTSIZE=12
+TEXTOFFX=8
+TEXTOFFY=8
+XMARGIN=100
+YMARGIN=420
+X2MARGIN=160
+Y2MARGIN=72
+TINTERVAL=100
+TTEXTOFFX=4
+TTEXTOFFY=2
+HEADOFFY=80
+SVGTMIN=2000
+
+# Make HTML document
+NFILES=`head -1 report.csv | awk '{print $6}' FS=,`
+MAXAGE=`head -1 final-ages.txt | gawk '{print $18}'`
+SVGHEIGHT=`echo "$(($NFILES*$WIDTHPERTEST+$YMARGIN+$Y2MARGIN))"`
+SVGWIDTH=`echo "$MAXAGE" | gawk -v d="$DOTSIZE" -v p="$PXPERYEAR" -v z="$ZEROAGE" -v m="$SVGTMIN" -v xm="$XMARGIN" -v xm2="$X2MARGIN" '{print int(($1+m-z)*p)+1+d*2+xm+xm2}'`
+echo "<!DOCTYPE html>" > tree.html
+echo "<html>" >> tree.html
+echo "<head>" >> tree.html
+echo "<title> Tree structure of $TOPSNP </title>" >> tree.html
+echo '<meta name="Description" content="Tree structure of $TOPSNP automatically compiled from called VCF/BED data">'  >> tree.html
+echo '<meta name="Author" content="Created using the REDUX pipeline by Iain McDonald (version '$VERSION')">'  >> tree.html
+#echo '<script type="text/javascript">' >> tree.html
+#echo '//<![CDATA[' >> tree.html
+#echo 'function copyToClipboard(element) {' >> tree.html
+#echo '  var $temp = $("<input>");' >> tree.html
+#echo '  $("body").append($temp);' >> tree.html
+#echo '  $temp.val($(element).text()).select();' >> tree.html
+#echo '  document.execCommand("copy");' >> tree.html
+#echo '  $temp.remove();' >> tree.html
+#echo '}//]]>' >> tree.html
+#echo '</script>' >> tree.html
+echo '</head>' >> tree.html
+echo '<body>' >> tree.html
+echo "<h1>Tree structure of $TOPSNP </h1>" >> tree.html
+echo '<p>Tree structure of '$TOPSNP' automatically compiled from called VCF/BED data'  >> tree.html
+echo '<br>Created using the REDUX pipeline by Iain McDonald (version '$VERSION')'  >> tree.html
+echo '<br>Updated:' `date +%c`  >> tree.html
+
+echo '<p><b>Historical events:</b> Mouse-over boxes or see <a href="#treefoot">below</a> for a key to abbreviations'  >> tree.html
+echo '<br><b>Age uncertainties:</b> Mouse-over circles to display. Example:<br>'  >> tree.html
+
+echo '<svg width="640" height="45">' >> tree.html
+echo '<rect x="200" y="14" width="200" height="16" fill="rgb(128,0,128)" fill-opacity="0.15" />' >> tree.html
+echo '<rect x="100" y="14" width="400" height="16" fill="rgb(128,0,128)" fill-opacity="0.15" />' >> tree.html
+echo '<rect x="0" y="14" width="600" height="16" fill="rgb(128,0,128)" fill-opacity="0.1" />' >> tree.html
+echo '<rect x="230" y="16" width="140" height="3" fill="red" fill-opacity="0.4" />' >> tree.html
+echo '<rect x="140" y="16" width="280" height="3" fill="red" fill-opacity="0.4" />' >> tree.html
+echo '<rect x="70" y="16" width="420" height="3" fill="red" fill-opacity="0.1" />' >> tree.html
+echo '<rect x="230" y="28" width="140" height="3" fill="blue" fill-opacity="0.4" />' >> tree.html
+echo '<rect x="140" y="28" width="280" height="3" fill="blue" fill-opacity="0.4" />' >> tree.html
+echo '<rect x="70" y="28" width="420" height="3" fill="blue" fill-opacity="0.1" />' >> tree.html
+echo '<circle r="8" cx="300" cy="22" />' >> tree.html
+echo '<text x="400" y="44" font-family="Verdana" font-size="12" style="fill:rgb(0,0,0)">68%</text>"}' >> tree.html
+echo '<text x="500" y="44" font-family="Verdana" font-size="12" style="fill:rgb(0,0,0)">95%</text>"}' >> tree.html
+echo '<text x="600" y="44" font-family="Verdana" font-size="12" style="fill:rgb(0,0,0)">99.5%</text>"}' >> tree.html
+echo '<text x="140" y="13" font-family="Verdana" font-size="12" style="fill:rgb(192,0,0)">Random uncertainty in each SNP</text>"}' >> tree.html
+echo '<text x="140" y="44" font-family="Verdana" font-size="12" style="fill:rgb(0,0,192)">Systematic uncertainty in the mutation rate</text>"}' >> tree.html
+echo '<text x="550" y="13" font-family="Verdana" font-size="12" style="fill:rgb(192,0,192)" text-anchor="end">Total uncertainty</text>"}' >> tree.html
+echo '</svg>' >> tree.html
+
+echo '<ul>' >> tree.html
+echo '<li> The top (red) line gives the random uncertainty, caused by the random nature of SNP generation. Each SNP is able to move around freely by this amount, with proportionally smaller movement for neighbouring SNPs to accommodate this change.' >> tree.html
+echo '<li> The bottom (blue) line gives the systematic uncertainty, caused by the uncertainty in the mutation rate. The whole tree can stretch or squash by this amount.' >> tree.html
+echo '<li> The thick purple line gives the total uncertainty, which is the combination of the above two factors.' >> tree.html
+echo '<li> Three different strengths of band are given. These correspond to the 68, 95 and 99.5% confidence intervals.' >> tree.html
+echo '<li> We can respectively be 68, 95 and 99.5% sure that the common ancestor was born between these bounds.' >> tree.html
+echo '<li> <a href="https://en.wikipedia.org/wiki/Observational_error">Further reading on random and systematic errors from Wikipedia</a>.' >> tree.html
+echo '<li> If this is all too much for you, use the middle, thick purple band to estimate how far each SNP can move by.' >> tree.html
+echo '</ul>' >> tree.html
+
+echo '<p>' >> tree.html
+
+echo '<embed name="E" id="E" src="tree.svg" width="'$SVGWIDTH'" height="'$SVGHEIGHT'">' >> tree.html
+
+# Insert text to go at foot of the tree, in HTML format
+cat treefoot.html >> tree.html
+
+echo "</body>" >> tree.html
+echo "</html>" >> tree.html
+
+# MAKE SVG TREE
+echo '<svg xmlns="http://www.w3.org/2000/svg">' > tree.svg
+# Background
+gawk -v h="$SVGHEIGHT" -v dt="$TINTERVAL" -v tox="$TTEXTOFFX" -v toy="$TTEXTOFFY" -v tmax="$MAXAGE" -v tmin="$SVGTMIN" -v t0="$ZEROAGE" -v d="$DOTSIZE" -v p="$PXPERYEAR" -v xm="$XMARGIN" \
+    'BEGIN {for (i=0;i<=tmax+(tmin-t0);i+=dt) {n++; x1=(tmax-i+tmin-t0)*p+d+xm; \
+	    if (n%2==0) {print "<rect x=\""x1"\" y=\"0\" width=\""dt*p"\" height=\""h"\" style=\"fill:rgb(239,239,239);stroke-width:1;stroke:rgb(191,191,191)\" />"}}; n=0; \
+	 for (i=0;i<=tmax+(tmin-t0);i+=dt) {n++; x1=(tmax-i+tmin-t0)*p+d+xm; label=tmin-i>0?tmin-i" AD":i-tmin" BC"; if (tmin-i==0) label="1 AD"; \
+	     print "<text x=\""x1+tox"\" y=\""toy"\" font-family=\"Verdana\" font-size=\""f"\" style=\"fill:rgb(159,159,159)\" transform=\"rotate(90 "x1+tox" "toy")\">"label"</text>"; \
+		 print "<text x=\""x1+tox"\" y=\""h-toy"\" font-family=\"Verdana\" font-size=\""f"\" style=\"fill:rgb(159,159,159)\" transform=\"rotate(90 "x1+tox" "h-toy")\" text-anchor=\"end\">"label"</text>"}}' >> tree.svg
+# Read in events from optional file
+# Substitutions will be made to convert years to pixels, based on '#' identifier with the following columns: years, y offset, width, height
+awk -v p="$PXPERYEAR" -v f="$FONTSIZE" -v xm="$XMARGIN" -v w="$SVGWIDTH" -v tmax="$MAXAGE" -v tmin="$SVGTMIN" -v xm="$XMARGIN" -v t0="$ZEROAGE" -v d="$DOTSIZE" -v hoy="$HEADOFFY" -v FS='@' '{print $1""(tmax+(tmin-t0)-(tmin-$2))*p+d+xm""$3""$4*f/12+hoy""$5""$6*p""$7""$8*f/12""$9}' events.svg >> tree.svg
+# Foreground
+sed 's/>/\&gt;/g' final-ages.txt | gawk -v d="$DOTSIZE" -v p="$PXPERYEAR" -v h="$WIDTHPERTEST" -v w="$MAXAGE" -v f="$FONTSIZE" -v tox="$TEXTOFFX" -v toy="$TEXTOFFY" -v xm="$XMARGIN" -v ym="$YMARGIN" -v r0="$RATE0" -v r1="$RATE1" -v rr="$RATE" \
+    '{c1[NR]=$10;c2[NR]=$11;t[NR]=$18;l[NR]=$16; y=(($10+$11)/2-17.5)*h+ym; x=(w-$18)*p+d+xm; \
+	xerr1=(w-$19)*p+d+xm; xerr1w=($19-$17)*p; xerr2=(w-(rr/r0)*$18)*p+d+xm; xerr2w=(r1-r0)/rr*$18*p; \
+	xerr3=(w-$18*(sqrt((($19-$18)/$18)**2+(rr/r0-1)**2)+1))*p+d+xm; xerr3w=((sqrt((($19-$18)/$18)**2+(rr/r0-1)**2))+(sqrt((($18-$17)/$18)**2+(r1/rr-1)**2)))*$18*p} \
+     NR>1 {for (i=1;i<NR;i++) if ($15==l[i]) q=i; yp=((c1[q]+c2[q])/2-17.5)*h+ym; xp=(w-t[q])*p+d+xm; \
+         print "<line x1=\""xp"\" y1=\""y"\" x2=\""xp"\" y2=\""yp"\" style=\"stroke:rgb(127,127,127);stroke-width=1\" />"; \
+          print "<line x1=\""x"\" y1=\""y"\" x2=\""xp"\" y2=\""y"\" style=\"stroke:rgb(127,127,127);stroke-width=2\" />"} \
+     {print "<rect x=\""xerr1"\" y=\""y-3*d/4"\" width=\""xerr1w"\" height=\""d/2"\" fill=\"red\" fill-opacity=\"0.0\"><set attributeName=\"fill-opacity\" to=\"0.4\" begin=\""$16".mouseover\" end=\""$16".mouseout\" /></rect>"; \
+      print "<rect x=\""(x+xerr1)/2"\" y=\""y-3*d/4"\" width=\""xerr1w/2"\" height=\""d/2"\" fill=\"red\" fill-opacity=\"0.0\"><set attributeName=\"fill-opacity\" to=\"0.4\" begin=\""$16".mouseover\" end=\""$16".mouseout\" /></rect>"; \
+      print "<rect x=\""xerr1-(x-xerr1)/2"\" y=\""y-3*d/4"\" width=\""xerr1w*3/2"\" height=\""d/2"\" fill=\"red\" fill-opacity=\"0.0\"><set attributeName=\"fill-opacity\" to=\"0.1\" begin=\""$16".mouseover\" end=\""$16".mouseout\" /></rect>"; \
+      print "<rect x=\""(x+xerr2)/2"\" y=\""y-3*d/4"\" width=\""xerr2w/2"\" height=\""d/2"\" fill=\"red\" fill-opacity=\"0.0\"><set attributeName=\"fill-opacity\" to=\"0.4\" begin=\""$16".mouseover\" end=\""$16".mouseout\" /></rect>"; \
+      print "<rect x=\""xerr2"\" y=\""y+1*d/4"\" width=\""xerr2w"\" height=\""d/2"\" fill=\"blue\" fill-opacity=\"0.0\"><set attributeName=\"fill-opacity\" to=\"0.4\" begin=\""$16".mouseover\" end=\""$16".mouseout\" /></rect>"; \
+      print "<rect x=\""xerr2-(x-xerr2)/2"\" y=\""y+1*d/4"\" width=\""xerr2w*3/2"\" height=\""d/2"\" fill=\"blue\" fill-opacity=\"0.0\"><set attributeName=\"fill-opacity\" to=\"0.1\" begin=\""$16".mouseover\" end=\""$16".mouseout\" /></rect>"; \
+      print "<rect x=\""(x+xerr3)/2"\" y=\""y-5*d/4"\" width=\""xerr3w/2"\" height=\""d*5/2"\" fill=\"rgb(128,0,128)\" fill-opacity=\"0.0\"><set attributeName=\"fill-opacity\" to=\"0.15\" begin=\""$16".mouseover\" end=\""$16".mouseout\" /></rect>"; \
+      print "<rect x=\""xerr3"\" y=\""y-5*d/4"\" width=\""xerr3w"\" height=\""d*5/2"\" fill=\"rgb(128,0,128)\" fill-opacity=\"0.0\"><set attributeName=\"fill-opacity\" to=\"0.15\" begin=\""$16".mouseover\" end=\""$16".mouseout\" /></rect>"; \
+      print "<rect x=\""xerr3-(x-xerr3)/2"\" y=\""y-5*d/4"\" width=\""xerr3w*3/2"\" height=\""d*5/2"\" fill=\"rgb(128,0,128)\" fill-opacity=\"0.0\"><set attributeName=\"fill-opacity\" to=\"0.1\" begin=\""$16".mouseover\" end=\""$16".mouseout\" /></rect>"; \
+      print "<circle id=\""$16"\" r=\""d"\" cx=\""x"\" cy=\""y"\" onclick=\"copyToClipboard(@#p1@)\"><title>"$13"</title></circle>"; \
+      print "<text id=\"text"NR"\" x=\""x+tox"\" y=\""y+toy"\" font-family=\"Verdana\" font-size=\""f"\" style=\"fill:rgb(0,0,0)\">"$16"</text>"}' | sed "s/@/'/g" > foo
+grep "<line" foo >> tree.svg
+grep "<rect" foo >> tree.svg
+grep "<text" foo >> tree.svg
+grep "<circle" foo >> tree.svg
+#gawk -v d="$DOTSIZE" -v p="$PXPERYEAR" -v w="$WIDTHPERTEST" -v h="$SVGHEIGHT" '{print "<circle r=\""d"\" cx=\""(($10+$11)/2-17.5)*w"\" cy=\""h-$18*p+d"\" />"}' final-ages.txt >> tree.svg
+echo '</svg>' >> tree.svg
+
+T1=`date +%s.%N`
+DT=`echo "$T1" "$T0" | gawk '{print $1-$2}'`
+echo "SVG tree creation complete after $DT seconds"
+
+# Close MAKEHTMLREPORT if statement
+fi
+
 
 T1=`date +%s.%N`
 DT=`echo "$T1" "$T0" | gawk '{print $1-$2}'`
