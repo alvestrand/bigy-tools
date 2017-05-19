@@ -16,7 +16,9 @@ def analyzeVcf(file):
       fields = line.split()
       if (fields[0] == 'chrY' and fields[6] == 'PASS' and fields[3] != '.'
           and fields[4] != '.'):
-        result[int(fields[1])] = fields[1] + '.' + fields[3] + '.' + fields[4]
+# Fix by Jef Treece for fields containing commas:
+        result[int(fields[1])] = fields[1] + '.' + fields[3].replace(',', ';') + '.' + fields[4].replace(',', ';')
+#        result[int(fields[1])] = fields[1] + '.' + fields[3] + '.' + fields[4]
   return result
 
 

@@ -2,7 +2,7 @@
 # Author: Iain McDonald
 # Contributors: Harald Alvestrand
 # Purpose: Reduction and comparison script for Family Tree DNA's BigY data
-# Version: 0.6.7 2016/03/22
+# Version: 0.6.8 2016/05/15
 # For free distribution under the terms of the GNU General Public License, version 3 (29 June 2007)
 # https://www.gnu.org/licenses/gpl.html
 
@@ -33,7 +33,7 @@
 #             7246726 > 23612197 : L48 > Z381
 #		    implies that any L48+ test must be Z381+. The labels are not actually used: it relies on the positions
 #		    before the colon. These should be in GrCh37 co-ordinates (native to BigY).
-#       [B] Implications can also include two different SNPs, e.g.:
+#       [B] Implications can (and probably should) also include two different SNPs, e.g.:
 #             7246726 & 8796078 > 23612197 : L48 & U106 > Z381
 #           enforces Z381+ if L48+ and U106+. This reduced false implied positives, but takes slightly longer.
 #		[C] The implications list can also include a number of SNPs not found in any BigY test which need to be inserted.
@@ -66,7 +66,7 @@
 # (b) Run the programme.
 #		./redux.bash
 # 	  For circa 800 kits, this process takes around 25 minutes on a medium-range 2016 laptop.
-# (c) Examine the output:
+# (c) Examine the output. In the first instance, this will probably be a horrible mess.
 #		The report will be placed in: report.csv
 #		The short report will be placed in: shortreport.csv
 #		The HTML report will be placed in: report.html
@@ -74,15 +74,31 @@
 #		A list of SNPs that are out of place will be placed in: warning-list.txt
 #       A list of SNPs that can be merged up into higher clades will be placed in: merge-list.txt
 #       A list of forced positives (called negative, presumed positive): forced-list.txt
-# (d) Filter the input data and repeat.
-#		Identify problematic SNPs in:
-#			warning-list.txt and merge-list.txt
-#		Exclude them using the files in section 2(b).
-#		Also check warnings in report.html if the output looks odd:
-#			grep WARNING report.html
-#		Set flags to:
+# (d) Filter the input data and repeat. This is the time-consuming part.
+#		(i) Identify problematic SNPs in:
+#			    warning-list.txt
+#		    And fix them by inserting new rules into the implications file (section 2(b)).
+#           One strategy is to open shortreport.csv, look for the highest level clade that is
+#           broken (column Q > 1) and work out the rule needed to fix the SNPs above to fix it.
+#			Anything that can't be fixed by this method should go into badlist.txt
+#			In cases where recurrent SNPs are known or strongly suspected, use recurrencies.txt
+#			If reference seqeunce positives are an issue (i.e. you are working with a tree
+#			structure which includes haplogroups G2 or R1b-U152) then now is the time to
+#			correct those too.
+#		(ii) Set flags to:
 #			SKIPZIP=3
-#		and re-run the code (./redux.bash). Rinse and repeat.
+#		and re-run the code (./redux.bash). Rinse and repeat until warning-list.txt is empty.
+#		Depending on your dataset, this may take some time.
+#		(iv) Check for any warnings in report.html:
+#				grep WARNING report.html
+#		and re-run the code if any changes are made.
+#		(v) Check merge-list.txt for SNPs that can be merged up into their parents.
+#			Unless you have a BAM file to check any poor calls, this can be subjective.
+#			Generally, SNPs should be merged up if they form a clade on their own, or
+#			if they join a larger group of SNPs (e.g. going from being part of a clade of 3 SNPs
+#			part of a clade of 7 SNPs is a good merger, the reverse isn't).
+#			Re-run the code if any changes are made.
+#		report.csv and report.html should now be properly structured.
 # (e) Once you have placated the warning list, set:
 #           CHECKDATA=0
 #			MAKEAGES=1
@@ -152,14 +168,14 @@ TESTFORREFPOS=0
 #RATE1=0.814
 
 # Rates for standardised age.bed restricted region
-RATE=0.8191
-RATE0=0.7594
-RATE1=0.8777
+RATE=0.8187
+RATE0=0.7591
+RATE1=0.8773
 
 # ZEROAGE gives the date from which ages are computed
 # ERRZEROAGE gives the (95% c.i.) +/- variation in this date for individual testers
-ZEROAGE=1949.70
-ERRZEROAGE=15.08
+ZEROAGE=1950.33
+ERRZEROAGE=15.02
 
 # That's it!
 
@@ -181,8 +197,15 @@ ERRZEROAGE=15.08
 # awk 'NR==FNR {n[NR]=$1;o[NR]=$2;x=NR} NR!=FNR {for (i=1;i<=x;i++) if ($1==o[i] && $1!=n[i] && $1+0==0) print o[i],n[i]}' <(awk '$1!="" {split($1,pp," "); split(pp[1],p,"/")} $2!="" {split($2,qq," "); split(qq[1],q,"/")} NR>3 {if ($1=="") print p[1],q[1]; if ($2=="") print p[1],p[1]}' FS=, official-tree.csv  | sed 's/In://Ig' | grep '[0-9]') <(awk '{print $16}' final-ages.txt) >> cladenames.txt
 
 # Change log:
-VERSION="0.6.7"
-# 0.6.7.20170322a - Fixed bug in stats generation
+VERSION="0.6.8"
+# 0.6.8.20170515a - Added support for extended ASCII characters - thanks: Jef Treece
+#                   Allowed selected SNPs to be removed from the merge list
+# 0.6.7.20170404a - EARLY RELEASE 963
+#                   Fixed bug with extra column generated - thanks: Jef Treece
+#					Fixed bug with missing escaped characters in regex (?+) and (R) - thanks: Jef Treece
+#					Fixed bug with commas in VCF files - thanks: Jef Treece
+#					Fixed bug with returns in some VCF files - thanks: Jef Treece
+#					Fixed bug in stats generation - thanks: Alex Williamson
 #					Improved memory efficieny in sorting
 #					Fixed BED counting bug - thanks: Alex Williamson
 #					Standardised age.bed to conform to FTDNA standard
@@ -242,6 +265,8 @@ VERSION="0.6.7"
 
 # Wish list / priority list:
 # Programming: sort memory issues with hsort
+# Programming: check status of REJECTED SNPs with respect to calling and reference positives
+# Programming: allow implications to select based on ancestral->derived as well as position
 # HTML report: ensure clade name is prioritised (<STRONG>?)
 # HTML report: links to YBrowse
 # HTML report: list quality information
@@ -251,7 +276,7 @@ VERSION="0.6.7"
 # SVG report: fix header while scrolling
 # SVG report: copy haplogroup label on click
 # Basic report: intelligent support for "possible" clades [(?!) notation]
-# Basic report: include GrCh37<->GrCh38 conversion (using CrossMap?)
+# Basic report: include GrCh37<->GrCh38 conversion (using CrossMap?) as new column
 # Basic report: sorting criterion to match FTDNA tree
 # Basic report: parallisation / further optimisation
 # Basic report: ensure soft coding for number of prefix rows/columns to allow additional meta-data support
@@ -262,7 +287,9 @@ VERSION="0.6.7"
 #				additional rows:
 #					Tree position ("R1b1a1a2...")
 #					Lowest shared clade ("terminal SNP") 
-# Basic report: "wish list"
+# Basic report: check and improve swapping of reference positives
+# Basic report: check ability to support "rejected" SNPs 	
+# Basic report: ability to not automatically flag some SNPs in merge-list
 # General: support for FGC test results
 # Age analysis: support for archaeological DNA / paper trail limits in the age analysis
 # General: cross-over with STR ages - need:
@@ -373,6 +400,14 @@ fi
 
 # Check whether unzip is installed
 command -v unzip >/dev/null 2>&1 || { echo >&2 "Unzip package not found. Aborting."; exit 1; }
+
+# Check whether SNP list exists
+if [ ! -f "snps_hg19.csv" ]; then
+echo "SNP names file does not exist. Try:"
+echo "wget http://ybrowse.org/gbrowse2/gff/snps_hg19.csv -O snps_hg19.csv"
+exit 1
+fi
+
 
 # -----------------------------------------------------------------------------
 #                               UNZIP FILES
@@ -501,7 +536,7 @@ echo "Identifying list of variants..."
 rm -f variant-list.txt
 for BEDFILE in ${FILES[@]}; do
 	VCFFILE=`echo "$BEDFILE" | sed 's/.bed/.vcf/'`
-	gawk '$1=="chrY" && $7=="PASS" && $4!="." && $5!="." {print $2"\t"$4"\t"$5}' "$VCFFILE" >> variant-list.txt
+	gawk '$1=="chrY" && $7=="PASS" && $4!="." && $5!="." {print $2"\t"$4"\t"$5}' "$VCFFILE" | sed 's/,/;/g' >> variant-list.txt
 	echo -n "."
 done
 echo ""
@@ -541,11 +576,13 @@ if [ "$USED" -gt "0" ]; then
 	A=""
 	for BEDFILE in ${FILES[@]}; do
 		VCFFILE=`echo "$BEDFILE" | sed 's/.bed/.vcf/'`
-		B=`gawk -v v="$VARIANT" -v a=0 '$1=="chrY" && $2==v && $7=="PASS" {a=$10==0?"+":"-"} END {printf "%s",a}' "$VCFFILE"`
+		B=`gawk -v v="$VARIANT" -v a=0 '$1=="chrY" && $2==v && $7=="PASS" {a=$10~/^0\r?$/?"+":"-"} END {printf "%s",a}' "$VCFFILE"`
 		A="$A$B"
 	done
 	NPOS=`echo "$A" | awk '{for (i=1;i<=length($1);i++) if (substr($1,i,1)=="+") n++} END {print n}'`
-	gawk '$1!=v {print} $1==v {truevar=$1"."$4"."$3; printf "%s,%s,%s,%s,%s,%s,",$1,$2,$4,$3,$5,npos; for (i=7;i<=lc;i++) printf "%s,",$i; for (i=lc+1;i<=NF;i++) {if ($i~";") {split ($i,foo,";"); x=";"foo[2]} else {x=""}; q=substr(a,i-lc,1); if (q=="-") o=x; if (q=="+") o=truevar""x; if (q=="0") o=x; printf "%s,",o}; printf "\n"}' v="$VARIANT" a="$A" npos="$NPOS" lc="$LEFTCOLS" FS=, OFS=, variant-match.txt > foo; mv foo variant-match.txt
+	# Bug fix, Jef Treece
+	#gawk '$1!=v {print} $1==v {truevar=$1"."$4"."$3; printf "%s,%s,%s,%s,%s,%s,",$1,$2,$4,$3,$5,npos; for (i=7;i<=lc;i++) printf "%s,",$i; for (i=lc+1;i<=NF;i++) {if ($i~";") {split ($i,foo,";"); x=";"foo[2]} else {x=""}; q=substr(a,i-lc,1); if (q=="-") o=x; if (q=="+") o=truevar""x; if (q=="0") o=x; printf "%s,",o}; printf "\n"}' v="$VARIANT" a="$A" npos="$NPOS" lc="$LEFTCOLS" FS=, OFS=, variant-match.txt > foo; mv foo variant-match.txt
+	gawk -F, '$1!=v {print} $1==v {truevar=$1"."$4"."$3; printf "%s,%s,%s,%s,%s,%s",$1,$2,$4,$3,$5,npos; for (i=7;i<=lc;i++) printf ",%s,",$i; for (i=lc+1;i<=NF;i++) {if ($i~";") {split ($i,foo,";"); x=";"foo[2]} else {x=""}; q=substr(a,i-lc,1); if (q=="-") o=x; if (q=="+") o=truevar""x; if (q=="0") o=x; printf ",%s",o}; printf "\n"}' v="$VARIANT" a="$A" npos="$NPOS" lc=$LEFTCOLS variant-match.txt > foo; mv foo variant-match.txt
 fi
 done
 
@@ -591,7 +628,7 @@ gawk -v FS=, -v OFS=, 'NR==FNR && $1+0>0 {n++;split($0,u," ");a[n]=u[1]; if (u[2
 gawk -v FS=, '{n=NF; for (i=1;i<=NF;i++) if (NR==1) {t[i]=$i} else {t[i]=t[i]","$i}} END {for (i=1;i<=n;i++) print t[i]}' bar > variant-output.txt
 
 # Identify recurrent SNPs
-gawk -v FS=, -v OFS=, 'NR==FNR {split($0,u," ");a[NR]=u[1];n++} NR!=FNR {for (j=1;j<=n;j++) if (a[j]==$1) {$2="(R);";for (i=18;i<=NF;i++) if ($i~$1 || $i~/(?+)/) $i="(R);"$i}; print}' recurrencies.txt variant-output.txt > foo
+gawk -v FS=, -v OFS=, 'NR==FNR {split($0,u," ");a[NR]=u[1];n++} NR!=FNR {for (j=1;j<=n;j++) if (a[j]==$1) {$2="(R);";for (i=18;i<=NF;i++) if ($i~$1 || $i~/\(\?\+\)/) $i="(R);"$i}; print}' recurrencies.txt variant-output.txt > foo
 mv foo variant-output.txt
 
 T1=`date +%s.%N`
@@ -602,7 +639,7 @@ echo "...complete after $DT seconds"
 echo "Generating stats and segregating for SNPs..."
 NFILES=`head -1 header.csv | gawk -v FS=, '{print NF-17}'`
 gawk -v FS=, -v f="$NFILES" '{cbl=cbu=cblu=presp=nn=nc=cblp=cbln=cbup=cbun=cblup=cblun=0; \
-   for (i=18;i<=18+f-1;i++) {if ($i!~$1) nn++; if ($i ~ /(?+)/) presp++; if ($i ~ /nc/) nc++; \
+   for (i=18;i<=18+f-1;i++) {if ($i!~$1) nn++; if ($i ~ /\(\?\+\)/) presp++; if ($i ~ /nc/) nc++; \
                              if ($i ~ /cbl/) cbl++; if ($i ~ /cbu/) cbu++; if ($i ~ /cblu/) cblu++; if ($i ~ /cbl/ && $i~$1) cblp++; if ($i ~ /cbu/ && $i~$1) cbup++; if ($i ~ /cblu/ && $i~$1) cblup++}; \
 							 cbln=cbl-cblp-cblu; cbun=cbu-cbup; cblun=cblu-cblup; $6+=presp; $7=presp+0; $8=nn+0; $9=nc+0; $10=cblp+0; $11=cbln+0; $12=cbup+0; $13=cbun+0; $14=cblup+0; $15=cblun+0; \
 							 for (i=1;i<=NF;i++) printf "%s,",$i; printf "\n"}' variant-output.txt > foo
@@ -639,7 +676,7 @@ sort -nk6,6r -nk8,8 -nk1,1 -t, variant-not-shared.txt > foo; tac foo > variant-n
 echo "Horizontal re-sort #1"
 # Sorting SNPs horizontally
 ORDER=`gawk -v FS=, 'NR==1 {for (i=1;i<=NF-17;i++) new[i]=i} \
-                  {delete p; for (i=1;i<=NF-17;i++) {p[i]=0; if (($(i+17)~$1 || $(i+17)~/(?+)/) && $(i+17)!~/(R)/) p[i]++}; \
+                  {delete p; for (i=1;i<=NF-17;i++) {p[i]=0; if (($(i+17)~$1 || $(i+17)~/\(\?\+\)/) && $(i+17)!~/\(R\)/) p[i]++}; \
 		          n=0; for (i=1;i<=NF-17;i++) {if (p[new[i]]==1) {n++;new2[n]=new[i]}}; \
 				       for (i=1;i<=NF-17;i++) {if (p[new[i]]==0) {n++;new2[n]=new[i]}}; \
 					   for (i=1;i<=NF-17;i++) new[i]=new2[i]} \
@@ -651,13 +688,13 @@ gawk -v FS=, -v o="$ORDER" 'NR==1 {n=split(o,s," ")} {for (i=1;i<=5;i++) printf 
 
 # Re-sort SNPs vertically
 echo "Vertical re-sort #1"
-gawk -v FS=, -v OFS=, '{$16=NF; for (i=NF;i>=18;i--) if ($i~$1 || $i~/(?+)/) $16=i; pruns=prun=0; for (i=18;i<=NF;i++) if ($i~$1 || $i ~ /(?+)/) {if (prun==0) {prun=1; pruns++}} else {if (length($i)<2) prun=0}; $17=pruns; print}' variant-not-shared.txt > foo
+gawk -v FS=, -v OFS=, '{$16=NF; for (i=NF;i>=18;i--) if ($i~$1 || $i~/\(\?\+\)/) $16=i; pruns=prun=0; for (i=18;i<=NF;i++) if ($i~$1 || $i ~ /\(\?\+\)/) {if (prun==0) {prun=1; pruns++}} else {if (length($i)<2) prun=0}; $17=pruns; print}' variant-not-shared.txt > foo
 sort -n -nk6,6r -nk16,16 -nk1,1 -t, foo > bar; tac bar > variant-not-shared.txt
 
 echo "Horizontal re-sort #2"
 # Sorting SNPs horizontally
 ORDER=`gawk -v FS=, 'NR==1 {for (i=1;i<=NF-17;i++) new[i]=i} \
-                  {delete p; for (i=1;i<=NF-17;i++) {p[i]=0; if (($(i+17)~$1 || $(i+17)~/(?+)/) && $(i+17)!~/(R)/) p[i]++}; \
+                  {delete p; for (i=1;i<=NF-17;i++) {p[i]=0; if (($(i+17)~$1 || $(i+17)~/\(\?\+\)/) && $(i+17)!~/\(R\)/) p[i]++}; \
 		          n=0; for (i=1;i<=NF-17;i++) {if (p[new[i]]==1) {n++;new2[n]=new[i]}}; \
 				       for (i=1;i<=NF-17;i++) {if (p[new[i]]==0) {n++;new2[n]=new[i]}}; \
 					   for (i=1;i<=NF-17;i++) new[i]=new2[i]} \
@@ -669,7 +706,7 @@ gawk -v FS=, -v o="$ORDER" 'NR==1 {n=split(o,s," ")} {for (i=1;i<=5;i++) printf 
 
 # Re-sort SNPs vertically
 echo "Vertical re-sort #2"
-gawk -v FS=, -v OFS=, '{$16=NF; for (i=NF;i>=18;i--) if ($i~$1 || $i~/(?+)/) $16=i; pruns=prun=0; for (i=18;i<=NF;i++) if ($i~$1 || $i ~ /(?+)/) {if (prun==0) {prun=1; pruns++}} else {if (length($i)<2) prun=0}; $17=pruns; print}' variant-not-shared.txt > foo
+gawk -v FS=, -v OFS=, '{$16=NF; for (i=NF;i>=18;i--) if ($i~$1 || $i~/\(\?\+\)/) $16=i; pruns=prun=0; for (i=18;i<=NF;i++) if ($i~$1 || $i ~ /\(\?\+\)/) {if (prun==0) {prun=1; pruns++}} else {if (length($i)<2) prun=0}; $17=pruns; print}' variant-not-shared.txt > foo
 sort -n -nk6,6r -nk16,16 -nk1,1 -t, foo > bar; tac bar > variant-not-shared.txt
 
 # Extract recurrent SNPs, then repeat
@@ -679,12 +716,12 @@ mv foo variant-not-shared.txt
 
 # Re-sort SNPs vertically
 echo "Vertical re-sort #3"
-gawk -v FS=, -v OFS=, '{$16=NF; for (i=NF;i>=18;i--) if ($i~$1 || $i~/(?+)/) $16=i; pruns=prun=0; for (i=18;i<=NF;i++) if ($i~$1 || $i ~ /(?+)/) {if (prun==0) {prun=1; pruns++}} else {if (length($i)<2) prun=0}; $17=pruns; print}' variant-not-shared.txt > foo
+gawk -v FS=, -v OFS=, '{$16=NF; for (i=NF;i>=18;i--) if ($i~$1 || $i~/\(\?\+\)/) $16=i; pruns=prun=0; for (i=18;i<=NF;i++) if ($i~$1 || $i ~ /\(\?\+\)/) {if (prun==0) {prun=1; pruns++}} else {if (length($i)<2) prun=0}; $17=pruns; print}' variant-not-shared.txt > foo
 sort -n -nk6,6r -nk16,16 -nk1,1 -t, foo > bar; mv bar variant-not-shared.txt
 
 # Sort other files
-gawk -v FS=, -v OFS=, '{pruns=prun=0; for (i=18;i<=NF;i++) if ($i~$1 || $i ~ /(?+)/) {if (prun==0) {prun=1; pruns++}} else {if (length($i)<2) prun=0}; $17=pruns; print}' variant-shared.txt > foo; mv foo variant-shared.txt
-gawk -v FS=, -v OFS=, '{pruns=prun=0; for (i=18;i<=NF;i++) if ($i~$1 || $i ~ /(?+)/) {if (prun==0) {prun=1; pruns++}} else {if (length($i)<2) prun=0}; $17=pruns; print}' variant-bad.txt > foo
+gawk -v FS=, -v OFS=, '{pruns=prun=0; for (i=18;i<=NF;i++) if ($i~$1 || $i ~ /\(\?\+\)/) {if (prun==0) {prun=1; pruns++}} else {if (length($i)<2) prun=0}; $17=pruns; print}' variant-shared.txt > foo; mv foo variant-shared.txt
+gawk -v FS=, -v OFS=, '{pruns=prun=0; for (i=18;i<=NF;i++) if ($i~$1 || $i ~ /\(\?\+\)/) {if (prun==0) {prun=1; pruns++}} else {if (length($i)<2) prun=0}; $17=pruns; print}' variant-bad.txt > foo
 sort -nk17,17 -nk6,6r foo > variant-bad.txt
 
 T1=`date +%s.%N`
@@ -838,7 +875,7 @@ if [ "$CHECKDATA" -gt "0" ]; then
 
 gawk -v FS=, '$17>1 && $2 !~ /\(R/ && $6>1 {print $1,$2,$5,$6,$17,"Inconsistent: conflicting calls"}' variant-not-shared.txt > warning-list.txt
 gawk -v FS=, '$17>1 && $2 !~ /\(R/ && $6==1 {print $1,$2,$5,$6,$17,"Inconsistent: multiple calls as singleton"}' variant-not-shared.txt >> warning-list.txt
-gawk -v FS=, '$6>1 && $17==1 {first=0; last=0; for (i=NF;i>=18;i--) if ($i~$1 || ($i~$2 && length($2)>0) || $i~/(?+)/) first=i; for (i=18;i<=NF;i++) if ($i~$1 || ($i~$2 && length($2)>0) || $i~/(?+)/) last=i; if (last-first+1>$6+0) print $1,$2,$6,$17,"Inconsistent: out of order"}' variant-not-shared.txt >> warning-list.txt
+gawk -v FS=, '$6>1 && $17==1 {first=0; last=0; for (i=NF;i>=18;i--) if ($i~$1 || ($i~$2 && length($2)>0) || $i~/\(\?\+\)/) first=i; for (i=18;i<=NF;i++) if ($i~$1 || ($i~$2 && length($2)>0) || $i~/\(\?\+\)/) last=i; if (last-first+1>$6+0) print $1,$2,$6,$17,"Inconsistent: out of order"}' variant-not-shared.txt >> warning-list.txt
 WARNINGSNPS=`wc -l warning-list.txt | gawk '{print $1}'`
 if [ "$WARNINGSNPS" -gt "0" ]; then
 echo "WARNING! $WARNINGSNPS mutations are not consistently placed in the tree."
@@ -856,12 +893,29 @@ echo "Tree complete after $DT seconds"
 #                       FLAG CLADES THAT CAN BE MERGED
 # -----------------------------------------------------------------------------
 echo "Identifying clades that can be merged up..."
-awk 'NR==FNR {for (i=1;i<=NF;i++) t[NR,i]=$i; n[NR]=split($5,x,";"); for (j=1;j<=n[NR];j++) s[NR,j]=x[j]; nc=FNR} NR!=FNR {for (i=1;i<=NF;i++) if (i<18) {d[FNR,i]=$i} else {d[FNR,i]=length($i)>0?1:0}; ns=FNR} END {for (i=1;i<=nc;i++) for (j=1;j<i;j++) if (t[j,7]==substr(t[i,7],1,length(t[i,7])-2)) parent[i]=j; for (i=1;i<=nc;i++) for (j=1;j<=n[i];j++) {for (k=1;k<=ns;k++) if (d[k,1]==s[i,j] || d[k,2]==s[i,j]) {nneg=0; for (l=t[parent[i],3];l<=t[parent[i],4];l++) if ((l<t[i,3] || l>t[i,4]) && d[k,l]==0) {nneg++}; if (nneg==0) print s[i,j],"can be merged into",t[parent[i],8]}}}' FS=, tree.csv variant-not-shared.txt > merge-list.txt
+# 1. Parse tree structure from tree.csv:
+# (a) Enter full data into memory as array t[clade,descriptor]
+# (b) Split the list of SNPs for each clide into array x, and parse into array s[clade,SNP]
+# 2. Parse SNP calls from variant-not-shared.txt:
+# (a) For each SNP [row], loop over tests [columns], parse information into d[SNP,test] as metadata (columns 1-17), or binary flag (+/-) (columns 18+)
+# 3. Collate data together to identify possible mergers:
+# (a) For each clade [i], loop over the clades above it [j] to identify the parent clade.
+# (b) For each clade [i], loop over the SNPs in that clade [j], and the SNPs in the variant call matrix [k].
+# (i) If an SNP is found in the variant matrix [d] which matches the position or name of SNP in that clade [s] then...
+# (ii) Loop over the tests where the parent clade is positive [l].
+# (iii) Identify the clades where the current clade is not called positive [l<t[i,3] || l>t[i,4]] and the SNP in question is explicitly called negative (d[k,l]==0), and increment the number of negatives [nneg]
+# (iv) If the number of explicit negatives is zero (i.e. there are no tests in which the parent is positive and the clade is explicitly negative), then print a warning message.
+awk 'NR==FNR {for (i=1;i<=NF;i++) t[NR,i]=$i; n[NR]=split($5,x,";"); for (j=1;j<=n[NR];j++) s[NR,j]=x[j]; nc=FNR} NR!=FNR {for (i=1;i<=NF;i++) if (i<18) {d[FNR,i]=$i} else {d[FNR,i]=length($i)>0?1:0}; ns=FNR} END {for (i=1;i<=nc;i++) for (j=1;j<i;j++) if (t[j,7]==substr(t[i,7],1,length(t[i,7])-2)) parent[i]=j; for (i=1;i<=nc;i++) for (j=1;j<=n[i];j++) {for (k=1;k<=ns;k++) if (d[k,1]==s[i,j] || d[k,2]==s[i,j]) {nneg=0; for (l=t[parent[i],3];l<=t[parent[i],4];l++) if ((l<t[i,3] || l>t[i,4]) && d[k,l]==0) {nneg++}; if (nneg==0) print s[i,j],"can be merged into",t[parent[i],8]}}}' FS=, tree.csv variant-not-shared.txt > merge-complete.txt
+join -j 1 -v 1 <(sort -k1,1 merge-complete.txt) <(awk '{print $1}' merge-ignore.txt | sort -k1,1) > merge-list.txt
+# Suggested fix by Jef Treece
+#awk 'NR==FNR {for (i=1;i<=NF;i++) t[NR,i]=$i; n[NR]=split($5,x,";"); for (j=1;j<=n[NR];j++) s[NR,j]=x[j]; nc=FNR} NR!=FNR {for (i=1;i<=NF;i++) if (i<18) {d[FNR,i]=$i} else {d[FNR,i]=length($i)>0?1:0}; ns=FNR} END {for (i=1;i<=nc;i++) for (j=1;j<i;j++) {match(t[i,7],"([0-9.]+)[.]([0-9]+)",a);if (t[j,7]==a[1]) parent[i]=j;} for (i=1;i<=nc;i++) for (j=1;j<=n[i];j++) {for (k=1;k<=ns;k++) if (d[k,1]==s[i,j] || d[k,2]==s[i,j]) {nneg=0; for (l=t[parent[i],3];l<=t[parent[i],4];l++) if ((l<t[i,3] || l>t[i,4]) && d[k,l]==0) {nneg++}; if (nneg==0) print s[i,j],"can be merged into",t[parent[i],8]}}}' FS=, tree.csv variant-not-shared.txt > merge-list.txt
+
 
 MERGESNPS=`wc -l merge-list.txt | gawk '{print $1}'`
 if [ "$MERGESNPS" -gt "0" ]; then
 echo "$MERGESNPS mutations can be merge higher in the tree."
 echo "This list will include any manually inserted SNPs."
+echo "It ignores" `wc -l merge-ignore.txt | gawk '{print $1}'` "mutations from merge-ignore.txt"
 echo "Set SKIPZIP=3 and fix them using implications.txt."
 echo "These mutations are recorded in merge-list.txt."
 fi
@@ -960,6 +1014,7 @@ echo "<head>" >> report.html
 echo "<title> Tree structure of $TOPSNP </title>" >> report.html
 echo '<meta name="Description" content="Tree structure of $TOPSNP automatically compiled from called VCF/BED data">'  >> report.html
 echo '<meta name="Author" content="Created using the REDUX pipeline by Iain McDonald (version '$VERSION')">'  >> report.html
+echo '<meta charset="utf-8">'  >> report.html
 echo "</head>" >> report.html
 echo "<body>" >> report.html
 
