@@ -2,7 +2,7 @@
 # Author: Iain McDonald
 # Contributors: Harald Alvestrand
 # Purpose: Reduction and comparison script for Family Tree DNA's BigY data
-# Version: 0.6.5 2016/01/28
+# Version: 0.6.6 2016/02/03
 # For free distribution under the terms of the GNU General Public License, version 3 (29 June 2007)
 # https://www.gnu.org/licenses/gpl.html
 
@@ -118,8 +118,8 @@ MAKEREPORT=1
 MAKEAGES=1
 MAKESHORTREPORT=1
 MAKEHTMLREPORT=1
+SKIPZIP=3
 CHECKDATA=1
-SKIPZIP=0
 ZIPUPDATEONLY=1
 TESTFORREFPOS=0
 # Notes on SKIPZIP
@@ -152,14 +152,14 @@ TESTFORREFPOS=0
 #RATE1=0.814
 
 # Rates for standardised age.bed restricted region
-RATE=0.8191
-RATE0=0.7594
-RATE1=0.8777
+RATE=0.8193
+RATE0=0.7595
+RATE1=0.8779
 
 # ZEROAGE gives the date from which ages are computed
 # ERRZEROAGE gives the (95% c.i.) +/- variation in this date for individual testers
-ZEROAGE=1949.85
-ERRZEROAGE=15.26
+ZEROAGE=1949.79
+ERRZEROAGE=15.12
 
 # That's it!
 
@@ -175,8 +175,10 @@ ERRZEROAGE=15.26
 #      zip redux.zip redux.bash positives-and-no-calls.py snps_hg19.csv age.bed poisson.tbl cpoisson.tbl implications.txt badlist.txt recurrencies.txt cladenames.txt events.svg treefoot.html
 
 # Change log:
-VERSION="0.6.5"
-# 0.6.5.20160126a - Allowed combined "if (A+ & B+) then C+" implications
+VERSION="0.6.6"
+# 0.6.6.20160203a - Provided correct placement of recurrent SNPs
+# 0.6.5.20160126a - EARLY RELEASE 871
+#					Allowed combined "if (A+ & B+) then C+" implications
 # 0.6.4.20160120a - EARLY RELEASE 861
 #					Added header to SVG tree, swapped horizontal/vertical
 # 0.6.3.20160110a - EARLY RELEAESE 844
@@ -656,13 +658,14 @@ gawk -v FS=, -v OFS=, '{$16=NF; for (i=NF;i>=18;i--) if ($i~$1 || $i~/(?+)/) $16
 sort -n -nk6,6r -nk16,16 -nk1,1 -t, foo > variant-not-shared.txt
 
 # Extract recurrent SNPs, then repeat
-# [To be done]
-#grep "(R)" variant-not-shared.txt | grep cbl | head -1 | awk '{split($2,a,";"); for (i=18;i<=NF;i++) if ($i~$1 || ($i~a[2] && length($2)>1) || $i~"(?+)") n[i]=1; q=0; for (i=18;i<=NF;i++) {if (n[i-1]+0==0 && n[i]==1) q++; print i,q,n[i],$i}}' FS=, | more^
+echo "Separating recurrent SNPs..."
+awk '$2!~"(R)" {print} $2~"(R)" {delete n; delete nq; delete r; delete rep; r2=$2; split($2,a,";"); for (i=18;i<=NF;i++) if ($i~$1 || ($i~a[2] && length(a[2])>1) || $i~"(?+)") n[i]=1; q=0; for (i=18;i<=NF;i++) {if (n[i-1]+0==0 && n[i]==1) q++; rep[i]=q; r[i]=$i; sub("R","R"q,r[i])}; for (iq=1;iq<=q;iq++) {nq[iq]=0; $2=r2; sub("R","R"iq,$2); for (i=2;i<=NF;i++) if (n[i]==1) {if (rep[i]==iq) {$i=r[i];nq[iq]++} else {$i=";-R"}}; $6=sprintf("%04i",nq[iq]); print $0}}' FS=, OFS=, variant-not-shared.txt > foo
+mv foo variant-not-shared.txt
 
 # Re-sort SNPs vertically
-#echo "Vertical re-sort #3"
-#gawk -v FS=, -v OFS=, '{$16=NF; for (i=NF;i>=18;i--) if ($i~$1 || $i~/(?+)/) $16=i; pruns=prun=0; for (i=18;i<=NF;i++) if ($i~$1 || $i ~ /(?+)/) {if (prun==0) {prun=1; pruns++}} else {if (length($i)<2) prun=0}; $17=pruns; print}' variant-not-shared.txt > foo
-#sort -n -nk6,6r -nk16,16 -nk1,1 -t, foo > variant-not-shared.txt
+echo "Vertical re-sort #3"
+gawk -v FS=, -v OFS=, '{$16=NF; for (i=NF;i>=18;i--) if ($i~$1 || $i~/(?+)/) $16=i; pruns=prun=0; for (i=18;i<=NF;i++) if ($i~$1 || $i ~ /(?+)/) {if (prun==0) {prun=1; pruns++}} else {if (length($i)<2) prun=0}; $17=pruns; print}' variant-not-shared.txt > foo
+sort -n -nk6,6r -nk16,16 -nk1,1 -t, foo > variant-not-shared.txt
 
 # Sort other files
 gawk -v FS=, -v OFS=, '{pruns=prun=0; for (i=18;i<=NF;i++) if ($i~$1 || $i ~ /(?+)/) {if (prun==0) {prun=1; pruns++}} else {if (length($i)<2) prun=0}; $17=pruns; print}' variant-shared.txt > foo; mv foo variant-shared.txt
@@ -687,9 +690,9 @@ if [ "$SKIPZIP" -le "2" ]; then
 	join -1 1 -2 1 -t, <(sort -k1,1 -t, foo) <(sort -k1,1 -t, snp-names.csv) > snp-used.csv
 	sort -nk1,1 -t. snp-used.csv > bar; mv bar snp-used.csv
 fi
-gawk -v FS=, -v OFS=, 'NR==FNR {s[NR,1]=$1;s[NR,2]=$2;split($2,arr," ");s[NR,3]=arr[1];n=NR} NR!=FNR {m=$1"."$3"."$4; for (i=1;i<=n;i++) if (s[i,1]==m) {$2=$2""s[i,2]; gsub(m,s[i,3],$0)}; print}' snp-used.csv variant-not-shared.txt > foo; mv foo variant-not-shared.txt
-gawk -v FS=, -v OFS=, 'NR==FNR {s[NR,1]=$1;s[NR,2]=$2;split($2,arr," ");s[NR,3]=arr[1];n=NR} NR!=FNR {m=$1"."$3"."$4; for (i=1;i<=n;i++) if (s[i,1]==m) {$2=$2""s[i,2]; gsub(m,s[i,3],$0)}; print}' snp-used.csv variant-shared.txt > foo; mv foo variant-shared.txt
-gawk -v FS=, -v OFS=, 'NR==FNR {s[NR,1]=$1;s[NR,2]=$2;split($2,arr," ");s[NR,3]=arr[1];n=NR} NR!=FNR {m=$1"."$3"."$4; for (i=1;i<=n;i++) if (s[i,1]==m) {$2=$2""s[i,2]; gsub(m,s[i,3],$0)}; print}' snp-used.csv variant-bad.txt > foo; mv foo variant-bad.txt
+gawk -v FS=, -v OFS=, 'NR==FNR {s[NR,1]=$1;s[NR,2]=$2;split($2,arr," ");s[NR,3]=arr[1];n=NR} NR!=FNR {m=$1"."$3"."$4; for (i=1;i<=n;i++) if (s[i,1]==m) {$2=$2""s[i,2]; gsub(m,s[i,3],$0)}; print}' snp-used.csv variant-not-shared.txt | gawk '$2~"\\(R" && length($2)<=5 {$2=$2""$1} {print}' FS=, OFS=, > foo; mv foo variant-not-shared.txt
+gawk -v FS=, -v OFS=, 'NR==FNR {s[NR,1]=$1;s[NR,2]=$2;split($2,arr," ");s[NR,3]=arr[1];n=NR} NR!=FNR {m=$1"."$3"."$4; for (i=1;i<=n;i++) if (s[i,1]==m) {$2=$2""s[i,2]; gsub(m,s[i,3],$0)}; print}' snp-used.csv variant-shared.txt | gawk '$2~"\\(R" && length($2)<=5 {$2=$2""$1} {print}' FS=, OFS=, > foo; mv foo variant-shared.txt
+gawk -v FS=, -v OFS=, 'NR==FNR {s[NR,1]=$1;s[NR,2]=$2;split($2,arr," ");s[NR,3]=arr[1];n=NR} NR!=FNR {m=$1"."$3"."$4; for (i=1;i<=n;i++) if (s[i,1]==m) {$2=$2""s[i,2]; gsub(m,s[i,3],$0)}; print}' snp-used.csv variant-bad.txt | gawk '$2~"\\(R" && length($2)<=5 {$2=$2""$1} {print}' FS=, OFS=, > foo; mv foo variant-bad.txt
 
 T1=`date +%s.%N`
 DT=`echo "$T1" "$T0" | gawk '{print $1-$2}'`
@@ -701,11 +704,11 @@ echo "...complete after $DT seconds"
 
 # Count the number of SNPs and indels, count the singletons, and count the singletons for any later age analysis
 echo "Creating SNP counts..."
-U106SNPS=`gawk -v FS=, -v OFS=, '$5=="SNP" {s=$2; for (i=1;i<=NF-17;i++) if (($(i+17)~$2 && length($2)>0) || ($(i+17)~$1 && length($2)==0) || $(i+17)~/(R)/) {n[i]++}} END {for (i=1;i<=NF-17;i++) {x+=n[i]; printf "%i,",n[i]}}' variant-not-shared.txt`
-U106INDELS=`gawk -v FS=, -v OFS=, '$5=="Indel" {s=$2; for (i=1;i<=NF-17;i++) if (($(i+17)~$2 && length($2)>0) || ($(i+17)~$1 && length($2)==0) || $(i+17)~/(R)/) {n[i]++}} END {for (i=1;i<=NF-17;i++) {x+=n[i]; printf "%i,",n[i]}}' variant-not-shared.txt`
-SINGSNPS=`gawk -v FS=, -v OFS=, '$5=="SNP" && $6==1 {s=$2; for (i=1;i<=NF-17;i++) if (($(i+17)~$2 && length($2)>0) || ($(i+17)~$1 && length($2)==0) || $(i+17)~/(R)/) {n[i]++}} END {for (i=1;i<=NF-17;i++) {x+=n[i]; printf "%i,",n[i]}}' variant-not-shared.txt`
-SINGINDELS=`gawk -v FS=, -v OFS=, '$5=="Indel" && $6==1 {s=$2; for (i=1;i<=NF-17;i++) if (($(i+17)~$2 && length($2)>0) || ($(i+17)~$1 && length($2)==0) || $(i+17)~/(R)/) {n[i]++}} END {for (i=1;i<=NF-17;i++) {x+=n[i]; printf "%i,",n[i]}}' variant-not-shared.txt`
-AGESINGSNPS=`gawk -v FS=, -v OFS=, 'NR==FNR {split($0,ax," ");a[NR]=ax[1];b[NR]=ax[2];na=NR} NR!=FNR && $5=="SNP" && $6==1 {s=$2; for (i=1;i<=NF-17;i++) if (($(i+17)~$2 && length($2)>0) || ($(i+17)~$1 && length($2)==0) || $(i+17)~/(R)/) {for (j=1;j<=na;j++) if ($1>=a[j] && $1<=b[j]) {n[i]++}}} END {for (i=1;i<=NF-17;i++) {x+=n[i]; printf "%i,",n[i]}}' age.bed variant-not-shared.txt`
+U106SNPS=`gawk -v FS=, -v OFS=, '$5=="SNP" {s=$2; for (i=1;i<=NF-17;i++) if (($(i+17)~$2 && length($2)>0) || ($(i+17)~$1 && length($2)==0) || $(i+17)~/\(R/) {n[i]++}} END {for (i=1;i<=NF-17;i++) {x+=n[i]; printf "%i,",n[i]}}' variant-not-shared.txt`
+U106INDELS=`gawk -v FS=, -v OFS=, '$5=="Indel" {s=$2; for (i=1;i<=NF-17;i++) if (($(i+17)~$2 && length($2)>0) || ($(i+17)~$1 && length($2)==0) || $(i+17)~/\(R/) {n[i]++}} END {for (i=1;i<=NF-17;i++) {x+=n[i]; printf "%i,",n[i]}}' variant-not-shared.txt`
+SINGSNPS=`gawk -v FS=, -v OFS=, '$5=="SNP" && $6==1 {s=$2; for (i=1;i<=NF-17;i++) if (($(i+17)~$2 && length($2)>0) || ($(i+17)~$1 && length($2)==0) || $(i+17)~/\(R/) {n[i]++}} END {for (i=1;i<=NF-17;i++) {x+=n[i]; printf "%i,",n[i]}}' variant-not-shared.txt`
+SINGINDELS=`gawk -v FS=, -v OFS=, '$5=="Indel" && $6==1 {s=$2; for (i=1;i<=NF-17;i++) if (($(i+17)~$2 && length($2)>0) || ($(i+17)~$1 && length($2)==0) || $(i+17)~/\(R/) {n[i]++}} END {for (i=1;i<=NF-17;i++) {x+=n[i]; printf "%i,",n[i]}}' variant-not-shared.txt`
+AGESINGSNPS=`gawk -v FS=, -v OFS=, 'NR==FNR {split($0,ax," ");a[NR]=ax[1];b[NR]=ax[2];na=NR} NR!=FNR && $5=="SNP" && $6==1 {s=$2; for (i=1;i<=NF-17;i++) if (($(i+17)~$2 && length($2)>0) || ($(i+17)~$1 && length($2)==0) || $(i+17)~/\(R/) {for (j=1;j<=na;j++) if ($1>=a[j] && $1<=b[j]) {n[i]++}}} END {for (i=1;i<=NF-17;i++) {x+=n[i]; printf "%i,",n[i]}}' age.bed variant-not-shared.txt`
 gawk -v FS=, -v OFS=, -v us="$U106SNPS" -v ui="$U106INDELS" -v ss="$SINGSNPS" -v si="$SINGINDELS" -v as="$AGESINGSNPS" '\
 	NR==9 {print $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,us} \
 	NR==10 {print $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,ss} \
@@ -765,6 +768,7 @@ echo "CALCULATING TREE STRUCTURE..."
 # First we need to identify clades
 echo "Identifying clades..."
 gawk -v FS=, -v OFS=, -v lead="$TOPSNP" 'NR==1 {print 1,lead,"SNP",$6,18} $17+0>0 && n==0 {n=1} $17+0==0 && n==1 {n=2} n==1 && $17==1 && $6>1 {print $1,$2,$5,$6,$16}' report.csv | \
+sed 's/(R[1-9]);//g' | \
 gawk -v FS=, 'NR==1 {x=$2;w=0} {if (length($2)>0) {y=$2} else {y=$1}; z=$1} $4==n && $5==f {x=x","y;w=w","z} ($4!=n || $5!=f) && $4>1 && NR>1 {print NR,n,f,n+f-1,x,w; x=y; w=z} {n=$4;f=$5} END {print NR,n,f,n+f-1,x,w}' > clades.csv
 
 # Now let's count the number of SNPs in those clades that are to be used for age analysis purposes
@@ -801,6 +805,7 @@ foundclass=0; for (i=1;i<=n;i++) if (ba[i]=="M" || ba[i]=="P" || ba[i]=="U" || b
 	if (foundclass==1) {lownum=9e9; for (i=1;i<=n;i++) if ((ba[i]=="M" || ba[i]=="P" || ba[i]=="U" || ba[i]=="L") && b0[i]<lownum) {$6=b[i]; lownum=b0[i]}}; \
 for (i=1;i<=nrename;i++) if ($6==autoname[i]) {for (j=1;j<=n;j++) if (b[j]==newname[i]) $6=newname[i]}; \
 print}' cladenames.txt cladecounts.csv | \
+sed 's/(R[1-9]);//g' | \
 gawk -v lead="$TOPSNP" '{a0[NR]=$3;a1[NR]=$4;a2[NR]=$6; if (NR==1) a2[NR]=""; for (i=NR-1;i>=1;i--) {if ($3>=a0[i] && $4<=a1[i]) $6=a2[i]">"$6}; $6=lead""$6; if (NR==1) {$7=0;$5=lead;$6=lead}; print}' | \
 sort -nk3,3 -nk1 | \
 gawk 'NR==1 {n[NR]=1;sh[1]="0"} \
@@ -816,8 +821,8 @@ sed 's/,/;/g' tree.txt | sed 's/ /,/g' > tree.csv
 # -----------------------------------------------------------------------------
 if [ "$CHECKDATA" -gt "0" ]; then
 
-gawk -v FS=, '$17>1 && $2 !~ /(R)/ && $6>1 {print $1,$2,$5,$6,$17,"Inconsistent: conflicting calls"}' variant-not-shared.txt > warning-list.txt
-gawk -v FS=, '$17>1 && $2 !~ /(R)/ && $6==1 {print $1,$2,$5,$6,$17,"Inconsistent: multiple calls as singleton"}' variant-not-shared.txt >> warning-list.txt
+gawk -v FS=, '$17>1 && $2 !~ /\(R/ && $6>1 {print $1,$2,$5,$6,$17,"Inconsistent: conflicting calls"}' variant-not-shared.txt > warning-list.txt
+gawk -v FS=, '$17>1 && $2 !~ /\(R/ && $6==1 {print $1,$2,$5,$6,$17,"Inconsistent: multiple calls as singleton"}' variant-not-shared.txt >> warning-list.txt
 gawk -v FS=, '$6>1 && $17==1 {first=0; last=0; for (i=NF;i>=18;i--) if ($i~$1 || ($i~$2 && length($2)>0) || $i~/(?+)/) first=i; for (i=18;i<=NF;i++) if ($i~$1 || ($i~$2 && length($2)>0) || $i~/(?+)/) last=i; if (last-first+1>$6+0) print $1,$2,$6,$17,"Inconsistent: out of order"}' variant-not-shared.txt >> warning-list.txt
 WARNINGSNPS=`wc -l warning-list.txt | gawk '{print $1}'`
 if [ "$WARNINGSNPS" -gt "0" ]; then
@@ -1004,13 +1009,14 @@ echo "CALCULATING AGES..."
 #  Lower: m/<rate>/<coverage> where int_0^n Poisson(n,m) = 0.025 for n observed SNPs and a theoretical mean of m
 #  Upper: m/<rate>/<coverage> where int_0^n Poisson(n,m) = 0.975 for n observed SNPs and a theoretical mean of m
 echo "Counting SNPs..."
+sed 's/(R[1-9]);//g' variant-not-shared.txt > foo
 gawk -v FS=, -v r="$RATE" 'NR==FNR {for (i=1;i<=9;i++) {c[FNR,i]=$i}; delete a; n=split($5,a,";"); natlevel[FNR]=n; s[FNR]=a[n]; n=FNR} \
 			  FILENAME=="header.csv" && FNR==4 {for (i=18;i<=NF;i++) {cov[i]=$i; covtotal+=$i}} \
 			  FILENAME=="age.bed" {split($0,a," ");counta[FNR]=a[1];countb[FNR]=a[2];nc=FNR} \
               NR!=FNR {flag[1]=1; for (i=1;i<=n;i++) { \
 			           if (flag[i]==1 && $5=="SNP") {snpused=0; for (j=c[i,3];j<=c[i,4];j++) if (($j~$2 && length($2)>0) || ($j~$1 && $1+0>0)) {for (k=1;k<=nc;k++) if ($1>=counta[k]&&$1<=countb[k]) {nsnp[i]++; snpused=1}}; snpsused[i]+=snpused};
 					   if ($1==s[i] || $2==s[i]) {for (j=c[i,3];j<=c[i,4];j++) coverage[i]+=cov[j]; flag[i]=1}}} \
-              END {coverage[1]=covtotal; for (i=1;i<=n;i++) {if (coverage[i]>0 && c[i,2]>0 && r>0) print i,nsnp[i]+0,c[i,2]+0,snpsused[i],nsnp[i]/c[i,2],coverage[i]/c[i,2],natlevel[i],c[i,6],c[i,3],c[i,4],c[i,7],c[i,8],c[i,9]}}' tree.csv header.csv age.bed variant-not-shared.txt > raw-ages.txt
+              END {coverage[1]=covtotal; for (i=1;i<=n;i++) {if (coverage[i]>0 && c[i,2]>0 && r>0) print i,nsnp[i]+0,c[i,2]+0,snpsused[i],nsnp[i]/c[i,2],coverage[i]/c[i,2],natlevel[i],c[i,6],c[i,3],c[i,4],c[i,7],c[i,8],c[i,9]}}' tree.csv header.csv age.bed foo > raw-ages.txt
 
 # The following line consults a Poisson statistics look-up table
 # For the specified number of standard deviations (s) it will take the number
